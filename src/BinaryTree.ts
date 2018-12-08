@@ -60,11 +60,86 @@ class BinaryTree<T> implements SortedCollection<T> {
   }
 
   public remove(value: T): SortedCollection<T> {
-    throw new Error("Not implemented error!");
+    if (this.root == null) {
+      return this;
+    } else {
+      const tree = this.copy();
+      let parent = null;
+      let node = tree.root;
+      while (node != null) {
+        let comparison = this.comparator(value, node.value);
+        if (comparison > 0) {
+          node.right = node.right.copy();
+          parent = node;
+          node = node.right;
+        } else if (comparison < 0) {
+          node.left = node.left.copy();
+          parent = node;
+          node = node.left;
+        } else {
+          if (parent == null) {
+            const left = this.copy();
+            left.root = left.root.left;
+            const right = this.copy();
+            right.root = right.root.right;
+            return right.union(left);
+          } else if (parent.right == node) {
+            parent.right = node.right;
+            const left = this.copy();
+            left.root = node.left;
+            return tree.union(left);
+          } else {
+            parent.left = node.right;
+            const left = this.copy();
+            left.root = node.left;
+            return tree.union(left);
+          }
+          node = null;
+        }
+      }
+    }
+  }
+
+  public unionBinaryTree(binaryTree: BinaryTree<T>): BinaryTree<T> {
+    const tree = this.copy();
+    if (tree.root == null) {
+      tree.root = binaryTree.root;
+    } else if (binaryTree.root != null) {
+      let node = tree.root;
+      while (node != null) {
+        if (this.comparator(binaryTree.root.value, node.value) > 0) {
+          if (node.right == null) {
+            node.right = binaryTree.root;
+            node = null;
+          } else {
+            node.right = node.right.copy();
+            node = node.right;
+          }
+        } else {
+          if (node.left == null) {
+            node.left = binaryTree.root;
+            node = null;
+          } else {
+            node.left = node.left.copy();
+            node = node.left;
+          }
+        }
+      }
+    }
+    return tree;
   }
 
   public union(sortedCollection: SortedCollection<T>): SortedCollection<T> {
-    throw new Error("Not implemented error!");
+    if (sortedCollection instanceof BinaryTree) {
+      return this.unionBinaryTree(sortedCollection as BinaryTree<T>);
+    } else {
+      return this.reduce<SortedCollection<T>>(
+        new BinaryTree<T>(this.comparator),
+        function(tree, value) {
+          return tree.add(value);
+        }
+      );
+    }
   }
 
   public intersection(
@@ -84,11 +159,35 @@ class BinaryTree<T> implements SortedCollection<T> {
   }
 
   public contains(value: T): boolean {
-    throw new Error("Not implemented error!");
+    // short-circuit with for of
+    for (let _value of this) {
+      if (value == _value) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public containsAll(sortedCollection: SortedCollection<T>): boolean {
-    throw new Error("Not implemented error!");
+    // short-circuit with for of
+    for (let value of sortedCollection) {
+      let frequency = 0;
+      for (let _value of sortedCollection) {
+        if (value == _value) {
+          frequency++;
+        }
+      }
+      let _frequency = 0;
+      for (let _value of this) {
+        if (value == _value) {
+          _frequency++;
+        }
+      }
+      if (frequency != _frequency) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public isEmpty(): boolean {
