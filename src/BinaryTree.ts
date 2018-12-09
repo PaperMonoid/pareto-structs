@@ -69,11 +69,11 @@ class BinaryTree<T> implements SortedCollection<T> {
       while (node != null) {
         let comparison = this.comparator(value, node.value);
         if (comparison > 0) {
-          node.right = node.right.copy();
+          node.right = node.right && node.right.copy();
           parent = node;
           node = node.right;
         } else if (comparison < 0) {
-          node.left = node.left.copy();
+          node.left = node.left && node.left.copy();
           parent = node;
           node = node.left;
         } else {
@@ -88,7 +88,7 @@ class BinaryTree<T> implements SortedCollection<T> {
             const left = this.copy();
             left.root = node.left;
             return tree.union(left);
-          } else {
+          } else if (parent.left == node) {
             parent.left = node.right;
             const left = this.copy();
             left.root = node.left;
@@ -97,6 +97,7 @@ class BinaryTree<T> implements SortedCollection<T> {
           node = null;
         }
       }
+      return this;
     }
   }
 
