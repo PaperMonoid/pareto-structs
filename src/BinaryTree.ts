@@ -100,62 +100,63 @@ class BinaryTree<T> implements SortedCollection<T> {
     }
   }
 
-  public unionBinaryTree(binaryTree: BinaryTree<T>): BinaryTree<T> {
-    const tree = this.copy();
-    if (tree.root == null) {
-      tree.root = binaryTree.root;
-    } else if (binaryTree.root != null) {
-      let node = tree.root;
-      while (node != null) {
-        if (this.comparator(binaryTree.root.value, node.value) > 0) {
-          if (node.right == null) {
-            node.right = binaryTree.root;
-            node = null;
-          } else {
-            node.right = node.right.copy();
-            node = node.right;
-          }
-        } else {
-          if (node.left == null) {
-            node.left = binaryTree.root;
-            node = null;
-          } else {
-            node.left = node.left.copy();
-            node = node.left;
-          }
-        }
+  public union(sortedCollection: SortedCollection<T>): SortedCollection<T> {
+    return sortedCollection.reduce<SortedCollection<T>>(this, function(
+      tree,
+      value
+    ) {
+      return tree.add(value);
+    });
+  }
+
+  // repeated values make implementation slow
+  // TODO fix implementation
+  public intersection(
+    sortedCollection: SortedCollection<T>
+  ): SortedCollection<T> {
+    const A: Iterator<T> = this[Symbol.iterator]();
+    const B: Iterator<T> = this.clear()
+      .union(sortedCollection)
+      [Symbol.iterator]();
+    let tree = this.clear();
+    let a: { value: T; done: boolean; skip?: boolean };
+    let b: { value: T; done: boolean; skip?: boolean };
+    a = A.next();
+    b = B.next();
+    while (!a.done && !b.done) {
+      const comparison = this.comparator(a.value, b.value);
+      if (comparison > 0) {
+        a.skip = true;
+        b.skip = false;
+      } else if (comparison < 0) {
+        a.skip = false;
+        b.skip = true;
+      } else {
+        tree = tree.add(a.value);
+        a.skip = false;
+        b.skip = false;
+      }
+      if (!a.skip) {
+        a = A.next();
+      }
+      if (!b.skip) {
+        b = B.next();
       }
     }
     return tree;
   }
 
-  public union(sortedCollection: SortedCollection<T>): SortedCollection<T> {
-    if (sortedCollection instanceof BinaryTree) {
-      return this.unionBinaryTree(sortedCollection as BinaryTree<T>);
-    } else {
-      return this.reduce<SortedCollection<T>>(
-        new BinaryTree<T>(this.comparator),
-        function(tree, value) {
-          return tree.add(value);
-        }
-      );
-    }
-  }
-
-  public intersection(
-    sortedCollection: SortedCollection<T>
-  ): SortedCollection<T> {
-    throw new Error("Not implemented error!");
-  }
-
   public except(sortedCollection: SortedCollection<T>): SortedCollection<T> {
-    throw new Error("Not implemented error!");
+    return sortedCollection.reduce<SortedCollection<T>>(this, function(
+      tree,
+      value
+    ) {
+      return tree.remove(value);
+    });
   }
 
   public clear(): SortedCollection<T> {
-    const tree = this.copy();
-    tree.root = null;
-    return tree;
+    return new BinaryTree<T>(this.comparator);
   }
 
   public contains(value: T): boolean {
@@ -225,12 +226,12 @@ class BinaryTree<T> implements SortedCollection<T> {
   }
 
   public filter(predicate: (value: T) => boolean): SortedCollection<T> {
-    return this.reduce<SortedCollection<T>>(
-      new BinaryTree<T>(this.comparator),
-      function(tree, value) {
-        return predicate(value) ? tree.add(value) : tree;
-      }
-    );
+    return this.reduce<SortedCollection<T>>(this.clear(), function(
+      tree,
+      value
+    ) {
+      return predicate(value) ? tree.add(value) : tree;
+    });
   }
 
   public map<R>(
