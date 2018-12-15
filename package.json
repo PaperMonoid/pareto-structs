@@ -1,5 +1,5 @@
 {
-  "name": "pareto-forest",
+  "name": "pareto-structs",
   "version": "1.0.0",
   "description": "A typescript data structure library for pareto optimization.",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TritiumMonoid/pareto-forest.git"
+    "url": "git+https://github.com/TritiumMonoid/pareto-structs.git"
   },
   "keywords": [
     "pareto",
@@ -22,9 +22,9 @@
   "author": "TritiumMonoid",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/TritiumMonoid/pareto-forest/issues"
+    "url": "https://github.com/TritiumMonoid/pareto-structs/issues"
   },
-  "homepage": "https://github.com/TritiumMonoid/pareto-forest#readme",
+  "homepage": "https://github.com/TritiumMonoid/pareto-structs#readme",
   "devDependencies": {
     "@types/jest": "^23.3.10",
     "jest": "^23.6.0",
