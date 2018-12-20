@@ -17,7 +17,7 @@ class Node<T> {
   }
 }
 
-class BinaryTree<T> implements SortedCollection<T> {
+class BinarySearchTree<T> implements SortedCollection<T> {
   public comparator: Comparator<T>;
   public root: Node<T>;
 
@@ -26,8 +26,11 @@ class BinaryTree<T> implements SortedCollection<T> {
     this.root = root;
   }
 
-  public copy(): BinaryTree<T> {
-    return new BinaryTree<T>(this.comparator, this.root && this.root.copy());
+  public copy(): BinarySearchTree<T> {
+    return new BinarySearchTree<T>(
+      this.comparator,
+      this.root && this.root.copy()
+    );
   }
 
   public add(value: T): SortedCollection<T> {
@@ -157,7 +160,7 @@ class BinaryTree<T> implements SortedCollection<T> {
   }
 
   public clear(): SortedCollection<T> {
-    return new BinaryTree<T>(this.comparator);
+    return new BinarySearchTree<T>(this.comparator);
   }
 
   public contains(value: T): boolean {
@@ -240,7 +243,7 @@ class BinaryTree<T> implements SortedCollection<T> {
     mapper: (value: T) => R
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new BinaryTree<R>(comparator),
+      new BinarySearchTree<R>(comparator),
       function(tree, value) {
         return tree.add(mapper(value));
       }
@@ -252,7 +255,7 @@ class BinaryTree<T> implements SortedCollection<T> {
     mapper: (value: T) => SortedCollection<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new BinaryTree<R>(comparator),
+      new BinarySearchTree<R>(comparator),
       function(tree, value) {
         return tree.union(mapper(value));
       }
@@ -271,4 +274,4 @@ class BinaryTree<T> implements SortedCollection<T> {
   }
 }
 
-export default BinaryTree;
+export default BinarySearchTree;
