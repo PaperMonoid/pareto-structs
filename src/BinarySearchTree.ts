@@ -24,12 +24,20 @@ class BinarySearchTree<T> implements SortedCollection<T> {
     this.count = count;
   }
 
-  private static fromIteratorBalance<T>(iterator: Iterator<T>): Node<T> {
-    const left = BinarySearchTree.fromIteratorBalance<T>(iterator);
+  private static fromIteratorBalance<T>(
+    iterator: Iterator<T>,
+    count: number
+  ): Node<T> {
+    if (count <= 0) {
+      return null;
+    }
+    const countLeft = Math.floor(count / 2);
+    const left = BinarySearchTree.fromIteratorBalance<T>(iterator, countLeft);
     const next = iterator.next();
     const node = next.value;
     const done = next.done;
-    const right = BinarySearchTree.fromIteratorBalance<T>(iterator);
+    const countRight = count - 1 - countLeft;
+    const right = BinarySearchTree.fromIteratorBalance<T>(iterator, countRight);
     if (done) {
       return null;
     } else {
@@ -44,7 +52,7 @@ class BinarySearchTree<T> implements SortedCollection<T> {
   ): BinarySearchTree<T> {
     return new BinarySearchTree<T>(
       comparator,
-      BinarySearchTree.fromIteratorBalance<T>(iterator),
+      BinarySearchTree.fromIteratorBalance<T>(iterator, count),
       count
     );
   }
@@ -257,11 +265,8 @@ class BinarySearchTree<T> implements SortedCollection<T> {
   }
 
   public filter(predicate: (value: T) => boolean): SortedCollection<T> {
-    return this.reduce<SortedCollection<T>>(this.clear(), function(
-      tree,
-      value
-    ) {
-      return predicate(value) ? tree.add(value) : tree;
+    return this.reduce<SortedCollection<T>>(this, function(tree, value) {
+      return predicate(value) ? tree : tree.remove(value);
     });
   }
 
