@@ -24,6 +24,31 @@ class BinarySearchTree<T> implements SortedCollection<T> {
     this.count = count;
   }
 
+  private static fromIteratorBalance<T>(iterator: Iterator<T>): Node<T> {
+    const left = BinarySearchTree.fromIteratorBalance<T>(iterator);
+    const next = iterator.next();
+    const node = next.value;
+    const done = next.done;
+    const right = BinarySearchTree.fromIteratorBalance<T>(iterator);
+    if (done) {
+      return null;
+    } else {
+      return new Node<T>(node.value, left, right);
+    }
+  }
+
+  public static fromIterator<T>(
+    comparator: Comparator<T>,
+    iterator: Iterator<T>,
+    count: number
+  ): BinarySearchTree<T> {
+    return new BinarySearchTree<T>(
+      comparator,
+      BinarySearchTree.fromIteratorBalance<T>(iterator),
+      count
+    );
+  }
+
   private addNode(newNode: Node<T>, node: Node<T>): Node<T> {
     if (newNode == null) {
       return node;
