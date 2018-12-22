@@ -387,3 +387,103 @@ test("Binary search tree add 4, 1, 0, 2, 3 except 7, 0, 1, 2, 5 test", function(
   let __tree = tree.except(_tree);
   expect(__tree.toArray()).toEqual([3, 4]);
 });
+
+test("Binary search tree size test", function() {
+  let tree = new BinarySearchTree<number>(comparator) as SortedCollection<
+    number
+  >;
+  expect(tree.size()).toBe(0);
+});
+
+test("Binary search tree add 0 size test", function() {
+  let tree = new BinarySearchTree<number>(comparator) as SortedCollection<
+    number
+  >;
+  tree = tree.add(0);
+  expect(tree.size()).toBe(1);
+});
+
+test("Binary search tree add 0, 1, 2 size test", function() {
+  let tree = new BinarySearchTree<number>(comparator) as SortedCollection<
+    number
+  >;
+  tree = tree.add(0);
+  tree = tree.add(1);
+  tree = tree.add(2);
+  expect(tree.size()).toBe(3);
+});
+
+test("Binary search tree add 2, 1, 0.5, 0, -1, -2, -1.5 size test", function() {
+  let tree = new BinarySearchTree<number>(comparator) as SortedCollection<
+    number
+  >;
+  tree = tree.add(2);
+  tree = tree.add(1);
+  tree = tree.add(0.5);
+  tree = tree.add(0);
+  tree = tree.add(-1);
+  tree = tree.add(-2);
+  tree = tree.add(-1.5);
+  expect(tree.size()).toBe(7);
+});
+
+test("Binary search tree add 0, 1, 2 remove 1 size test", function() {
+  let tree = new BinarySearchTree<number>(comparator) as SortedCollection<
+    number
+  >;
+  tree = tree.add(0);
+  tree = tree.add(1);
+  tree = tree.add(2);
+  tree = tree.remove(1);
+  expect(tree.size()).toBe(2);
+});
+
+test("Binary search tree add 2, 1, 0.5, 0, -1, -2, -1.5 remove 1, -1 size test", function() {
+  let tree = new BinarySearchTree<number>(comparator) as SortedCollection<
+    number
+  >;
+  tree = tree.add(2);
+  tree = tree.add(1);
+  tree = tree.add(0.5);
+  tree = tree.add(0);
+  tree = tree.add(-1);
+  tree = tree.add(-2);
+  tree = tree.add(-1.5);
+  tree = tree.remove(1);
+  tree = tree.remove(-1);
+  expect(tree.size()).toBe(5);
+});
+
+test("Binary search tree add 2, 1, 0.5, 0, -1, -2, -1.5 filter 1, -1 test", function() {
+  let tree = new BinarySearchTree<number>(comparator) as SortedCollection<
+    number
+  >;
+  tree = tree.add(2);
+  tree = tree.add(1);
+  tree = tree.add(0.5);
+  tree = tree.add(0);
+  tree = tree.add(-1);
+  tree = tree.add(-2);
+  tree = tree.add(-1.5);
+  tree = tree.filter(function(x) {
+    return x != 1 && x != -1;
+  });
+  expect(tree.toArray()).toEqual([-2, -1.5, 0, 0.5, 2]);
+});
+
+test("Binary search tree add 2, 1, 0.5, 0, -1, -2, -1.5 map -x test", function() {
+  let tree = new BinarySearchTree<number>(comparator) as SortedCollection<
+    number
+  >;
+  tree = tree.add(2);
+  tree = tree.add(1);
+  tree = tree.add(0.5);
+  tree = tree.add(0);
+  tree = tree.add(-1);
+  tree = tree.add(-2);
+  tree = tree.add(-1.5);
+  tree = tree.map(comparator, function(x) {
+    return -1 * x;
+  });
+  expect(tree.toArray()).toEqual([-2, -1, -0.5, -0, 1, 1.5, 2]);
+});

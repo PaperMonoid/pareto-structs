@@ -21,7 +21,7 @@ class BinarySearchTree<T> implements SortedCollection<T> {
   constructor(comparator: Comparator<T>, root?: Node<T>, count?: number) {
     this.comparator = comparator;
     this.root = root;
-    this.count = count;
+    this.count = count || 0;
   }
 
   private static fromIteratorBalance<T>(
@@ -34,14 +34,14 @@ class BinarySearchTree<T> implements SortedCollection<T> {
     const countLeft = Math.floor(count / 2);
     const left = BinarySearchTree.fromIteratorBalance<T>(iterator, countLeft);
     const next = iterator.next();
-    const node = next.value;
+    const value = next.value;
     const done = next.done;
     const countRight = count - 1 - countLeft;
     const right = BinarySearchTree.fromIteratorBalance<T>(iterator, countRight);
     if (done) {
       return null;
     } else {
-      return new Node<T>(node.value, left, right);
+      return new Node<T>(value, left, right);
     }
   }
 
@@ -77,28 +77,10 @@ class BinarySearchTree<T> implements SortedCollection<T> {
     }
   }
 
-  private addValue(value: T, node: Node<T>): Node<T> {
-    if (node == null) {
-      return new Node<T>(value);
-    } else if (this.comparator(value, node.value) > 0) {
-      return new Node<T>(
-        node.value,
-        node.left,
-        this.addValue(value, node.right)
-      );
-    } else {
-      return new Node<T>(
-        node.value,
-        this.addValue(value, node.left),
-        node.right
-      );
-    }
-  }
-
   public add(value: T): SortedCollection<T> {
     return new BinarySearchTree<T>(
       this.comparator,
-      this.addValue(value, this.root),
+      this.addNode(new Node<T>(value), this.root),
       this.count + 1
     );
   }
@@ -241,10 +223,11 @@ class BinarySearchTree<T> implements SortedCollection<T> {
   }
 
   public toArray(): T[] {
-    return this.reduce<T[]>([], function(array, value) {
+    const array = [];
+    for (let value of this) {
       array.push(value);
-      return array;
-    });
+    }
+    return array;
   }
 
   public [Symbol.iterator](): Iterator<T> {
@@ -299,9 +282,9 @@ class BinarySearchTree<T> implements SortedCollection<T> {
     accumulator: (accumulated: U, value: T) => U
   ): U {
     let accumulated: U = identity;
-    this.forEach(function(value) {
+    for (let value of this) {
       accumulated = accumulator(accumulated, value);
-    });
+    }
     return accumulated;
   }
 }
