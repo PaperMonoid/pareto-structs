@@ -133,33 +133,21 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     );
   }
 
-  // repeated elements make implementation slow
-  // TODO fix implementation
   public intersection(collection: SortedCollection<E>): SortedCollection<E> {
-    const A: Iterator<E> = this[Symbol.iterator]();
-    const B: Iterator<E> = this.clear()
+    const A = this[Symbol.iterator]();
+    const B = this.clear()
       .union(collection)
       [Symbol.iterator]();
     let tree = this.clear();
-    let a: { value: E; done: boolean; skip?: boolean } = A.next();
-    let b: { value: E; done: boolean; skip?: boolean } = B.next();
-    while (!a.done && !b.done) {
+    for (let a = A.next(), b = B.next(); !a.done && !b.done; ) {
       const comparison = this.comparator(a.value, b.value);
       if (comparison > 0) {
-        a.skip = true;
-        b.skip = false;
+        b = B.next();
       } else if (comparison < 0) {
-        a.skip = false;
-        b.skip = true;
+        a = A.next();
       } else {
         tree = tree.add(a.value);
-        a.skip = false;
-        b.skip = false;
-      }
-      if (!a.skip) {
         a = A.next();
-      }
-      if (!b.skip) {
         b = B.next();
       }
     }
@@ -195,27 +183,18 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public containsAll(collection: SortedCollection<E>): boolean {
-    const A: Iterator<E> = this[Symbol.iterator]();
-    const B: Iterator<E> = this.clear()
+    const A = this[Symbol.iterator]();
+    const B = this.clear()
       .union(collection)
       [Symbol.iterator]();
-    let a: { value: E; done: boolean; skip?: boolean } = A.next();
-    let b: { value: E; done: boolean; skip?: boolean } = B.next();
-    while (!a.done && !b.done) {
+    for (let a = A.next(), b = B.next(); !a.done && !b.done; ) {
       const comparison = this.comparator(a.value, b.value);
       if (comparison > 0) {
-        a.skip = true;
-        b.skip = false;
-      } else if (comparison < 0) {
         return false;
-      } else {
-        a.skip = false;
-        b.skip = false;
-      }
-      if (!a.skip) {
+      } else if (comparison < 0) {
         a = A.next();
-      }
-      if (!b.skip) {
+      } else {
+        a = A.next();
         b = B.next();
       }
     }
