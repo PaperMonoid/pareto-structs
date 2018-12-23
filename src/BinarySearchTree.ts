@@ -141,10 +141,8 @@ class BinarySearchTree<E> implements SortedCollection<E> {
       .union(collection)
       [Symbol.iterator]();
     let tree = this.clear();
-    let a: { value: E; done: boolean; skip?: boolean };
-    let b: { value: E; done: boolean; skip?: boolean };
-    a = A.next();
-    b = B.next();
+    let a: { value: E; done: boolean; skip?: boolean } = A.next();
+    let b: { value: E; done: boolean; skip?: boolean } = B.next();
     while (!a.done && !b.done) {
       const comparison = this.comparator(a.value, b.value);
       if (comparison > 0) {
@@ -178,36 +176,50 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     return new BinarySearchTree<E>(this.comparator);
   }
 
-  public contains(element: E): boolean {
-    // short-circuit with for of
-    for (let _element of this) {
-      if (element == _element) {
-        return true;
-      }
+  public search(element: E, node: Node<E>): Node<E> {
+    if (node == null) {
+      return null;
     }
-    return false;
+    const comparison = this.comparator(element, node.element);
+    if (comparison > 0) {
+      return node.right;
+    } else if (comparison < 0) {
+      return node.left;
+    } else {
+      return node;
+    }
+  }
+
+  public contains(element: E): boolean {
+    return this.search(element, this.root) != null;
   }
 
   public containsAll(collection: SortedCollection<E>): boolean {
-    // short-circuit with for of
-    for (let element of collection) {
-      let frequency = 0;
-      for (let _element of collection) {
-        if (element == _element) {
-          frequency++;
-        }
-      }
-      let _frequency = 0;
-      for (let _element of this) {
-        if (element == _element) {
-          _frequency++;
-        }
-      }
-      if (frequency != _frequency) {
+    const A: Iterator<E> = this[Symbol.iterator]();
+    const B: Iterator<E> = this.clear()
+      .union(collection)
+      [Symbol.iterator]();
+    let a: { value: E; done: boolean; skip?: boolean } = A.next();
+    let b: { value: E; done: boolean; skip?: boolean } = B.next();
+    while (!a.done && !b.done) {
+      const comparison = this.comparator(a.value, b.value);
+      if (comparison > 0) {
+        a.skip = true;
+        b.skip = false;
+      } else if (comparison < 0) {
         return false;
+      } else {
+        a.skip = false;
+        b.skip = false;
+      }
+      if (!a.skip) {
+        a = A.next();
+      }
+      if (!b.skip) {
+        b = B.next();
       }
     }
-    return true;
+    return b.done;
   }
 
   public isEmpty(): boolean {
