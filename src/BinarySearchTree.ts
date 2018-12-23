@@ -128,12 +128,9 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public union(collection: SortedCollection<E>): SortedCollection<E> {
-    return collection.reduce<SortedCollection<E>>(this, function(
-      tree,
-      element
-    ) {
-      return tree.add(element);
-    });
+    return collection.reduce<SortedCollection<E>>(this, (tree, element) =>
+      tree.add(element)
+    );
   }
 
   // repeated elements make implementation slow
@@ -172,12 +169,9 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public except(collection: SortedCollection<E>): SortedCollection<E> {
-    return collection.reduce<SortedCollection<E>>(this, function(
-      tree,
-      element
-    ) {
-      return tree.remove(element);
-    });
+    return collection.reduce<SortedCollection<E>>(this, (tree, element) =>
+      tree.remove(element)
+    );
   }
 
   public clear(): SortedCollection<E> {
@@ -250,9 +244,9 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public filter(predicate: Predicate<E>): SortedCollection<E> {
-    return this.reduce<SortedCollection<E>>(this, function(tree, element) {
-      return predicate(element) ? tree : tree.remove(element);
-    });
+    return this.reduce<SortedCollection<E>>(this, (tree, element) =>
+      predicate(element) ? tree : tree.remove(element)
+    );
   }
 
   public map<R>(
@@ -261,9 +255,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
       new BinarySearchTree<R>(comparator),
-      function(tree, element) {
-        return tree.add(mapper(element));
-      }
+      (tree, element) => tree.add(mapper(element))
     );
   }
 
@@ -273,9 +265,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
       new BinarySearchTree<R>(comparator),
-      function(tree, element) {
-        return tree.union(mapper(element));
-      }
+      (tree, element) => tree.union(mapper(element))
     );
   }
 
