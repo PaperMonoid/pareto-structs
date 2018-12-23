@@ -28,39 +28,6 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     this.count = count || 0;
   }
 
-  private static fromIteratorBalance<E>(
-    iterator: Iterator<E>,
-    count: number
-  ): Node<E> {
-    if (count <= 0) {
-      return null;
-    }
-    const countLeft = Math.floor(count / 2);
-    const left = BinarySearchTree.fromIteratorBalance<E>(iterator, countLeft);
-    const next = iterator.next();
-    const element = next.value;
-    const done = next.done;
-    const countRight = count - 1 - countLeft;
-    const right = BinarySearchTree.fromIteratorBalance<E>(iterator, countRight);
-    if (done) {
-      return null;
-    } else {
-      return new Node<E>(element, left, right);
-    }
-  }
-
-  public static fromIterator<E>(
-    comparator: Comparator<E>,
-    iterator: Iterator<E>,
-    count: number
-  ): BinarySearchTree<E> {
-    return new BinarySearchTree<E>(
-      comparator,
-      BinarySearchTree.fromIteratorBalance<E>(iterator, count),
-      count
-    );
-  }
-
   private addNode(newNode: Node<E>, node: Node<E>): Node<E> {
     if (newNode == null) {
       return node;
@@ -93,7 +60,6 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     if (node == null) {
       return null;
     }
-
     const comparison = this.comparator(element, node.element);
     if (comparison > 0) {
       const removed = this.removeNode(element, node.right);
@@ -187,7 +153,8 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     const B = this.clear()
       .union(collection)
       [Symbol.iterator]();
-    for (let a = A.next(), b = B.next(); !a.done && !b.done; ) {
+    let a, b;
+    for (a = A.next(), b = B.next(); !a.done && !b.done; ) {
       const comparison = this.comparator(a.value, b.value);
       if (comparison > 0) {
         return false;
