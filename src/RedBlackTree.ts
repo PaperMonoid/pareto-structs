@@ -1,67 +1,73 @@
+import BiFunction from "./Function/BiFunction";
+import Comparator from "./Function/Comparator";
+import Consumer from "./Function/Consumer";
+import Function from "./Function/Function";
+import Predicate from "./Function/Predicate";
 import SortedCollection from "./SortedCollection";
-import Comparator from "./Comparator";
 
 enum Color {
   Red,
   Black
 }
 
-class Node<T> {
-  public readonly value: T;
+class Node<E> {
+  public readonly element: E;
   public readonly color: Color;
-  public readonly left: Node<T>;
-  public readonly right: Node<T>;
+  public readonly left: Node<E>;
+  public readonly right: Node<E>;
 
-  public constructor(value: T, color?: Color, left?: Node<T>, right?: Node<T>) {
-    this.value = value;
+  public constructor(
+    element: E,
+    color?: Color,
+    left?: Node<E>,
+    right?: Node<E>
+  ) {
+    this.element = element;
     this.color = color ? color : Color.Black;
     this.left = left;
     this.right = right;
   }
 }
 
-class RedBlackTree<T> implements SortedCollection<T> {
-  public readonly comparator: Comparator<T>;
-  public readonly root: Node<T>;
+class RedBlackTree<E> implements SortedCollection<E> {
+  public readonly comparator: Comparator<E>;
+  public readonly root: Node<E>;
   public readonly count: number;
 
-  constructor(comparator: Comparator<T>, root?: Node<T>, count?: number) {
+  constructor(comparator: Comparator<E>, root?: Node<E>, count?: number) {
     this.comparator = comparator;
     this.root = root;
     this.count = count;
   }
-
-  public add(value: T): SortedCollection<T> {
+  public add(element: E): SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
-  public remove(value: T): SortedCollection<T> {
+  public remove(element: E): SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
-  public union(sortedCollection: SortedCollection<T>): SortedCollection<T> {
+  public union(collection: SortedCollection<E>): SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
-  public intersection(
-    sortedCollection: SortedCollection<T>
-  ): SortedCollection<T> {
+  public intersection(collection: SortedCollection<E>): SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
-  public except(sortedCollection: SortedCollection<T>): SortedCollection<T> {
+  public except(collection: SortedCollection<E>): SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
-  public clear(): SortedCollection<T> {
+  public clear(): SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
-  public contains(value: T): boolean {
+  public contains(element: E): boolean {
     throw new Error("Not implemented");
   }
 
-  public containsAll(sortedCollection: SortedCollection<T>): boolean {
+  public containsAll(collection: SortedCollection<E>): boolean {
     throw new Error("Not implemented");
   }
 
@@ -73,40 +79,37 @@ class RedBlackTree<T> implements SortedCollection<T> {
     throw new Error("Not implemented");
   }
 
-  public toArray(): T[] {
+  public toArray(): E[] {
     throw new Error("Not implemented");
   }
 
-  public [Symbol.iterator](): Iterator<T> {
+  public [Symbol.iterator](): Iterator<E> {
     throw new Error("Not implemented");
   }
 
-  public forEach(action: (value: T) => void): void {
+  public forEach(action: Consumer<E>): void {
     throw new Error("Not implemented");
   }
 
-  public filter(predicate: (value: T) => boolean): SortedCollection<T> {
+  public filter(predicate: Predicate<E>): SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
   public map<R>(
     comparator: Comparator<R>,
-    mapper: (value: T) => R
+    mapper: Function<E, R>
   ): SortedCollection<R> {
     throw new Error("Not implemented");
   }
 
   public flatMap<R>(
     comparator: Comparator<R>,
-    mapper: (value: T) => SortedCollection<R>
+    mapper: Function<E, SortedCollection<R>>
   ): SortedCollection<R> {
     throw new Error("Not implemented");
   }
 
-  public reduce<U>(
-    identity: U,
-    accumulator: (accumulated: U, value: T) => U
-  ): U {
+  public reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U {
     throw new Error("Not implemented");
   }
 }

@@ -1,34 +1,33 @@
-import Comparator from "./Comparator";
+import BiFunction from "./Function/BiFunction";
+import Comparator from "./Function/Comparator";
+import Consumer from "./Function/Consumer";
+import Function from "./Function/Function";
+import Predicate from "./Function/Predicate";
 
-interface SortedCollection<T> extends Iterable<T> {
-  public add(value: T): SortedCollection<T>;
-  public remove(value: T): SortedCollection<T>;
-  public union(sortedCollection: SortedCollection<T>): SortedCollection<T>;
-  public intersection(
-    sortedCollection: SortedCollection<T>
-  ): SortedCollection<T>;
-  public except(sortedCollection: SortedCollection<T>): SortedCollection<T>;
-  public clear(): SortedCollection<T>;
-  public contains(value: T): boolean;
-  public containsAll(sortedCollection: SortedCollection<T>): boolean;
+interface SortedCollection<E> extends Iterable<E> {
+  public add(element: E): SortedCollection<E>;
+  public remove(element: E): SortedCollection<E>;
+  public union(collection: SortedCollection<E>): SortedCollection<E>;
+  public intersection(collection: SortedCollection<E>): SortedCollection<E>;
+  public except(collection: SortedCollection<E>): SortedCollection<E>;
+  public clear(): SortedCollection<E>;
+  public contains(element: E): boolean;
+  public containsAll(collection: SortedCollection<E>): boolean;
   public isEmpty(): boolean;
   public size(): number;
-  public toArray(): T[];
-  public [Symbol.iterator](): Iterator<T>;
-  public forEach(action: (value: T) => void): void;
-  public filter(predicate: (value: T) => boolean): SortedCollection<T>;
+  public toArray(): E[];
+  public [Symbol.iterator](): Iterator<E>;
+  public forEach(action: Consumer<E>): void;
+  public filter(predicate: Predicate<E>): SortedCollection<E>;
   public map<R>(
     comparator: Comparator<R>,
-    mapper: (value: T) => R
+    mapper: Function<E, R>
   ): SortedCollection<R>;
   public flatMap<R>(
     comparator: Comparator<R>,
-    mapper: (value: T) => SortedCollection<R>
+    mapper: Function<E, SortedCollection<R>>
   ): SortedCollection<R>;
-  public reduce<U>(
-    identity: U,
-    accumulator: (accumulated: U, value: T) => U
-  ): U;
+  public reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U;
 }
 
 export default SortedCollection;

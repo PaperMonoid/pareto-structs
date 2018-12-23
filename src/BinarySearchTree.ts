@@ -1,121 +1,125 @@
+import BiFunction from "./Function/BiFunction";
+import Comparator from "./Function/Comparator";
+import Consumer from "./Function/Consumer";
+import Function from "./Function/Function";
+import Predicate from "./Function/Predicate";
 import SortedCollection from "./SortedCollection";
-import Comparator from "./Comparator";
 
-class Node<T> {
-  public readonly value: T;
-  public readonly left: Node<T>;
-  public readonly right: Node<T>;
+class Node<E> {
+  public readonly element: E;
+  public readonly left: Node<E>;
+  public readonly right: Node<E>;
 
-  public constructor(value: T, left?: Node<T>, right?: Node<T>) {
-    this.value = value;
+  public constructor(element: E, left?: Node<E>, right?: Node<E>) {
+    this.element = element;
     this.left = left;
     this.right = right;
   }
 }
 
-class BinarySearchTree<T> implements SortedCollection<T> {
-  public readonly comparator: Comparator<T>;
-  public readonly root: Node<T>;
+class BinarySearchTree<E> implements SortedCollection<E> {
+  public readonly comparator: Comparator<E>;
+  public readonly root: Node<E>;
   public readonly count: number;
 
-  constructor(comparator: Comparator<T>, root?: Node<T>, count?: number) {
+  constructor(comparator: Comparator<E>, root?: Node<E>, count?: number) {
     this.comparator = comparator;
     this.root = root;
     this.count = count || 0;
   }
 
-  private static fromIteratorBalance<T>(
-    iterator: Iterator<T>,
+  private static fromIteratorBalance<E>(
+    iterator: Iterator<E>,
     count: number
-  ): Node<T> {
+  ): Node<E> {
     if (count <= 0) {
       return null;
     }
     const countLeft = Math.floor(count / 2);
-    const left = BinarySearchTree.fromIteratorBalance<T>(iterator, countLeft);
+    const left = BinarySearchTree.fromIteratorBalance<E>(iterator, countLeft);
     const next = iterator.next();
-    const value = next.value;
+    const element = next.value;
     const done = next.done;
     const countRight = count - 1 - countLeft;
-    const right = BinarySearchTree.fromIteratorBalance<T>(iterator, countRight);
+    const right = BinarySearchTree.fromIteratorBalance<E>(iterator, countRight);
     if (done) {
       return null;
     } else {
-      return new Node<T>(value, left, right);
+      return new Node<E>(element, left, right);
     }
   }
 
-  public static fromIterator<T>(
-    comparator: Comparator<T>,
-    iterator: Iterator<T>,
+  public static fromIterator<E>(
+    comparator: Comparator<E>,
+    iterator: Iterator<E>,
     count: number
-  ): BinarySearchTree<T> {
-    return new BinarySearchTree<T>(
+  ): BinarySearchTree<E> {
+    return new BinarySearchTree<E>(
       comparator,
-      BinarySearchTree.fromIteratorBalance<T>(iterator, count),
+      BinarySearchTree.fromIteratorBalance<E>(iterator, count),
       count
     );
   }
 
-  private addNode(newNode: Node<T>, node: Node<T>): Node<T> {
+  private addNode(newNode: Node<E>, node: Node<E>): Node<E> {
     if (newNode == null) {
       return node;
     } else if (node == null) {
       return newNode;
-    } else if (this.comparator(newNode.value, node.value) > 0) {
-      return new Node<T>(
-        node.value,
+    } else if (this.comparator(newNode.element, node.element) > 0) {
+      return new Node<E>(
+        node.element,
         node.left,
         this.addNode(newNode, node.right)
       );
     } else {
-      return new Node<T>(
-        node.value,
+      return new Node<E>(
+        node.element,
         this.addNode(newNode, node.left),
         node.right
       );
     }
   }
 
-  public add(value: T): SortedCollection<T> {
-    return new BinarySearchTree<T>(
+  public add(element: E): SortedCollection<E> {
+    return new BinarySearchTree<E>(
       this.comparator,
-      this.addNode(new Node<T>(value), this.root),
+      this.addNode(new Node<E>(element), this.root),
       this.count + 1
     );
   }
 
-  public removeNode(value: T, node: Node<T>): Node<T>[] {
+  public removeNode(element: E, node: Node<E>): Node<E>[] {
     if (node == null) {
       return null;
     }
 
-    const comparison = this.comparator(value, node.value);
+    const comparison = this.comparator(element, node.element);
     if (comparison > 0) {
-      const removed = this.removeNode(value, node.right);
+      const removed = this.removeNode(element, node.right);
       if (removed == null) {
         return null;
       } else {
-        return [removed[0], new Node<T>(node.value, node.left, removed[1])];
+        return [removed[0], new Node<E>(node.element, node.left, removed[1])];
       }
     } else if (comparison < 0) {
-      const removed = this.removeNode(value, node.left);
+      const removed = this.removeNode(element, node.left);
       if (removed == null) {
         return null;
       } else {
-        return [removed[0], new Node<T>(node.value, removed[1], node.right)];
+        return [removed[0], new Node<E>(node.element, removed[1], node.right)];
       }
     } else {
       return [node.left, node.right];
     }
   }
 
-  public remove(value: T): SortedCollection<T> {
-    const removed = this.removeNode(value, this.root);
+  public remove(element: E): SortedCollection<E> {
+    const removed = this.removeNode(element, this.root);
     if (removed == null) {
       return this;
     } else {
-      return new BinarySearchTree<T>(
+      return new BinarySearchTree<E>(
         this.comparator,
         this.addNode(removed[0], removed[1]),
         this.count - 1
@@ -123,27 +127,25 @@ class BinarySearchTree<T> implements SortedCollection<T> {
     }
   }
 
-  public union(sortedCollection: SortedCollection<T>): SortedCollection<T> {
-    return sortedCollection.reduce<SortedCollection<T>>(this, function(
+  public union(collection: SortedCollection<E>): SortedCollection<E> {
+    return collection.reduce<SortedCollection<E>>(this, function(
       tree,
-      value
+      element
     ) {
-      return tree.add(value);
+      return tree.add(element);
     });
   }
 
-  // repeated values make implementation slow
+  // repeated elements make implementation slow
   // TODO fix implementation
-  public intersection(
-    sortedCollection: SortedCollection<T>
-  ): SortedCollection<T> {
-    const A: Iterator<T> = this[Symbol.iterator]();
-    const B: Iterator<T> = this.clear()
-      .union(sortedCollection)
+  public intersection(collection: SortedCollection<E>): SortedCollection<E> {
+    const A: Iterator<E> = this[Symbol.iterator]();
+    const B: Iterator<E> = this.clear()
+      .union(collection)
       [Symbol.iterator]();
     let tree = this.clear();
-    let a: { value: T; done: boolean; skip?: boolean };
-    let b: { value: T; done: boolean; skip?: boolean };
+    let a: { value: E; done: boolean; skip?: boolean };
+    let b: { value: E; done: boolean; skip?: boolean };
     a = A.next();
     b = B.next();
     while (!a.done && !b.done) {
@@ -169,41 +171,41 @@ class BinarySearchTree<T> implements SortedCollection<T> {
     return tree;
   }
 
-  public except(sortedCollection: SortedCollection<T>): SortedCollection<T> {
-    return sortedCollection.reduce<SortedCollection<T>>(this, function(
+  public except(collection: SortedCollection<E>): SortedCollection<E> {
+    return collection.reduce<SortedCollection<E>>(this, function(
       tree,
-      value
+      element
     ) {
-      return tree.remove(value);
+      return tree.remove(element);
     });
   }
 
-  public clear(): SortedCollection<T> {
-    return new BinarySearchTree<T>(this.comparator);
+  public clear(): SortedCollection<E> {
+    return new BinarySearchTree<E>(this.comparator);
   }
 
-  public contains(value: T): boolean {
+  public contains(element: E): boolean {
     // short-circuit with for of
-    for (let _value of this) {
-      if (value == _value) {
+    for (let _element of this) {
+      if (element == _element) {
         return true;
       }
     }
     return false;
   }
 
-  public containsAll(sortedCollection: SortedCollection<T>): boolean {
+  public containsAll(collection: SortedCollection<E>): boolean {
     // short-circuit with for of
-    for (let value of sortedCollection) {
+    for (let element of collection) {
       let frequency = 0;
-      for (let _value of sortedCollection) {
-        if (value == _value) {
+      for (let _element of collection) {
+        if (element == _element) {
           frequency++;
         }
       }
       let _frequency = 0;
-      for (let _value of this) {
-        if (value == _value) {
+      for (let _element of this) {
+        if (element == _element) {
           _frequency++;
         }
       }
@@ -222,68 +224,65 @@ class BinarySearchTree<T> implements SortedCollection<T> {
     return this.count;
   }
 
-  public toArray(): T[] {
+  public toArray(): E[] {
     const array = [];
-    for (let value of this) {
-      array.push(value);
+    for (let element of this) {
+      array.push(element);
     }
     return array;
   }
 
-  public [Symbol.iterator](): Iterator<T> {
-    function* visit(node: Node<T>) {
+  public [Symbol.iterator](): Iterator<E> {
+    function* visit(node: Node<E>) {
       if (node != null) {
         yield* visit(node.left);
-        yield node.value;
+        yield node.element;
         yield* visit(node.right);
       }
     }
     return visit(this.root);
   }
 
-  public forEach(action: (value: T) => void): void {
-    for (let value of this) {
-      action(value);
+  public forEach(action: Consumer<E>): void {
+    for (let element of this) {
+      action(element);
     }
   }
 
-  public filter(predicate: (value: T) => boolean): SortedCollection<T> {
-    return this.reduce<SortedCollection<T>>(this, function(tree, value) {
-      return predicate(value) ? tree : tree.remove(value);
+  public filter(predicate: Predicate<E>): SortedCollection<E> {
+    return this.reduce<SortedCollection<E>>(this, function(tree, element) {
+      return predicate(element) ? tree : tree.remove(element);
     });
   }
 
   public map<R>(
     comparator: Comparator<R>,
-    mapper: (value: T) => R
+    mapper: Function<E, R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
       new BinarySearchTree<R>(comparator),
-      function(tree, value) {
-        return tree.add(mapper(value));
+      function(tree, element) {
+        return tree.add(mapper(element));
       }
     );
   }
 
   public flatMap<R>(
     comparator: Comparator<R>,
-    mapper: (value: T) => SortedCollection<R>
+    mapper: Function<E, SortedCollection<R>>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
       new BinarySearchTree<R>(comparator),
-      function(tree, value) {
-        return tree.union(mapper(value));
+      function(tree, element) {
+        return tree.union(mapper(element));
       }
     );
   }
 
-  public reduce<U>(
-    identity: U,
-    accumulator: (accumulated: U, value: T) => U
-  ): U {
+  public reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U {
     let accumulated: U = identity;
-    for (let value of this) {
-      accumulated = accumulator(accumulated, value);
+    for (let element of this) {
+      accumulated = accumulator(accumulated, element);
     }
     return accumulated;
   }
