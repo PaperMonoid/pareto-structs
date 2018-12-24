@@ -56,6 +56,17 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     );
   }
 
+  private removeRightMost(node: Node<E>): Node<E>[] {
+    if (node == null) {
+      return [null, null];
+    } else if (node.right == null) {
+      return [node.left, node];
+    } else {
+      const nodes = this.removeRightMost(node.right);
+      return [new Node<E>(node.element, node.left, nodes[0]), nodes[1]];
+    }
+  }
+
   public removeNode(element: E, node: Node<E>): Node<E>[] {
     if (node == null) {
       return null;
@@ -66,17 +77,20 @@ class BinarySearchTree<E> implements SortedCollection<E> {
       if (removed == null) {
         return null;
       } else {
-        return [removed[0], new Node<E>(node.element, node.left, removed[1])];
+        return [new Node<E>(node.element, node.left, removed[0])];
       }
     } else if (comparison < 0) {
       const removed = this.removeNode(element, node.left);
       if (removed == null) {
         return null;
       } else {
-        return [removed[0], new Node<E>(node.element, removed[1], node.right)];
+        return [new Node<E>(node.element, removed[0], node.right)];
       }
+    } else if (node.left == null) {
+      return [node.right];
     } else {
-      return [node.left, node.right];
+      const nodes = this.removeRightMost(node.left);
+      return [new Node<E>(nodes[1].element, nodes[0], node.right)];
     }
   }
 
@@ -87,7 +101,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     } else {
       return new BinarySearchTree<E>(
         this.comparator,
-        this.addNode(removed[0], removed[1]),
+        removed[0],
         this.count - 1
       );
     }
