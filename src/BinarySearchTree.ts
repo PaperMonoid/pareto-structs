@@ -107,13 +107,15 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     }
   }
 
-  public union(collection: SortedCollection<E>): SortedCollection<E> {
-    return collection.reduce<SortedCollection<E>>(this, (tree, element) =>
-      tree.add(element)
-    );
+  public union(collection: Iterable<E>): SortedCollection<E> {
+    let tree = this as SortedCollection<E>;
+    for (let element of collection) {
+      tree = tree.add(element);
+    }
+    return tree;
   }
 
-  public intersection(collection: SortedCollection<E>): SortedCollection<E> {
+  public intersection(collection: Iterable<E>): SortedCollection<E> {
     const A = this[Symbol.iterator]();
     const B = this.clear()
       .union(collection)
@@ -134,10 +136,12 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     return tree;
   }
 
-  public except(collection: SortedCollection<E>): SortedCollection<E> {
-    return collection.reduce<SortedCollection<E>>(this, (tree, element) =>
-      tree.remove(element)
-    );
+  public except(collection: Iterable<E>): SortedCollection<E> {
+    let tree = this as SortedCollection<E>;
+    for (let element of collection) {
+      tree = tree.remove(element);
+    }
+    return tree;
   }
 
   public clear(): SortedCollection<E> {
@@ -162,7 +166,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     return this.search(element, this.root) != null;
   }
 
-  public containsAll(collection: SortedCollection<E>): boolean {
+  public containsAll(collection: Iterable<E>): boolean {
     const A = this[Symbol.iterator]();
     const B = this.clear()
       .union(collection)
@@ -233,7 +237,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
 
   public flatMap<R>(
     comparator: Comparator<R>,
-    mapper: Function<E, SortedCollection<R>>
+    mapper: Function<E, Iterable<R>>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
       new BinarySearchTree<R>(comparator),

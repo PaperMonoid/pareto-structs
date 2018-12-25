@@ -7,12 +7,12 @@ import Predicate from "./Function/Predicate";
 interface SortedCollection<E> extends Iterable<E> {
   public add(element: E): SortedCollection<E>;
   public remove(element: E): SortedCollection<E>;
-  public union(collection: SortedCollection<E>): SortedCollection<E>;
-  public intersection(collection: SortedCollection<E>): SortedCollection<E>;
-  public except(collection: SortedCollection<E>): SortedCollection<E>;
+  public union(collection: Iterable<E>): SortedCollection<E>;
+  public intersection(collection: Iterable<E>): SortedCollection<E>;
+  public except(collection: Iterable<E>): SortedCollection<E>;
   public clear(): SortedCollection<E>;
   public contains(element: E): boolean;
-  public containsAll(collection: SortedCollection<E>): boolean;
+  public containsAll(collection: Iterable<E>): boolean;
   public isEmpty(): boolean;
   public size(): number;
   public toArray(): E[];
@@ -25,7 +25,7 @@ interface SortedCollection<E> extends Iterable<E> {
   ): SortedCollection<R>;
   public flatMap<R>(
     comparator: Comparator<R>,
-    mapper: Function<E, SortedCollection<R>>
+    mapper: Function<E, Iterable<R>>
   ): SortedCollection<R>;
   public reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U;
 }

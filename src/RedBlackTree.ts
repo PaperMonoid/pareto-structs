@@ -47,15 +47,15 @@ class RedBlackTree<E> implements SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
-  public union(collection: SortedCollection<E>): SortedCollection<E> {
+  public union(collection: Iterable<E>): SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
-  public intersection(collection: SortedCollection<E>): SortedCollection<E> {
+  public intersection(collection: Iterable<E>): SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
-  public except(collection: SortedCollection<E>): SortedCollection<E> {
+  public except(collection: Iterable<E>): SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
@@ -67,7 +67,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
     throw new Error("Not implemented");
   }
 
-  public containsAll(collection: SortedCollection<E>): boolean {
+  public containsAll(collection: Iterable<E>): boolean {
     throw new Error("Not implemented");
   }
 
@@ -104,7 +104,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
 
   public flatMap<R>(
     comparator: Comparator<R>,
-    mapper: Function<E, SortedCollection<R>>
+    mapper: Function<E, Iterable<R>>
   ): SortedCollection<R> {
     throw new Error("Not implemented");
   }
