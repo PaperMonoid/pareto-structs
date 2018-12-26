@@ -120,9 +120,11 @@ class RedBlackTree<E> implements SortedCollection<E> {
         return false;
       } else if (comparison < 0) {
         a = A.next();
-      } else {
+      } else if (comparison === 0) {
         a = A.next();
         b = B.next();
+      } else {
+        return false;
       }
     }
     return b.done;
