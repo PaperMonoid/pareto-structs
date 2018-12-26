@@ -94,11 +94,13 @@ class RedBlackTree<E> implements SortedCollection<E> {
     }
     const comparison = this.comparator(element, node.element);
     if (comparison > 0) {
-      return node.right;
+      return this.search(element, node.right);
     } else if (comparison < 0) {
-      return node.left;
-    } else {
+      return this.search(element, node.left);
+    } else if (comparison === 0) {
       return node;
+    } else {
+      return null;
     }
   }
 

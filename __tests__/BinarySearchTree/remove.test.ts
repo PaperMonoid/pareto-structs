@@ -153,3 +153,38 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 remove 0 desc test", function(
   expect(tree.toArray()).toEqual([3, 2, 1, -1, -2, -3]);
   expect(tree.size()).toBe(6);
 });
+
+test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 remove undefined test", function() {
+  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  tree = tree.add(0);
+  tree = tree.add(2);
+  tree = tree.add(-2);
+  tree = tree.add(3);
+  tree = tree.add(-3);
+  tree = tree.add(-1);
+  tree = tree.add(1);
+  tree = tree.remove(undefined);
+  expect(tree.toArray()).toEqual([-3, -2, -1, 0, 1, 2, 3]);
+  expect(tree.size()).toBe(7);
+});
+
+/**
+ * NOTE: This SHOULD be false, but it isn't.
+ * This happens because Javascript coerces null to 0 when doing number
+ * subtractions, so 0 - null becomes 0 - 0 which is 0.
+ * This could be solved by using the strictNullChecks flag on Typescript
+ * but data structures often use null internally so this is a bad idea.
+ */
+// test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 remove null test", function() {
+//   let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+//   tree = tree.add(0);
+//   tree = tree.add(2);
+//   tree = tree.add(-2);
+//   tree = tree.add(3);
+//   tree = tree.add(-3);
+//   tree = tree.add(-1);
+//   tree = tree.add(1);
+//   tree = tree.remove(null);
+//   expect(tree.toArray()).toEqual([3, 2, 1, 0, -1, -2, -3]);
+//   expect(tree.size()).toBe(7);
+// });
