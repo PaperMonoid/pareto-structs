@@ -115,6 +115,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     return tree;
   }
 
+  // TODO: fix implementation. sorted elements = worst case insert O(n).
   public intersection(collection: Iterable<E>): SortedCollection<E> {
     const A = this[Symbol.iterator]();
     const B = this.clear()

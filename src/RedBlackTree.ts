@@ -48,69 +48,149 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 
   public union(collection: Iterable<E>): SortedCollection<E> {
-    throw new Error("Not implemented");
+    let tree = this as SortedCollection<E>;
+    for (let element of collection) {
+      tree = tree.add(element);
+    }
+    return tree;
   }
 
   public intersection(collection: Iterable<E>): SortedCollection<E> {
-    throw new Error("Not implemented");
+    const A = this[Symbol.iterator]();
+    const B = this.clear()
+      .union(collection)
+      [Symbol.iterator]();
+    let tree = this.clear();
+    for (let a = A.next(), b = B.next(); !a.done && !b.done; ) {
+      const comparison = this.comparator(a.value, b.value);
+      if (comparison > 0) {
+        b = B.next();
+      } else if (comparison < 0) {
+        a = A.next();
+      } else {
+        tree = tree.add(a.value);
+        a = A.next();
+        b = B.next();
+      }
+    }
+    return tree;
   }
 
   public except(collection: Iterable<E>): SortedCollection<E> {
-    throw new Error("Not implemented");
+    let tree = this as SortedCollection<E>;
+    for (let element of collection) {
+      tree = tree.remove(element);
+    }
+    return tree;
   }
 
   public clear(): SortedCollection<E> {
-    throw new Error("Not implemented");
+    return new RedBlackTree<E>(this.comparator);
+  }
+
+  public search(element: E, node: Node<E>): Node<E> {
+    if (node == null) {
+      return null;
+    }
+    const comparison = this.comparator(element, node.element);
+    if (comparison > 0) {
+      return node.right;
+    } else if (comparison < 0) {
+      return node.left;
+    } else {
+      return node;
+    }
   }
 
   public contains(element: E): boolean {
-    throw new Error("Not implemented");
+    return this.search(element, this.root) != null;
   }
 
   public containsAll(collection: Iterable<E>): boolean {
-    throw new Error("Not implemented");
+    const A = this[Symbol.iterator]();
+    const B = this.clear()
+      .union(collection)
+      [Symbol.iterator]();
+    let a, b;
+    for (a = A.next(), b = B.next(); !a.done && !b.done; ) {
+      const comparison = this.comparator(a.value, b.value);
+      if (comparison > 0) {
+        return false;
+      } else if (comparison < 0) {
+        a = A.next();
+      } else {
+        a = A.next();
+        b = B.next();
+      }
+    }
+    return b.done;
   }
 
   public isEmpty(): boolean {
-    throw new Error("Not implemented");
+    return this.root == null;
   }
 
   public size(): number {
-    throw new Error("Not implemented");
+    return this.count;
   }
 
   public toArray(): E[] {
-    throw new Error("Not implemented");
+    const array = [];
+    for (let element of this) {
+      array.push(element);
+    }
+    return array;
   }
 
   public [Symbol.iterator](): Iterator<E> {
-    throw new Error("Not implemented");
+    function* visit(node: Node<E>) {
+      if (node != null) {
+        yield* visit(node.left);
+        yield node.element;
+        yield* visit(node.right);
+      }
+    }
+    return visit(this.root);
   }
 
   public forEach(action: Consumer<E>): void {
-    throw new Error("Not implemented");
+    for (let element of this) {
+      action(element);
+    }
   }
 
   public filter(predicate: Predicate<E>): SortedCollection<E> {
-    throw new Error("Not implemented");
+    return this.reduce<SortedCollection<E>>(this, (tree, element) =>
+      predicate(element) ? tree : tree.remove(element)
+    );
   }
 
   public map<R>(
     comparator: Comparator<R>,
     mapper: Function<E, R>
   ): SortedCollection<R> {
-    throw new Error("Not implemented");
+    return this.reduce<SortedCollection<R>>(
+      new RedBlackTree<R>(comparator),
+      (tree, element) => tree.add(mapper(element))
+    );
   }
 
   public flatMap<R>(
     comparator: Comparator<R>,
     mapper: Function<E, Iterable<R>>
   ): SortedCollection<R> {
-    throw new Error("Not implemented");
+    return this.reduce<SortedCollection<R>>(
+      new BinarySearchTree<R>(comparator),
+      (tree, element) => tree.union(mapper(element))
+    );
   }
 
   public reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U {
-    throw new Error("Not implemented");
+    let accumulated: U = identity;
+    for (let element of this) {
+      accumulated = accumulator(accumulated, element);
+    }
+    return accumulated;
   }
 }
 
