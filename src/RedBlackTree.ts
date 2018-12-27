@@ -18,12 +18,12 @@ class Node<E> {
 
   public constructor(
     element: E,
-    color?: Color,
+    color: Color,
     left?: Node<E>,
     right?: Node<E>
   ) {
     this.element = element;
-    this.color = color ? color : Color.Black;
+    this.color = color;
     this.left = left;
     this.right = right;
   }
@@ -37,10 +37,163 @@ class RedBlackTree<E> implements SortedCollection<E> {
   constructor(comparator: Comparator<E>, root?: Node<E>, count?: number) {
     this.comparator = comparator;
     this.root = root;
-    this.count = count;
+    this.count = count || 0;
+
+    if (root != null && root.color != Color.Black) {
+      throw new Error("Invalid color");
+    }
+    this.hasValidColors(this.root);
   }
+
+  private hasValidColors(node: Node<E>): void {
+    if (node != null) {
+      if (node.left != null) {
+        this.hasValidColors(node.left);
+        if (node.color == Color.Red && node.left.color == Color.Red) {
+          throw new Error("Invalid color");
+        }
+      }
+      if (node.right != null) {
+        this.hasValidColors(node.right);
+        if (node.color == Color.Red && node.right.color == Color.Red) {
+          throw new Error("Invalid color");
+        }
+      }
+    }
+  }
+
+  private rotateRight(node: Node<E>): Node<E> {
+    if (node == null) {
+      return null;
+    }
+    if (node.left == null) {
+      return node;
+    }
+    return new Node<E>(
+      node.left.element,
+      node.left.color,
+      node.left.left,
+      new Node<E>(node.element, node.color, node.left.right, node.right)
+    );
+  }
+
+  private rotateLeft(node: Node<E>): Node<E> {
+    if (node == null) {
+      return null;
+    }
+    if (node.right == null) {
+      return node;
+    }
+    return new Node<E>(
+      node.right.element,
+      node.right.color,
+      new Node<E>(node.element, node.color, node.left, node.right.left),
+      node.right.right
+    );
+  }
+
+  private makeBlack(node: Node<E>): Node<E> {
+    if (node == null) {
+      return null;
+    } else if (node.color != Color.Black) {
+      return new Node<E>(node.element, Color.Black, node.left, node.right);
+    } else {
+      return node;
+    }
+  }
+
+  private balance(node: Node<E>): Node<E> {
+    if (node.color == Color.Black) {
+      if (node.left != null && node.left.color == Color.Red) {
+        if (node.left.left != null && node.left.left.color == Color.Red) {
+          const rotated = this.rotateRight(node);
+          return new Node<E>(
+            rotated.element,
+            Color.Red,
+            this.makeBlack(rotated.left),
+            rotated.right
+          );
+        }
+        if (node.left.right != null && node.left.right.color == Color.Red) {
+          const rotated = this.rotateRight(
+            new Node<E>(
+              node.element,
+              node.color,
+              this.rotateLeft(node.left),
+              node.right
+            )
+          );
+          return new Node<E>(
+            rotated.element,
+            Color.Red,
+            this.makeBlack(rotated.left),
+            rotated.right
+          );
+        }
+      }
+      if (node.right != null && node.right.color == Color.Red) {
+        if (node.right.right != null && node.right.right.color == Color.Red) {
+          const rotated = this.rotateLeft(node);
+          return new Node<E>(
+            rotated.element,
+            Color.Red,
+            rotated.left,
+            this.makeBlack(rotated.right)
+          );
+        }
+        if (node.right.left != null && node.right.left.color == Color.Red) {
+          const rotated = this.rotateLeft(
+            new Node<E>(
+              node.element,
+              node.color,
+              node.left,
+              this.rotateRight(node.right)
+            )
+          );
+          return new Node<E>(
+            rotated.element,
+            Color.Red,
+            rotated.left,
+            this.makeBlack(rotated.right)
+          );
+        }
+      }
+    }
+    return node;
+  }
+
+  private addNode(newNode: Node<E>, node: Node<E>): Node<E> {
+    if (newNode == null) {
+      return node;
+    } else if (node == null) {
+      return newNode;
+    } else if (this.comparator(newNode.element, node.element) > 0) {
+      return this.balance(
+        new Node<E>(
+          node.element,
+          node.color,
+          node.left,
+          this.addNode(newNode, node.right)
+        )
+      );
+    } else {
+      return this.balance(
+        new Node<E>(
+          node.element,
+          node.color,
+          this.addNode(newNode, node.left),
+          node.right
+        )
+      );
+    }
+  }
+
   public add(element: E): SortedCollection<E> {
-    throw new Error("Not implemented");
+    return new RedBlackTree<E>(
+      this.comparator,
+      this.makeBlack(this.addNode(new Node<E>(element, Color.Red), this.root)),
+      this.count + 1
+    );
   }
 
   public remove(element: E): SortedCollection<E> {
@@ -184,7 +337,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
     mapper: Function<E, Iterable<R>>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new BinarySearchTree<R>(comparator),
+      new RedBlackTree<R>(comparator),
       (tree, element) => tree.union(mapper(element))
     );
   }
