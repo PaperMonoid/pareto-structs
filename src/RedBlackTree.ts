@@ -38,28 +38,6 @@ class RedBlackTree<E> implements SortedCollection<E> {
     this.comparator = comparator;
     this.root = root;
     this.count = count || 0;
-
-    if (root != null && root.color != Color.Black) {
-      throw new Error("Invalid color");
-    }
-    this.hasValidColors(this.root);
-  }
-
-  private hasValidColors(node: Node<E>): void {
-    if (node != null) {
-      if (node.left != null) {
-        this.hasValidColors(node.left);
-        if (node.color == Color.Red && node.left.color == Color.Red) {
-          throw new Error("Invalid color");
-        }
-      }
-      if (node.right != null) {
-        this.hasValidColors(node.right);
-        if (node.color == Color.Red && node.right.color == Color.Red) {
-          throw new Error("Invalid color");
-        }
-      }
-    }
   }
 
   private rotateRight(node: Node<E>): Node<E> {
