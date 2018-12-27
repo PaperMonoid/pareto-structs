@@ -1,6 +1,7 @@
 import BiFunction from "./Function/BiFunction";
 import Comparator from "./Function/Comparator";
 import Consumer from "./Function/Consumer";
+import Equals from "./Function/Equals";
 import Function from "./Function/Function";
 import Predicate from "./Function/Predicate";
 
@@ -20,12 +21,14 @@ interface SortedCollection<E> extends Iterable<E> {
   public forEach(action: Consumer<E>): void;
   public filter(predicate: Predicate<E>): SortedCollection<E>;
   public map<R>(
+    mapper: Function<E, R>,
     comparator: Comparator<R>,
-    mapper: Function<E, R>
+    equals?: Equals<R>
   ): SortedCollection<R>;
   public flatMap<R>(
+    mapper: Function<E, Iterable<R>>,
     comparator: Comparator<R>,
-    mapper: Function<E, Iterable<R>>
+    equals?: Equals<R>
   ): SortedCollection<R>;
   public reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U;
 }

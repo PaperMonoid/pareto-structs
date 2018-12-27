@@ -29,18 +29,11 @@ test("BinarySearchTree empty contains 1 test", function() {
   expect(tree.contains(1)).toBe(false);
 });
 
-/**
- * NOTE: This SHOULD be false, but it isn't.
- * This happens because Javascript coerces null to 0 when doing number
- * subtractions, so 0 - null becomes 0 - 0 which is 0.
- * This could be solved by using the strictNullChecks flag on Typescript
- * but data structures often use null internally so this is a bad idea.
- */
-// test("BinarySearchTree add 0 contains null test", function() {
-//   let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
-//   tree = tree.add(0);
-//   expect(tree.contains(null)).toBe(false);
-// });
+test("BinarySearchTree add 0 contains null test", function() {
+  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  tree = tree.add(0);
+  expect(tree.contains(null)).toBe(false);
+});
 
 test("BinarySearchTree add 0 contains undefined test", function() {
   let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;

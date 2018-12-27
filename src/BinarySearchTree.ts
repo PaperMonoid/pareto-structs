@@ -1,9 +1,11 @@
 import BiFunction from "./Function/BiFunction";
 import Comparator from "./Function/Comparator";
 import Consumer from "./Function/Consumer";
+import Equals from "./Function/Equals";
 import Function from "./Function/Function";
 import Predicate from "./Function/Predicate";
 import SortedCollection from "./SortedCollection";
+import StrictEquality from "./Function/StrictEquality";
 
 class Node<E> {
   public readonly element: E;
@@ -19,13 +21,20 @@ class Node<E> {
 
 class BinarySearchTree<E> implements SortedCollection<E> {
   public readonly comparator: Comparator<E>;
+  public readonly equals: Equals<E>;
   public readonly root: Node<E>;
   public readonly count: number;
 
-  constructor(comparator: Comparator<E>, root?: Node<E>, count?: number) {
+  constructor(
+    comparator: Comparator<E>,
+    equals?: Equals<E>,
+    root?: Node<E>,
+    count?: number
+  ) {
     this.comparator = comparator;
     this.root = root;
     this.count = count || 0;
+    this.equals = equals || StrictEquality;
   }
 
   private addNode(newNode: Node<E>, node: Node<E>): Node<E> {
@@ -51,6 +60,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   public add(element: E): SortedCollection<E> {
     return new BinarySearchTree<E>(
       this.comparator,
+      this.equals,
       this.addNode(new Node<E>(element), this.root),
       this.count + 1
     );
@@ -72,29 +82,27 @@ class BinarySearchTree<E> implements SortedCollection<E> {
       return null;
     }
     const comparison = this.comparator(element, node.element);
-    if (comparison > 0) {
-      const removed = this.removeNode(element, node.right);
-      if (removed == null) {
-        return null;
-      } else {
-        return [new Node<E>(node.element, node.left, removed[0])];
-      }
-    } else if (comparison < 0) {
-      const removed = this.removeNode(element, node.left);
-      if (removed == null) {
-        return null;
-      } else {
-        return [new Node<E>(node.element, removed[0], node.right)];
-      }
-    } else if (comparison === 0) {
+    if (comparison == 0 && this.equals(element, node.element)) {
       if (node.left == null) {
         return [node.right];
       } else {
         const nodes = this.removeRightMost(node.left);
         return [new Node<E>(nodes[1].element, nodes[0], node.right)];
       }
+    } else if (comparison > 0) {
+      const removed = this.removeNode(element, node.right);
+      if (removed == null) {
+        return null;
+      } else {
+        return [new Node<E>(node.element, node.left, removed[0])];
+      }
     } else {
-      return null;
+      const removed = this.removeNode(element, node.left);
+      if (removed == null) {
+        return null;
+      } else {
+        return [new Node<E>(node.element, removed[0], node.right)];
+      }
     }
   }
 
@@ -105,6 +113,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     } else {
       return new BinarySearchTree<E>(
         this.comparator,
+        this.equals,
         removed[0],
         this.count - 1
       );
@@ -150,7 +159,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public clear(): SortedCollection<E> {
-    return new BinarySearchTree<E>(this.comparator);
+    return new BinarySearchTree<E>(this.comparator, this.equals);
   }
 
   public search(element: E, node: Node<E>): Node<E> {
@@ -158,14 +167,12 @@ class BinarySearchTree<E> implements SortedCollection<E> {
       return null;
     }
     const comparison = this.comparator(element, node.element);
-    if (comparison > 0) {
-      return this.search(element, node.right);
-    } else if (comparison < 0) {
-      return this.search(element, node.left);
-    } else if (comparison === 0) {
+    if (comparison == 0 && this.equals(element, node.element)) {
       return node;
+    } else if (comparison > 0) {
+      return this.search(element, node.right);
     } else {
-      return null;
+      return this.search(element, node.left);
     }
   }
 
@@ -181,15 +188,13 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     let a, b;
     for (a = A.next(), b = B.next(); !a.done && !b.done; ) {
       const comparison = this.comparator(a.value, b.value);
-      if (comparison > 0) {
-        return false;
-      } else if (comparison < 0) {
-        a = A.next();
-      } else if (comparison === 0) {
+      if (comparison == 0 && this.equals(a.value, b.value)) {
         a = A.next();
         b = B.next();
-      } else {
+      } else if (comparison > 0) {
         return false;
+      } else {
+        a = A.next();
       }
     }
     return b.done;
@@ -235,21 +240,23 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public map<R>(
+    mapper: Function<E, R>,
     comparator: Comparator<R>,
-    mapper: Function<E, R>
+    equals?: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new BinarySearchTree<R>(comparator),
+      new BinarySearchTree<R>(comparator, equals),
       (tree, element) => tree.add(mapper(element))
     );
   }
 
   public flatMap<R>(
+    mapper: Function<E, Iterable<R>>,
     comparator: Comparator<R>,
-    mapper: Function<E, Iterable<R>>
+    equals?: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new BinarySearchTree<R>(comparator),
+      new BinarySearchTree<R>(comparator, equals),
       (tree, element) => tree.union(mapper(element))
     );
   }

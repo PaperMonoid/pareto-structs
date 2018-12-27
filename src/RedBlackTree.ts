@@ -1,9 +1,11 @@
 import BiFunction from "./Function/BiFunction";
 import Comparator from "./Function/Comparator";
 import Consumer from "./Function/Consumer";
+import Equals from "./Function/Equals";
 import Function from "./Function/Function";
 import Predicate from "./Function/Predicate";
 import SortedCollection from "./SortedCollection";
+import StrictEquality from "./Function/StrictEquality";
 
 enum Color {
   Red,
@@ -31,13 +33,20 @@ class Node<E> {
 
 class RedBlackTree<E> implements SortedCollection<E> {
   public readonly comparator: Comparator<E>;
+  public readonly equals: Equals<E>;
   public readonly root: Node<E>;
   public readonly count: number;
 
-  constructor(comparator: Comparator<E>, root?: Node<E>, count?: number) {
+  constructor(
+    comparator: Comparator<E>,
+    equals?: Equals<E>,
+    root?: Node<E>,
+    count?: number
+  ) {
     this.comparator = comparator;
     this.root = root;
     this.count = count || 0;
+    this.equals = equals || StrictEquality;
   }
 
   private rotateRight(node: Node<E>): Node<E> {
@@ -169,6 +178,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
   public add(element: E): SortedCollection<E> {
     return new RedBlackTree<E>(
       this.comparator,
+      this.equals,
       this.makeBlack(this.addNode(new Node<E>(element, Color.Red), this.root)),
       this.count + 1
     );
@@ -216,7 +226,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 
   public clear(): SortedCollection<E> {
-    return new RedBlackTree<E>(this.comparator);
+    return new RedBlackTree<E>(this.comparator, this.equals);
   }
 
   public search(element: E, node: Node<E>): Node<E> {
@@ -224,14 +234,12 @@ class RedBlackTree<E> implements SortedCollection<E> {
       return null;
     }
     const comparison = this.comparator(element, node.element);
-    if (comparison > 0) {
-      return this.search(element, node.right);
-    } else if (comparison < 0) {
-      return this.search(element, node.left);
-    } else if (comparison === 0) {
+    if (comparison == 0 && this.equals(element, node.element)) {
       return node;
+    } else if (comparison > 0) {
+      return this.search(element, node.right);
     } else {
-      return null;
+      return this.search(element, node.left);
     }
   }
 
@@ -247,15 +255,13 @@ class RedBlackTree<E> implements SortedCollection<E> {
     let a, b;
     for (a = A.next(), b = B.next(); !a.done && !b.done; ) {
       const comparison = this.comparator(a.value, b.value);
-      if (comparison > 0) {
-        return false;
-      } else if (comparison < 0) {
-        a = A.next();
-      } else if (comparison === 0) {
+      if (comparison == 0 && this.equals(a.value, b.value)) {
         a = A.next();
         b = B.next();
-      } else {
+      } else if (comparison > 0) {
         return false;
+      } else {
+        a = A.next();
       }
     }
     return b.done;
@@ -301,21 +307,23 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 
   public map<R>(
+    mapper: Function<E, R>,
     comparator: Comparator<R>,
-    mapper: Function<E, R>
+    equals: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new RedBlackTree<R>(comparator),
+      new RedBlackTree<R>(comparator, equals),
       (tree, element) => tree.add(mapper(element))
     );
   }
 
   public flatMap<R>(
+    mapper: Function<E, Iterable<R>>,
     comparator: Comparator<R>,
-    mapper: Function<E, Iterable<R>>
+    equals: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new RedBlackTree<R>(comparator),
+      new RedBlackTree<R>(comparator, equals),
       (tree, element) => tree.union(mapper(element))
     );
   }
