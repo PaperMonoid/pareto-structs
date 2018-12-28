@@ -66,14 +66,24 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     );
   }
 
-  private removeRightMost(node: Node<E>): Node<E>[] {
+  private replaceWithSuccessor(node: Node<E>, first?: boolean): Node<E>[] {
     if (node == null) {
       return [null, null];
-    } else if (node.right == null) {
-      return [node.left, node];
+    }
+    if (first) {
+      if (node.right == null) {
+        return [node.left, node];
+      } else {
+        const [replaced, successor] = this.replaceWithSuccessor(node.right);
+        return [new Node<E>(successor.element, node.left, replaced), successor];
+      }
     } else {
-      const nodes = this.removeRightMost(node.right);
-      return [new Node<E>(node.element, node.left, nodes[0]), nodes[1]];
+      if (node.left == null) {
+        return [node.right, node];
+      } else {
+        const [replaced, successor] = this.replaceWithSuccessor(node.left);
+        return [new Node<E>(node.element, replaced, node.right), successor];
+      }
     }
   }
 
@@ -83,38 +93,34 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     }
     const comparison = this.comparator(element, node.element);
     if (comparison == 0 && this.equals(element, node.element)) {
-      if (node.left == null) {
-        return [node.right];
-      } else {
-        const nodes = this.removeRightMost(node.left);
-        return [new Node<E>(nodes[1].element, nodes[0], node.right)];
-      }
+      const [replaced, _] = this.replaceWithSuccessor(node, true);
+      return [replaced];
     } else if (comparison > 0) {
-      const removed = this.removeNode(element, node.right);
-      if (removed == null) {
+      const replaced = this.removeNode(element, node.right);
+      if (replaced == null) {
         return null;
       } else {
-        return [new Node<E>(node.element, node.left, removed[0])];
+        return [new Node<E>(node.element, node.left, replaced[0])];
       }
     } else {
-      const removed = this.removeNode(element, node.left);
-      if (removed == null) {
+      const replaced = this.removeNode(element, node.left);
+      if (replaced == null) {
         return null;
       } else {
-        return [new Node<E>(node.element, removed[0], node.right)];
+        return [new Node<E>(node.element, replaced[0], node.right)];
       }
     }
   }
 
   public remove(element: E): SortedCollection<E> {
-    const removed = this.removeNode(element, this.root);
-    if (removed == null) {
+    const replaced = this.removeNode(element, this.root);
+    if (replaced == null) {
       return this;
     } else {
       return new BinarySearchTree<E>(
         this.comparator,
         this.equals,
-        removed[0],
+        replaced[0],
         this.count - 1
       );
     }
