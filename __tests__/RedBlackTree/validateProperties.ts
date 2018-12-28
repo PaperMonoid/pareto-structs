@@ -5,23 +5,11 @@ enum Color {
   Black
 }
 
-class Node<E> {
-  public readonly element: E;
-  public readonly color: Color;
-  public readonly left: Node<E>;
-  public readonly right: Node<E>;
-
-  public constructor(
-    element: E,
-    color: Color,
-    left?: Node<E>,
-    right?: Node<E>
-  ) {
-    this.element = element;
-    this.color = color;
-    this.left = left;
-    this.right = right;
-  }
+interface Node<E> {
+  element: E;
+  color: Color;
+  left: Node<E>;
+  right: Node<E>;
 }
 
 function getBlackHeights<E>(node: Node<E>, height: number): number[] {

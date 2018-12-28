@@ -29,6 +29,38 @@ class Node<E> {
     this.left = left;
     this.right = right;
   }
+
+  public makeBlack(): Node<E> {
+    if (this.color != Color.Black) {
+      return new Node<E>(this.element, Color.Black, this.left, this.right);
+    } else {
+      return this;
+    }
+  }
+
+  public rotateRight(): Node<E> {
+    if (this.left == null) {
+      return this;
+    }
+    return new Node<E>(
+      this.left.element,
+      this.left.color,
+      this.left.left,
+      new Node<E>(this.element, this.color, this.left.right, this.right)
+    );
+  }
+
+  public rotateLeft(): Node<E> {
+    if (this.right == null) {
+      return this;
+    }
+    return new Node<E>(
+      this.right.element,
+      this.right.color,
+      new Node<E>(this.element, this.color, this.left, this.right.left),
+      this.right.right
+    );
+  }
 }
 
 class RedBlackTree<E> implements SortedCollection<E> {
@@ -49,99 +81,55 @@ class RedBlackTree<E> implements SortedCollection<E> {
     this.equals = equals || StrictEquality;
   }
 
-  private rotateRight(node: Node<E>): Node<E> {
-    if (node == null) {
-      return null;
-    }
-    if (node.left == null) {
-      return node;
-    }
-    return new Node<E>(
-      node.left.element,
-      node.left.color,
-      node.left.left,
-      new Node<E>(node.element, node.color, node.left.right, node.right)
-    );
-  }
-
-  private rotateLeft(node: Node<E>): Node<E> {
-    if (node == null) {
-      return null;
-    }
-    if (node.right == null) {
-      return node;
-    }
-    return new Node<E>(
-      node.right.element,
-      node.right.color,
-      new Node<E>(node.element, node.color, node.left, node.right.left),
-      node.right.right
-    );
-  }
-
-  private makeBlack(node: Node<E>): Node<E> {
-    if (node == null) {
-      return null;
-    } else if (node.color != Color.Black) {
-      return new Node<E>(node.element, Color.Black, node.left, node.right);
-    } else {
-      return node;
-    }
-  }
-
   private balance(node: Node<E>): Node<E> {
     if (node.color == Color.Black) {
       if (node.left != null && node.left.color == Color.Red) {
         if (node.left.left != null && node.left.left.color == Color.Red) {
-          const rotated = this.rotateRight(node);
+          const rotated = node.rotateRight();
           return new Node<E>(
             rotated.element,
             Color.Red,
-            this.makeBlack(rotated.left),
+            rotated.left.makeBlack(),
             rotated.right
           );
         }
         if (node.left.right != null && node.left.right.color == Color.Red) {
-          const rotated = this.rotateRight(
-            new Node<E>(
-              node.element,
-              node.color,
-              this.rotateLeft(node.left),
-              node.right
-            )
-          );
+          const rotated = new Node<E>(
+            node.element,
+            node.color,
+            node.left.rotateLeft(),
+            node.right
+          ).rotateRight();
           return new Node<E>(
             rotated.element,
             Color.Red,
-            this.makeBlack(rotated.left),
+            rotated.left.makeBlack(),
             rotated.right
           );
         }
       }
       if (node.right != null && node.right.color == Color.Red) {
         if (node.right.right != null && node.right.right.color == Color.Red) {
-          const rotated = this.rotateLeft(node);
+          const rotated = node.rotateLeft();
           return new Node<E>(
             rotated.element,
             Color.Red,
             rotated.left,
-            this.makeBlack(rotated.right)
+            rotated.right.makeBlack()
           );
         }
         if (node.right.left != null && node.right.left.color == Color.Red) {
-          const rotated = this.rotateLeft(
-            new Node<E>(
-              node.element,
-              node.color,
-              node.left,
-              this.rotateRight(node.right)
-            )
-          );
+          const rotated = new Node<E>(
+            node.element,
+            node.color,
+            node.left,
+            node.right.rotateRight()
+          ).rotateLeft();
           return new Node<E>(
             rotated.element,
             Color.Red,
             rotated.left,
-            this.makeBlack(rotated.right)
+            rotated.right.makeBlack()
           );
         }
       }
@@ -179,7 +167,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
     return new RedBlackTree<E>(
       this.comparator,
       this.equals,
-      this.makeBlack(this.addNode(new Node<E>(element, Color.Red), this.root)),
+      this.addNode(new Node<E>(element, Color.Red), this.root).makeBlack(),
       this.count + 1
     );
   }
