@@ -1,0 +1,12 @@
+export { default as BinarySearchTree } from "./BinarySearchTree";
+export { default as RedBlackTree } from "./RedBlackTree";
+export { default as SortedCollection } from "./SortedCollection";
+export { default as BiFunction } from "./BiFunction";
+export { default as Comparator } from "./Comparator";
+export { default as Consumer } from "./Consumer";
+export { default as Equality } from "./Equality";
+export { default as Equals } from "./Equals";
+export { default as Function } from "./Function";
+export { default as Identity } from "./Identity";
+export { default as Predicate } from "./Predicate";
+export { default as StrictEquality } from "./StrictEquality";

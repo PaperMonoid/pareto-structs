@@ -1,9 +1,9 @@
-import BiFunction from "./Function/BiFunction";
-import Comparator from "./Function/Comparator";
-import Consumer from "./Function/Consumer";
-import Equals from "./Function/Equals";
-import Function from "./Function/Function";
-import Predicate from "./Function/Predicate";
+import BiFunction from "../Function/BiFunction";
+import Comparator from "../Function/Comparator";
+import Consumer from "../Function/Consumer";
+import Equals from "../Function/Equals";
+import Function from "../Function/Function";
+import Predicate from "../Function/Predicate";
 
 interface SortedCollection<E> extends Iterable<E> {
   public add(element: E): SortedCollection<E>;

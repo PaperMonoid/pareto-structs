@@ -1,4 +1,4 @@
-import RedBlackTree from "../../src/RedBlackTree";
+import { SortedCollection, RedBlackTree } from "../../src/SortedCollection";
 
 enum Color {
   Red,

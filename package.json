@@ -2,7 +2,7 @@
   "name": "pareto-structs",
   "version": "1.0.0",
   "description": "A typescript data structure library for pareto optimization.",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
     "test": "jest"
   },

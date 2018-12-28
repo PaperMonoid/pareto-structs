@@ -1,5 +1,4 @@
-import BinarySearchTree from "../../src/BinarySearchTree";
-import SortedCollection from "../../src/SortedCollection";
+import { SortedCollection, BinarySearchTree } from "../../src/SortedCollection";
 
 function asc(first: number, second: number): number {
   return first - second;

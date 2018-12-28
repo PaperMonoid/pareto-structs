@@ -1,69 +1,25 @@
-import BiFunction from "./Function/BiFunction";
-import Comparator from "./Function/Comparator";
-import Consumer from "./Function/Consumer";
-import Equals from "./Function/Equals";
-import Function from "./Function/Function";
-import Predicate from "./Function/Predicate";
-import SortedCollection from "./SortedCollection";
-import StrictEquality from "./Function/StrictEquality";
-
-enum Color {
-  Red,
-  Black
-}
+import BiFunction from "../Function/BiFunction";
+import Comparator from "../Function/Comparator";
+import Consumer from "../Function/Consumer";
+import Equals from "../Function/Equals";
+import Function from "../Function/Function";
+import Predicate from "../Function/Predicate";
+import SortedCollection from "../SortedCollection";
+import StrictEquality from "../Function/StrictEquality";
 
 class Node<E> {
   public readonly element: E;
-  public readonly color: Color;
   public readonly left: Node<E>;
   public readonly right: Node<E>;
 
-  public constructor(
-    element: E,
-    color: Color,
-    left?: Node<E>,
-    right?: Node<E>
-  ) {
+  public constructor(element: E, left?: Node<E>, right?: Node<E>) {
     this.element = element;
-    this.color = color;
     this.left = left;
     this.right = right;
   }
-
-  public makeBlack(): Node<E> {
-    if (this.color != Color.Black) {
-      return new Node<E>(this.element, Color.Black, this.left, this.right);
-    } else {
-      return this;
-    }
-  }
-
-  public rotateRight(): Node<E> {
-    if (this.left == null) {
-      return this;
-    }
-    return new Node<E>(
-      this.left.element,
-      this.left.color,
-      this.left.left,
-      new Node<E>(this.element, this.color, this.left.right, this.right)
-    );
-  }
-
-  public rotateLeft(): Node<E> {
-    if (this.right == null) {
-      return this;
-    }
-    return new Node<E>(
-      this.right.element,
-      this.right.color,
-      new Node<E>(this.element, this.color, this.left, this.right.left),
-      this.right.right
-    );
-  }
 }
 
-class RedBlackTree<E> implements SortedCollection<E> {
+class BinarySearchTree<E> implements SortedCollection<E> {
   public readonly comparator: Comparator<E>;
   public readonly equals: Equals<E>;
   public readonly root: Node<E>;
@@ -81,99 +37,93 @@ class RedBlackTree<E> implements SortedCollection<E> {
     this.equals = equals || StrictEquality;
   }
 
-  private balance(node: Node<E>): Node<E> {
-    if (node.color == Color.Black) {
-      if (node.left != null && node.left.color == Color.Red) {
-        if (node.left.left != null && node.left.left.color == Color.Red) {
-          const rotated = node.rotateRight();
-          return new Node<E>(
-            rotated.element,
-            Color.Red,
-            rotated.left.makeBlack(),
-            rotated.right
-          );
-        }
-        if (node.left.right != null && node.left.right.color == Color.Red) {
-          const rotated = new Node<E>(
-            node.element,
-            node.color,
-            node.left.rotateLeft(),
-            node.right
-          ).rotateRight();
-          return new Node<E>(
-            rotated.element,
-            Color.Red,
-            rotated.left.makeBlack(),
-            rotated.right
-          );
-        }
-      }
-      if (node.right != null && node.right.color == Color.Red) {
-        if (node.right.right != null && node.right.right.color == Color.Red) {
-          const rotated = node.rotateLeft();
-          return new Node<E>(
-            rotated.element,
-            Color.Red,
-            rotated.left,
-            rotated.right.makeBlack()
-          );
-        }
-        if (node.right.left != null && node.right.left.color == Color.Red) {
-          const rotated = new Node<E>(
-            node.element,
-            node.color,
-            node.left,
-            node.right.rotateRight()
-          ).rotateLeft();
-          return new Node<E>(
-            rotated.element,
-            Color.Red,
-            rotated.left,
-            rotated.right.makeBlack()
-          );
-        }
-      }
-    }
-    return node;
-  }
-
   private addNode(newNode: Node<E>, node: Node<E>): Node<E> {
     if (newNode == null) {
       return node;
     } else if (node == null) {
       return newNode;
     } else if (this.comparator(newNode.element, node.element) > 0) {
-      return this.balance(
-        new Node<E>(
-          node.element,
-          node.color,
-          node.left,
-          this.addNode(newNode, node.right)
-        )
+      return new Node<E>(
+        node.element,
+        node.left,
+        this.addNode(newNode, node.right)
       );
     } else {
-      return this.balance(
-        new Node<E>(
-          node.element,
-          node.color,
-          this.addNode(newNode, node.left),
-          node.right
-        )
+      return new Node<E>(
+        node.element,
+        this.addNode(newNode, node.left),
+        node.right
       );
     }
   }
 
   public add(element: E): SortedCollection<E> {
-    return new RedBlackTree<E>(
+    return new BinarySearchTree<E>(
       this.comparator,
       this.equals,
-      this.addNode(new Node<E>(element, Color.Red), this.root).makeBlack(),
+      this.addNode(new Node<E>(element), this.root),
       this.count + 1
     );
   }
 
+  private replaceWithSuccessor(node: Node<E>, first?: boolean): Node<E>[] {
+    if (node == null) {
+      return [null, null];
+    }
+    if (first) {
+      if (node.right == null) {
+        return [node.left, node];
+      } else {
+        const [replaced, successor] = this.replaceWithSuccessor(node.right);
+        return [new Node<E>(successor.element, node.left, replaced), successor];
+      }
+    } else {
+      if (node.left == null) {
+        return [node.right, node];
+      } else {
+        const [replaced, successor] = this.replaceWithSuccessor(node.left);
+        return [new Node<E>(node.element, replaced, node.right), successor];
+      }
+    }
+  }
+
+  public removeNode(element: E, node: Node<E>): Node<E>[] {
+    if (node == null) {
+      return null;
+    }
+    const comparison = this.comparator(element, node.element);
+    if (comparison == 0 && this.equals(element, node.element)) {
+      const [replaced, _] = this.replaceWithSuccessor(node, true);
+      return [replaced];
+    } else if (comparison > 0) {
+      const replaced = this.removeNode(element, node.right);
+      if (replaced == null) {
+        return null;
+      } else {
+        return [new Node<E>(node.element, node.left, replaced[0])];
+      }
+    } else {
+      const replaced = this.removeNode(element, node.left);
+      if (replaced == null) {
+        return null;
+      } else {
+        return [new Node<E>(node.element, replaced[0], node.right)];
+      }
+    }
+  }
+
   public remove(element: E): SortedCollection<E> {
-    throw new Error("Not implemented");
+    const replaced = this.removeNode(element, this.root);
+    if (replaced == null) {
+      return this;
+    } else {
+      return new BinarySearchTree<E>(
+        this.comparator,
+        this.equals,
+        replaced[0],
+        this.count - 1
+      );
+    }
   }
 
   public union(collection: Iterable<E>): SortedCollection<E> {
@@ -184,6 +134,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
     return tree;
   }
 
+  // TODO: fix implementation. sorted elements = worst case insert O(n).
   public intersection(collection: Iterable<E>): SortedCollection<E> {
     const A = this[Symbol.iterator]();
     const B = this.clear()
@@ -214,7 +165,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 
   public clear(): SortedCollection<E> {
-    return new RedBlackTree<E>(this.comparator, this.equals);
+    return new BinarySearchTree<E>(this.comparator, this.equals);
   }
 
   public search(element: E, node: Node<E>): Node<E> {
@@ -297,10 +248,10 @@ class RedBlackTree<E> implements SortedCollection<E> {
   public map<R>(
     mapper: Function<E, R>,
     comparator: Comparator<R>,
-    equals: Equals<R>
+    equals?: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new RedBlackTree<R>(comparator, equals),
+      new BinarySearchTree<R>(comparator, equals),
       (tree, element) => tree.add(mapper(element))
     );
   }
@@ -308,10 +259,10 @@ class RedBlackTree<E> implements SortedCollection<E> {
   public flatMap<R>(
     mapper: Function<E, Iterable<R>>,
     comparator: Comparator<R>,
-    equals: Equals<R>
+    equals?: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new RedBlackTree<R>(comparator, equals),
+      new BinarySearchTree<R>(comparator, equals),
       (tree, element) => tree.union(mapper(element))
     );
   }
@@ -325,4 +276,4 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 }
 
-export default RedBlackTree;
+export default BinarySearchTree;
