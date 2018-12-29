@@ -18,6 +18,18 @@ class Node<E> {
     this.right = right;
   }
 
+  public setElement(element: E): Node<E> {
+    return new Node<E>(element, this.left, this.right);
+  }
+
+  public setLeft(node: Node<E>): Node<E> {
+    return new Node<E>(this.element, node, this.right);
+  }
+
+  public setRight(node: Node<E>): Node<E> {
+    return new Node<E>(this.element, this.left, node);
+  }
+
   public min(): Node<E> {
     if (this.left == null) {
       return this;
@@ -59,17 +71,9 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     } else if (node == null) {
       return newNode;
     } else if (this.comparator(newNode.element, node.element) > 0) {
-      return new Node<E>(
-        node.element,
-        node.left,
-        this.addNode(newNode, node.right)
-      );
+      return node.setRight(this.addNode(newNode, node.right));
     } else {
-      return new Node<E>(
-        node.element,
-        this.addNode(newNode, node.left),
-        node.right
-      );
+      return node.setLeft(this.addNode(newNode, node.left));
     }
   }
 
@@ -91,14 +95,17 @@ class BinarySearchTree<E> implements SortedCollection<E> {
         return [node.left, node];
       } else {
         const [replaced, successor] = this.replaceWithSuccessor(node.right);
-        return [new Node<E>(successor.element, node.left, replaced), successor];
+        return [
+          node.setRight(replaced).setElement(successor.element),
+          successor
+        ];
       }
     } else {
       if (node.left == null) {
         return [node.right, node];
       } else {
         const [replaced, successor] = this.replaceWithSuccessor(node.left);
-        return [new Node<E>(node.element, replaced, node.right), successor];
+        return [node.setLeft(replaced), successor];
       }
     }
   }
@@ -116,14 +123,14 @@ class BinarySearchTree<E> implements SortedCollection<E> {
       if (replaced == null) {
         return null;
       } else {
-        return [new Node<E>(node.element, node.left, replaced[0])];
+        return [node.setRight(replaced[0])];
       }
     } else {
       const replaced = this.removeNode(element, node.left);
       if (replaced == null) {
         return null;
       } else {
-        return [new Node<E>(node.element, replaced[0], node.right)];
+        return [node.setLeft(replaced[0])];
       }
     }
   }

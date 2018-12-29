@@ -30,6 +30,22 @@ class Node<E> {
     this.right = right;
   }
 
+  public setElement(element: E): Node<E> {
+    return new Node<E>(element, this.color, this.left, this.right);
+  }
+
+  public setColor(color: Color): Node<E> {
+    return new Node<E>(this.element, color, this.left, this.right);
+  }
+
+  public setLeft(node: Node<E>): Node<E> {
+    return new Node<E>(this.element, this.color, node, this.right);
+  }
+
+  public setRight(node: Node<E>): Node<E> {
+    return new Node<E>(this.element, this.color, this.left, node);
+  }
+
   public min(): Node<E> {
     if (this.left == null) {
       return this;
@@ -46,36 +62,18 @@ class Node<E> {
     }
   }
 
-  public makeBlack(): Node<E> {
-    if (this.color != Color.Black) {
-      return new Node<E>(this.element, Color.Black, this.left, this.right);
-    } else {
-      return this;
-    }
-  }
-
   public rotateRight(): Node<E> {
     if (this.left == null) {
       return this;
     }
-    return new Node<E>(
-      this.left.element,
-      this.left.color,
-      this.left.left,
-      new Node<E>(this.element, this.color, this.left.right, this.right)
-    );
+    return this.left.setRight(this.setLeft(this.left.right));
   }
 
   public rotateLeft(): Node<E> {
     if (this.right == null) {
       return this;
     }
-    return new Node<E>(
-      this.right.element,
-      this.right.color,
-      new Node<E>(this.element, this.color, this.left, this.right.left),
-      this.right.right
-    );
+    return this.right.setLeft(this.setRight(this.right.left));
   }
 }
 
@@ -102,51 +100,29 @@ class RedBlackTree<E> implements SortedCollection<E> {
       if (node.left != null && node.left.color == Color.Red) {
         if (node.left.left != null && node.left.left.color == Color.Red) {
           const rotated = node.rotateRight();
-          return new Node<E>(
-            rotated.element,
-            Color.Red,
-            rotated.left.makeBlack(),
-            rotated.right
-          );
+          return rotated
+            .setLeft(rotated.left.setColor(Color.Black))
+            .setColor(Color.Red);
         }
         if (node.left.right != null && node.left.right.color == Color.Red) {
-          const rotated = new Node<E>(
-            node.element,
-            node.color,
-            node.left.rotateLeft(),
-            node.right
-          ).rotateRight();
-          return new Node<E>(
-            rotated.element,
-            Color.Red,
-            rotated.left.makeBlack(),
-            rotated.right
-          );
+          const rotated = node.setLeft(node.left.rotateLeft()).rotateRight();
+          return rotated
+            .setLeft(rotated.left.setColor(Color.Black))
+            .setColor(Color.Red);
         }
       }
       if (node.right != null && node.right.color == Color.Red) {
         if (node.right.right != null && node.right.right.color == Color.Red) {
           const rotated = node.rotateLeft();
-          return new Node<E>(
-            rotated.element,
-            Color.Red,
-            rotated.left,
-            rotated.right.makeBlack()
-          );
+          return rotated
+            .setRight(rotated.right.setColor(Color.Black))
+            .setColor(Color.Red);
         }
         if (node.right.left != null && node.right.left.color == Color.Red) {
-          const rotated = new Node<E>(
-            node.element,
-            node.color,
-            node.left,
-            node.right.rotateRight()
-          ).rotateLeft();
-          return new Node<E>(
-            rotated.element,
-            Color.Red,
-            rotated.left,
-            rotated.right.makeBlack()
-          );
+          const rotated = node.setRight(node.right.rotateRight()).rotateLeft();
+          return rotated
+            .setRight(rotated.right.setColor(Color.Black))
+            .setColor(Color.Red);
         }
       }
     }
@@ -159,23 +135,9 @@ class RedBlackTree<E> implements SortedCollection<E> {
     } else if (node == null) {
       return newNode;
     } else if (this.comparator(newNode.element, node.element) > 0) {
-      return this.balance(
-        new Node<E>(
-          node.element,
-          node.color,
-          node.left,
-          this.addNode(newNode, node.right)
-        )
-      );
+      return this.balance(node.setRight(this.addNode(newNode, node.right)));
     } else {
-      return this.balance(
-        new Node<E>(
-          node.element,
-          node.color,
-          this.addNode(newNode, node.left),
-          node.right
-        )
-      );
+      return this.balance(node.setLeft(this.addNode(newNode, node.left)));
     }
   }
 
@@ -183,7 +145,9 @@ class RedBlackTree<E> implements SortedCollection<E> {
     return new RedBlackTree<E>(
       this.comparator,
       this.equals,
-      this.addNode(new Node<E>(element, Color.Red), this.root).makeBlack(),
+      this.addNode(new Node<E>(element, Color.Red), this.root).setColor(
+        Color.Black
+      ),
       this.count + 1
     );
   }
