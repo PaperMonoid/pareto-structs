@@ -90,9 +90,22 @@ class RedBlackTree<E> implements SortedCollection<E> {
     count?: number
   ) {
     this.comparator = comparator;
+    this.equals = equals || StrictEquality;
     this.root = root;
     this.count = count || 0;
-    this.equals = equals || StrictEquality;
+  }
+
+  public setRoot(node: Node<E>): RedBlackTree<E> {
+    return new RedBlackTree<E>(
+      this.comparator,
+      this.equals,
+      node.setColor(Color.Black),
+      this.count
+    );
+  }
+
+  public setCount(count: number): RedBlackTree<E> {
+    return new RedBlackTree<E>(this.comparator, this.equals, this.root, count);
   }
 
   private balance(node: Node<E>): Node<E> {
@@ -142,14 +155,9 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 
   public add(element: E): SortedCollection<E> {
-    return new RedBlackTree<E>(
-      this.comparator,
-      this.equals,
-      this.addNode(new Node<E>(element, Color.Red), this.root).setColor(
-        Color.Black
-      ),
-      this.count + 1
-    );
+    return this.setRoot(
+      this.addNode(new Node<E>(element, Color.Red), this.root)
+    ).setCount(this.count + 1);
   }
 
   public remove(element: E): SortedCollection<E> {

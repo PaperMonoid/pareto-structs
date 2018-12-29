@@ -60,9 +60,27 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     count?: number
   ) {
     this.comparator = comparator;
+    this.equals = equals || StrictEquality;
     this.root = root;
     this.count = count || 0;
-    this.equals = equals || StrictEquality;
+  }
+
+  public setRoot(node: Node<E>): BinarySearchTree<E> {
+    return new BinarySearchTree<E>(
+      this.comparator,
+      this.equals,
+      node,
+      this.count
+    );
+  }
+
+  public setCount(count: number): BinarySearchTree<E> {
+    return new BinarySearchTree<E>(
+      this.comparator,
+      this.equals,
+      this.root,
+      count
+    );
   }
 
   private addNode(newNode: Node<E>, node: Node<E>): Node<E> {
@@ -78,12 +96,8 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public add(element: E): SortedCollection<E> {
-    return new BinarySearchTree<E>(
-      this.comparator,
-      this.equals,
-      this.addNode(new Node<E>(element), this.root),
-      this.count + 1
-    );
+    const node = this.addNode(new Node<E>(element), this.root);
+    return this.setRoot(node).setCount(this.count + 1);
   }
 
   private replaceWithSuccessor(node: Node<E>, first?: boolean): Node<E>[] {
@@ -140,12 +154,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     if (replaced == null) {
       return this;
     } else {
-      return new BinarySearchTree<E>(
-        this.comparator,
-        this.equals,
-        replaced[0],
-        this.count - 1
-      );
+      return this.setRoot(replaced[0]).setCount(this.count - 1);
     }
   }
 
@@ -351,6 +360,14 @@ class Reversed<E> extends BinarySearchTree<E> {
     this.tree = collection as BinarySearchTree<E>;
   }
 
+  public setRoot(node: Node<E>): BinarySearchTree<E> {
+    return new Reversed<E>(this.tree.setRoot(node));
+  }
+
+  public setCount(count: number): BinarySearchTree<E> {
+    return new Reversed<E>(this.tree.setCount(count));
+  }
+
   public add(element: E): SortedCollection<E> {
     return new Reversed<E>(this.tree.add(element));
   }
@@ -403,40 +420,8 @@ class Reversed<E> extends BinarySearchTree<E> {
     return this.tree.min();
   }
 
-  public nth(index: number): E {
-    let i = 0;
-    for (let element of this) {
-      if (i++ == index) {
-        return element;
-      }
-    }
-    throw new RangeError();
-  }
-
-  public slice(lower?: number, upper?: number): SortedCollection<E> {
-    const min = lower < 0 ? this.size() + lower : lower;
-    const max = upper < 0 ? this.size() + upper : upper;
-    let i = 0;
-    let tree: SortedCollection<E> = this;
-    for (let element of this) {
-      if (i < min || i >= max) {
-        tree = tree.remove(element);
-      }
-      i++;
-    }
-    return tree;
-  }
-
   public reverse(): SortedCollection<E> {
     return this.tree;
-  }
-
-  public toArray(): E[] {
-    const array = [];
-    for (let element of this) {
-      array.push(element);
-    }
-    return array;
   }
 
   public [Symbol.iterator](): Iterator<E> {
@@ -448,48 +433,6 @@ class Reversed<E> extends BinarySearchTree<E> {
       }
     }
     return visit(this.tree.root);
-  }
-
-  public forEach(action: Consumer<E>): void {
-    for (let element of this) {
-      action(element);
-    }
-  }
-
-  public filter(predicate: Predicate<E>): SortedCollection<E> {
-    return this.reduce<SortedCollection<E>>(this, (tree, element) =>
-      predicate(element) ? tree : tree.remove(element)
-    );
-  }
-
-  public map<R>(
-    mapper: Function<E, R>,
-    comparator: Comparator<R>,
-    equals?: Equals<R>
-  ): SortedCollection<R> {
-    return this.reduce<SortedCollection<R>>(
-      new Reversed<R>(new BinarySearchTree<R>(comparator, equals)),
-      (tree, element) => tree.add(mapper(element))
-    );
-  }
-
-  public flatMap<R>(
-    mapper: Function<E, Iterable<R>>,
-    comparator: Comparator<R>,
-    equals?: Equals<R>
-  ): SortedCollection<R> {
-    return this.reduce<SortedCollection<R>>(
-      new Reversed<R>(new BinarySearchTree<R>(comparator, equals)),
-      (tree, element) => tree.union(mapper(element))
-    );
-  }
-
-  public reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U {
-    let accumulated: U = identity;
-    for (let element of this) {
-      accumulated = accumulator(accumulated, element);
-    }
-    return accumulated;
   }
 }
 
