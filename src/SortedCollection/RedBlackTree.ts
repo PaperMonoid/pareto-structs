@@ -309,7 +309,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
     const min = lower < 0 ? this.size() + lower : lower;
     const max = upper < 0 ? this.size() + upper : upper;
     let i = 0;
-    let tree = this as SortedCollection<E>;
+    let tree: SortedCollection<E> = this;
     for (let element of this) {
       if (i < min || i >= max) {
         tree = tree.remove(element);

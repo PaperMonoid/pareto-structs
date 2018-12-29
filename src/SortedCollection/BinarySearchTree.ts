@@ -271,7 +271,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public reverse(): SortedCollection<E> {
-    throw new ReferenceError();
+    return new Reversed<E>(this);
   }
 
   public toArray(): E[] {
@@ -323,6 +323,156 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
       new BinarySearchTree<R>(comparator, equals),
+      (tree, element) => tree.union(mapper(element))
+    );
+  }
+
+  public reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U {
+    let accumulated: U = identity;
+    for (let element of this) {
+      accumulated = accumulator(accumulated, element);
+    }
+    return accumulated;
+  }
+}
+
+class Reversed<E> extends BinarySearchTree<E> {
+  public tree: BinarySearchTree<E>;
+
+  constructor(collection: SortedCollection<E>) {
+    super(null);
+    this.tree = collection as BinarySearchTree<E>;
+  }
+
+  public add(element: E): SortedCollection<E> {
+    return new Reversed<E>(this.tree.add(element));
+  }
+
+  public remove(element: E): SortedCollection<E> {
+    return new Reversed<E>(this.tree.remove(element));
+  }
+
+  public union(collection: Iterable<E>): SortedCollection<E> {
+    return new Reversed<E>(this.tree.union(collection));
+  }
+
+  public intersection(collection: Iterable<E>): SortedCollection<E> {
+    return new Reversed<E>(this.tree.intersection(collection));
+  }
+
+  public except(collection: Iterable<E>): SortedCollection<E> {
+    return new Reversed<E>(this.tree.except(collection));
+  }
+
+  public clear(): SortedCollection<E> {
+    return new Reversed<E>(this.tree.clear());
+  }
+
+  public search(element: E, node: Node<E>): Node<E> {
+    return this.tree.search(element, node);
+  }
+
+  public contains(element: E): boolean {
+    return this.tree.contains(element);
+  }
+
+  public containsAll(collection: Iterable<E>): boolean {
+    return this.tree.containsAll(collection);
+  }
+
+  public isEmpty(): boolean {
+    return this.tree.isEmpty();
+  }
+
+  public size(): number {
+    return this.tree.size();
+  }
+
+  public min(): E {
+    return this.tree.max();
+  }
+
+  public max(): E {
+    return this.tree.min();
+  }
+
+  public nth(index: number): E {
+    let i = 0;
+    for (let element of this) {
+      if (i++ == index) {
+        return element;
+      }
+    }
+    throw new RangeError();
+  }
+
+  public slice(lower?: number, upper?: number): SortedCollection<E> {
+    const min = lower < 0 ? this.size() + lower : lower;
+    const max = upper < 0 ? this.size() + upper : upper;
+    let i = 0;
+    let tree: SortedCollection<E> = this;
+    for (let element of this) {
+      if (i < min || i >= max) {
+        tree = tree.remove(element);
+      }
+      i++;
+    }
+    return tree;
+  }
+
+  public reverse(): SortedCollection<E> {
+    return this.tree;
+  }
+
+  public toArray(): E[] {
+    const array = [];
+    for (let element of this) {
+      array.push(element);
+    }
+    return array;
+  }
+
+  public [Symbol.iterator](): Iterator<E> {
+    function* visit(node: Node<E>) {
+      if (node != null) {
+        yield* visit(node.right);
+        yield node.element;
+        yield* visit(node.left);
+      }
+    }
+    return visit(this.tree.root);
+  }
+
+  public forEach(action: Consumer<E>): void {
+    for (let element of this) {
+      action(element);
+    }
+  }
+
+  public filter(predicate: Predicate<E>): SortedCollection<E> {
+    return this.reduce<SortedCollection<E>>(this, (tree, element) =>
+      predicate(element) ? tree : tree.remove(element)
+    );
+  }
+
+  public map<R>(
+    mapper: Function<E, R>,
+    comparator: Comparator<R>,
+    equals?: Equals<R>
+  ): SortedCollection<R> {
+    return this.reduce<SortedCollection<R>>(
+      new Reversed<R>(new BinarySearchTree<R>(comparator, equals)),
+      (tree, element) => tree.add(mapper(element))
+    );
+  }
+
+  public flatMap<R>(
+    mapper: Function<E, Iterable<R>>,
+    comparator: Comparator<R>,
+    equals?: Equals<R>
+  ): SortedCollection<R> {
+    return this.reduce<SortedCollection<R>>(
+      new Reversed<R>(new BinarySearchTree<R>(comparator, equals)),
       (tree, element) => tree.union(mapper(element))
     );
   }
