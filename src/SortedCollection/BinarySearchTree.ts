@@ -4,7 +4,7 @@ import Consumer from "../Function/Consumer";
 import Equals from "../Function/Equals";
 import Function from "../Function/Function";
 import Predicate from "../Function/Predicate";
-import SortedCollection from "../SortedCollection";
+import SortedCollection from "./SortedCollection";
 import StrictEquality from "../Function/StrictEquality";
 
 class Node<E> {
@@ -16,6 +16,22 @@ class Node<E> {
     this.element = element;
     this.left = left;
     this.right = right;
+  }
+
+  public min(): Node<E> {
+    if (this.left == null) {
+      return this;
+    } else {
+      return this.left.min();
+    }
+  }
+
+  public max(): Node<E> {
+    if (this.right == null) {
+      return this;
+    } else {
+      return this.right.max();
+    }
   }
 }
 
@@ -87,7 +103,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     }
   }
 
-  public removeNode(element: E, node: Node<E>): Node<E>[] {
+  private removeNode(element: E, node: Node<E>): Node<E>[] {
     if (node == null) {
       return null;
     }
@@ -212,6 +228,50 @@ class BinarySearchTree<E> implements SortedCollection<E> {
 
   public size(): number {
     return this.count;
+  }
+
+  public min(): E {
+    if (this.root == null) {
+      throw new RangeError();
+    } else {
+      return this.root.min().element;
+    }
+  }
+
+  public max(): E {
+    if (this.root == null) {
+      throw new RangeError();
+    } else {
+      return this.root.max().element;
+    }
+  }
+
+  public nth(index: number): E {
+    let i = 0;
+    for (let element of this) {
+      if (i++ == index) {
+        return element;
+      }
+    }
+    throw new RangeError();
+  }
+
+  public slice(lower?: number, upper?: number): SortedCollection<E> {
+    const min = lower < 0 ? this.size() + lower - 1 : lower;
+    const max = upper < 0 ? this.size() + upper - 1 : upper;
+    let i = 0;
+    let tree = this as SortedCollection<E>;
+    for (let element of this) {
+      if (i < min || i > max) {
+        tree = tree.remove(element);
+      }
+      i++;
+    }
+    return tree;
+  }
+
+  public reverse(): SortedCollection<E> {
+    throw new ReferenceError();
   }
 
   public toArray(): E[] {

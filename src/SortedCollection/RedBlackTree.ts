@@ -30,6 +30,22 @@ class Node<E> {
     this.right = right;
   }
 
+  public min(): Node<E> {
+    if (this.left == null) {
+      return this;
+    } else {
+      return this.left.min();
+    }
+  }
+
+  public max(): Node<E> {
+    if (this.right == null) {
+      return this;
+    } else {
+      return this.right.max();
+    }
+  }
+
   public makeBlack(): Node<E> {
     if (this.color != Color.Black) {
       return new Node<E>(this.element, Color.Black, this.left, this.right);
@@ -261,6 +277,50 @@ class RedBlackTree<E> implements SortedCollection<E> {
 
   public size(): number {
     return this.count;
+  }
+
+  public min(): E {
+    if (this.root == null) {
+      throw new RangeError();
+    } else {
+      return this.root.min().element;
+    }
+  }
+
+  public max(): E {
+    if (this.root == null) {
+      throw new RangeError();
+    } else {
+      return this.root.max().element;
+    }
+  }
+
+  public nth(index: number): E {
+    let i = 0;
+    for (let element of this) {
+      if (i++ == index) {
+        return element;
+      }
+    }
+    throw new RangeError();
+  }
+
+  public slice(lower?: number, upper?: number): SortedCollection<E> {
+    const min = lower < 0 ? this.size() + lower - 1 : lower;
+    const max = upper < 0 ? this.size() + upper - 1 : upper;
+    let i = 0;
+    let tree = this as SortedCollection<E>;
+    for (let element of this) {
+      if (i < min || i > max) {
+        tree = tree.remove(element);
+      }
+      i++;
+    }
+    return tree;
+  }
+
+  public reverse(): SortedCollection<E> {
+    throw new ReferenceError();
   }
 
   public toArray(): E[] {

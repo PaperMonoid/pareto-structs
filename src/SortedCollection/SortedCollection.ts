@@ -16,6 +16,11 @@ interface SortedCollection<E> extends Iterable<E> {
   public containsAll(collection: Iterable<E>): boolean;
   public isEmpty(): boolean;
   public size(): number;
+  public min(): E;
+  public max(): E;
+  public nth(index: number): E;
+  public slice(lower?: number, upper?: number): SortedCollection<E>;
+  public reverse(): SortedCollection<E>;
   public toArray(): E[];
   public [Symbol.iterator](): Iterator<E>;
   public forEach(action: Consumer<E>): void;
