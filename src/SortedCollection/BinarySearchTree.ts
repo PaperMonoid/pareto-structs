@@ -257,12 +257,12 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public slice(lower?: number, upper?: number): SortedCollection<E> {
-    const min = lower < 0 ? this.size() + lower - 1 : lower;
-    const max = upper < 0 ? this.size() + upper - 1 : upper;
+    const min = lower < 0 ? this.size() + lower : lower;
+    const max = upper < 0 ? this.size() + upper : upper;
     let i = 0;
-    let tree = this as SortedCollection<E>;
+    let tree: SortedCollection<E> = this;
     for (let element of this) {
-      if (i < min || i > max) {
+      if (i < min || i >= max) {
         tree = tree.remove(element);
       }
       i++;
