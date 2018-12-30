@@ -3,6 +3,7 @@ import Comparator from "../Function/Comparator";
 import Consumer from "../Function/Consumer";
 import Equals from "../Function/Equals";
 import Function from "../Function/Function";
+import Optional from "../Data/Optional";
 import Predicate from "../Function/Predicate";
 import SortedCollection from "./SortedCollection";
 import StrictEquality from "../Function/StrictEquality";
@@ -124,38 +125,26 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     }
   }
 
-  private removeNode(element: E, node: Node<E>): Node<E>[] {
+  private removeNode(element: E, node: Node<E>): Optional<Node<E>> {
     if (node == null) {
-      return null;
+      return Optional.empty();
     }
     const comparison = this.comparator(element, node.element);
     if (comparison == 0 && this.equals(element, node.element)) {
       const [replaced, _] = this.replaceWithSuccessor(node, true);
-      return [replaced];
+      return Optional.ofValue(replaced);
     } else if (comparison > 0) {
-      const replaced = this.removeNode(element, node.right);
-      if (replaced == null) {
-        return null;
-      } else {
-        return [node.setRight(replaced[0])];
-      }
+      return this.removeNode(element, node.right).map(node.setRight.bind(node));
     } else {
-      const replaced = this.removeNode(element, node.left);
-      if (replaced == null) {
-        return null;
-      } else {
-        return [node.setLeft(replaced[0])];
-      }
+      return this.removeNode(element, node.left).map(node.setLeft.bind(node));
     }
   }
 
   public remove(element: E): SortedCollection<E> {
-    const replaced = this.removeNode(element, this.root);
-    if (replaced == null) {
-      return this;
-    } else {
-      return this.setRoot(replaced[0]).setCount(this.count - 1);
-    }
+    const tree = this;
+    return this.removeNode(element, this.root)
+      .map(replaced => tree.setRoot(replaced).setCount(tree.count - 1))
+      .orValue(this);
   }
 
   public union(collection: Iterable<E>): SortedCollection<E> {
