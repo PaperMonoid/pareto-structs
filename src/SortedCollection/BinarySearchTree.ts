@@ -19,6 +19,24 @@ class Node<E> {
     this.right = right;
   }
 
+  private removeMin(): Node<E>[] {
+    if (this.left == null) {
+      return [this.right, this];
+    } else {
+      const [replaced, minimum] = this.left.removeMin();
+      return [this.setLeft(replaced), minimum];
+    }
+  }
+
+  public replaceWithSuccessor(): Node<E> {
+    if (this.right == null) {
+      return this.left;
+    } else {
+      const [replaced, successor] = this.right.removeMin();
+      return this.setRight(replaced).setElement(successor.element);
+    }
+  }
+
   public setElement(element: E): Node<E> {
     return new Node<E>(element, this.left, this.right);
   }
@@ -101,38 +119,13 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     return this.setRoot(node).setCount(this.count + 1);
   }
 
-  private replaceWithSuccessor(node: Node<E>, first?: boolean): Node<E>[] {
-    if (node == null) {
-      return [null, null];
-    }
-    if (first) {
-      if (node.right == null) {
-        return [node.left, node];
-      } else {
-        const [replaced, successor] = this.replaceWithSuccessor(node.right);
-        return [
-          node.setRight(replaced).setElement(successor.element),
-          successor
-        ];
-      }
-    } else {
-      if (node.left == null) {
-        return [node.right, node];
-      } else {
-        const [replaced, successor] = this.replaceWithSuccessor(node.left);
-        return [node.setLeft(replaced), successor];
-      }
-    }
-  }
-
   private removeNode(element: E, node: Node<E>): Optional<Node<E>> {
     if (node == null) {
       return Optional.empty();
     }
     const comparison = this.comparator(element, node.element);
     if (comparison == 0 && this.equals(element, node.element)) {
-      const [replaced, _] = this.replaceWithSuccessor(node, true);
-      return Optional.ofValue(replaced);
+      return Optional.ofValue(node.replaceWithSuccessor());
     } else if (comparison > 0) {
       return this.removeNode(element, node.right).map(node.setRight.bind(node));
     } else {
