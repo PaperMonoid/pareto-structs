@@ -3,6 +3,7 @@ import Comparator from "../Function/Comparator";
 import Consumer from "../Function/Consumer";
 import Equals from "../Function/Equals";
 import Function from "../Function/Function";
+import Optional from "../Data/Optional";
 import Predicate from "../Function/Predicate";
 import SortedCollection from "./SortedCollection";
 import StrictEquality from "../Function/StrictEquality";
@@ -30,6 +31,24 @@ class Node<E> {
     this.right = right;
   }
 
+  private removeMin(): Node<E>[] {
+    if (!this.left) {
+      return [this.right, this];
+    } else {
+      const [replaced, minimum] = this.left.removeMin();
+      return [this.setLeft(replaced), minimum];
+    }
+  }
+
+  public replaceWithSuccessor(): Node<E> {
+    if (!this.right) {
+      return this.left;
+    } else {
+      const [replaced, successor] = this.right.removeMin();
+      return this.setRight(replaced).setElement(successor.element);
+    }
+  }
+
   public setElement(element: E): Node<E> {
     return new Node<E>(element, this.color, this.left, this.right);
   }
@@ -47,7 +66,7 @@ class Node<E> {
   }
 
   public min(): Node<E> {
-    if (this.left == null) {
+    if (!this.left) {
       return this;
     } else {
       return this.left.min();
@@ -55,7 +74,7 @@ class Node<E> {
   }
 
   public max(): Node<E> {
-    if (this.right == null) {
+    if (!this.right) {
       return this;
     } else {
       return this.right.max();
@@ -63,14 +82,14 @@ class Node<E> {
   }
 
   public rotateRight(): Node<E> {
-    if (this.left == null) {
+    if (!this.left) {
       return this;
     }
     return this.left.setRight(this.setLeft(this.left.right));
   }
 
   public rotateLeft(): Node<E> {
-    if (this.right == null) {
+    if (!this.right) {
       return this;
     }
     return this.right.setLeft(this.setRight(this.right.left));
@@ -99,7 +118,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
     return new RedBlackTree<E>(
       this.comparator,
       this.equals,
-      node.setColor(Color.Black),
+      node && node.setColor(Color.Black),
       this.count
     );
   }
@@ -110,28 +129,28 @@ class RedBlackTree<E> implements SortedCollection<E> {
 
   private balance(node: Node<E>): Node<E> {
     if (node.color == Color.Black) {
-      if (node.left != null && node.left.color == Color.Red) {
-        if (node.left.left != null && node.left.left.color == Color.Red) {
+      if (node.left && node.left.color == Color.Red) {
+        if (node.left.left && node.left.left.color == Color.Red) {
           const rotated = node.rotateRight();
           return rotated
             .setLeft(rotated.left.setColor(Color.Black))
             .setColor(Color.Red);
         }
-        if (node.left.right != null && node.left.right.color == Color.Red) {
+        if (node.left.right && node.left.right.color == Color.Red) {
           const rotated = node.setLeft(node.left.rotateLeft()).rotateRight();
           return rotated
             .setLeft(rotated.left.setColor(Color.Black))
             .setColor(Color.Red);
         }
       }
-      if (node.right != null && node.right.color == Color.Red) {
-        if (node.right.right != null && node.right.right.color == Color.Red) {
+      if (node.right && node.right.color == Color.Red) {
+        if (node.right.right && node.right.right.color == Color.Red) {
           const rotated = node.rotateLeft();
           return rotated
             .setRight(rotated.right.setColor(Color.Black))
             .setColor(Color.Red);
         }
-        if (node.right.left != null && node.right.left.color == Color.Red) {
+        if (node.right.left && node.right.left.color == Color.Red) {
           const rotated = node.setRight(node.right.rotateRight()).rotateLeft();
           return rotated
             .setRight(rotated.right.setColor(Color.Black))
@@ -143,9 +162,9 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 
   private addNode(newNode: Node<E>, node: Node<E>): Node<E> {
-    if (newNode == null) {
+    if (!newNode) {
       return node;
-    } else if (node == null) {
+    } else if (!node) {
       return newNode;
     } else if (this.comparator(newNode.element, node.element) > 0) {
       return this.balance(node.setRight(this.addNode(newNode, node.right)));
@@ -206,7 +225,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 
   public search(element: E, node: Node<E>): Node<E> {
-    if (node == null) {
+    if (!node) {
       return null;
     }
     const comparison = this.comparator(element, node.element);
@@ -252,7 +271,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 
   public min(): E {
-    if (this.root == null) {
+    if (!this.root) {
       throw new RangeError();
     } else {
       return this.root.min().element;
@@ -260,7 +279,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 
   public max(): E {
-    if (this.root == null) {
+    if (!this.root) {
       throw new RangeError();
     } else {
       return this.root.max().element;
@@ -305,7 +324,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
 
   public [Symbol.iterator](): Iterator<E> {
     function* visit(node: Node<E>) {
-      if (node != null) {
+      if (node) {
         yield* visit(node.left);
         yield node.element;
         yield* visit(node.right);

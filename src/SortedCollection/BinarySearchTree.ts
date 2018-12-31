@@ -20,7 +20,7 @@ class Node<E> {
   }
 
   private removeMin(): Node<E>[] {
-    if (this.left == null) {
+    if (!this.left) {
       return [this.right, this];
     } else {
       const [replaced, minimum] = this.left.removeMin();
@@ -29,7 +29,7 @@ class Node<E> {
   }
 
   public replaceWithSuccessor(): Node<E> {
-    if (this.right == null) {
+    if (!this.right) {
       return this.left;
     } else {
       const [replaced, successor] = this.right.removeMin();
@@ -50,7 +50,7 @@ class Node<E> {
   }
 
   public min(): Node<E> {
-    if (this.left == null) {
+    if (!this.left) {
       return this;
     } else {
       return this.left.min();
@@ -58,7 +58,7 @@ class Node<E> {
   }
 
   public max(): Node<E> {
-    if (this.right == null) {
+    if (!this.right) {
       return this;
     } else {
       return this.right.max();
@@ -103,9 +103,9 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   private addNode(newNode: Node<E>, node: Node<E>): Node<E> {
-    if (newNode == null) {
+    if (!newNode) {
       return node;
-    } else if (node == null) {
+    } else if (!node) {
       return newNode;
     } else if (this.comparator(newNode.element, node.element) > 0) {
       return node.setRight(this.addNode(newNode, node.right));
@@ -120,7 +120,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   private removeNode(element: E, node: Node<E>): Optional<Node<E>> {
-    if (node == null) {
+    if (!node) {
       return Optional.empty();
     }
     const comparison = this.comparator(element, node.element);
@@ -183,7 +183,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public search(element: E, node: Node<E>): Node<E> {
-    if (node == null) {
+    if (!node) {
       return null;
     }
     const comparison = this.comparator(element, node.element);
@@ -229,7 +229,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public min(): E {
-    if (this.root == null) {
+    if (!this.root) {
       throw new RangeError();
     } else {
       return this.root.min().element;
@@ -237,7 +237,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
   }
 
   public max(): E {
-    if (this.root == null) {
+    if (!this.root) {
       throw new RangeError();
     } else {
       return this.root.max().element;
@@ -282,7 +282,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
 
   public [Symbol.iterator](): Iterator<E> {
     function* visit(node: Node<E>) {
-      if (node != null) {
+      if (node) {
         yield* visit(node.left);
         yield node.element;
         yield* visit(node.right);
@@ -408,7 +408,7 @@ class Reversed<E> extends BinarySearchTree<E> {
 
   public [Symbol.iterator](): Iterator<E> {
     function* visit(node: Node<E>) {
-      if (node != null) {
+      if (node) {
         yield* visit(node.right);
         yield node.element;
         yield* visit(node.left);
