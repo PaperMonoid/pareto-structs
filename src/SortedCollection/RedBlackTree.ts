@@ -461,7 +461,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 
   public reverse(): SortedCollection<E> {
-    throw new ReferenceError();
+    return new Reversed<E>(this);
   }
 
   public toArray(): E[] {
@@ -523,6 +523,90 @@ class RedBlackTree<E> implements SortedCollection<E> {
       accumulated = accumulator(accumulated, element);
     }
     return accumulated;
+  }
+}
+
+class Reversed<E> extends RedBlackTree<E> {
+  public tree: RedBlackTree<E>;
+
+  constructor(collection: SortedCollection<E>) {
+    super(null);
+    this.tree = collection as RedBlackTree<E>;
+  }
+
+  public setRoot(node: Node<E>): RedBlackTree<E> {
+    return new Reversed<E>(this.tree.setRoot(node));
+  }
+
+  public setCount(count: number): RedBlackTree<E> {
+    return new Reversed<E>(this.tree.setCount(count));
+  }
+
+  public add(element: E): SortedCollection<E> {
+    return new Reversed<E>(this.tree.add(element));
+  }
+
+  public remove(element: E): SortedCollection<E> {
+    return new Reversed<E>(this.tree.remove(element));
+  }
+
+  public union(collection: Iterable<E>): SortedCollection<E> {
+    return new Reversed<E>(this.tree.union(collection));
+  }
+
+  public intersection(collection: Iterable<E>): SortedCollection<E> {
+    return new Reversed<E>(this.tree.intersection(collection));
+  }
+
+  public except(collection: Iterable<E>): SortedCollection<E> {
+    return new Reversed<E>(this.tree.except(collection));
+  }
+
+  public clear(): SortedCollection<E> {
+    return new Reversed<E>(this.tree.clear());
+  }
+
+  public search(element: E, node: Node<E>): Node<E> {
+    return this.tree.search(element, node);
+  }
+
+  public contains(element: E): boolean {
+    return this.tree.contains(element);
+  }
+
+  public containsAll(collection: Iterable<E>): boolean {
+    return this.tree.containsAll(collection);
+  }
+
+  public isEmpty(): boolean {
+    return this.tree.isEmpty();
+  }
+
+  public size(): number {
+    return this.tree.size();
+  }
+
+  public min(): E {
+    return this.tree.max();
+  }
+
+  public max(): E {
+    return this.tree.min();
+  }
+
+  public reverse(): SortedCollection<E> {
+    return this.tree;
+  }
+
+  public [Symbol.iterator](): Iterator<E> {
+    function* visit(node: Node<E>) {
+      if (node) {
+        yield* visit(node.right);
+        yield node.element;
+        yield* visit(node.left);
+      }
+    }
+    return visit(this.tree.root);
   }
 }
 
