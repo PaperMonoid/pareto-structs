@@ -137,7 +137,9 @@ class Node<E> {
         Node.isBlack(this.right)
       ) {
         return [
-          this.setColor(Color.Black).setLeft(this.left.setColor(Color.Red)),
+          this.setColor(Color.Black)
+            .setLeft(this.left.setColor(Color.Red))
+            .fixRedViolation(),
           false
         ];
       } else if (
@@ -152,9 +154,8 @@ class Node<E> {
           rotated.setLeft(
             rotated.left
               .setColor(Color.Black)
-              .setLeft(
-                rotated.left.left && rotated.left.left.setColor(Color.Red)
-              )
+              .setLeft(rotated.left.left.setColor(Color.Red))
+              .fixRedViolation()
           ),
           false
         ];
@@ -163,7 +164,10 @@ class Node<E> {
         Node.isBlack(this.left) &&
         Node.isBlack(this.right)
       ) {
-        return [this.setLeft(this.left.setColor(Color.Red)), true];
+        return [
+          this.setLeft(this.left.setColor(Color.Red)).fixRedViolation(),
+          true
+        ];
       }
     }
     return [this, fix];
@@ -177,7 +181,9 @@ class Node<E> {
         Node.isBlack(this.right)
       ) {
         return [
-          this.setColor(Color.Black).setRight(this.right.setColor(Color.Red)),
+          this.setColor(Color.Black)
+            .setRight(this.right.setColor(Color.Red))
+            .fixRedViolation(),
           false
         ];
       } else if (
@@ -192,9 +198,8 @@ class Node<E> {
           rotated.setRight(
             rotated.right
               .setColor(Color.Black)
-              .setRight(
-                rotated.right.right && rotated.right.right.setColor(Color.Red)
-              )
+              .setRight(rotated.right.right.setColor(Color.Red))
+              .fixRedViolation()
           ),
           false
         ];
@@ -203,7 +208,10 @@ class Node<E> {
         Node.isBlack(this.left) &&
         Node.isBlack(this.right)
       ) {
-        return [this.setRight(this.right.setColor(Color.Red)), true];
+        return [
+          this.setRight(this.right.setColor(Color.Red)).fixRedViolation(),
+          true
+        ];
       }
     }
     return [this, fix];
