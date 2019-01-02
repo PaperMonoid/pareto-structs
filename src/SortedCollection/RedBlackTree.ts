@@ -168,8 +168,7 @@ class Node<E> {
             rotated.left
               .setColor(Color.Black)
               .setLeft(rotated.left.left.setColor(Color.Red))
-              .fixRedViolation()
-              .setColor(Color.Black)
+              .fixRedViolation() // don't repaint it black for whatever reason
           ),
           false
         ];
@@ -215,8 +214,7 @@ class Node<E> {
             rotated.right
               .setColor(Color.Black)
               .setRight(rotated.right.right.setColor(Color.Red))
-              .fixRedViolation()
-              .setColor(Color.Black)
+              .fixRedViolation() // don't repaint it black for whatever reason
           ),
           false
         ];
