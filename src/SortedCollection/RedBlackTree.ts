@@ -45,31 +45,6 @@ class Node<E> {
     return false;
   }
 
-  private removeMin(): [Node<E>, Node<E>, boolean] {
-    if (!this.left && !this.right) {
-      return [null, this, this.shouldFix()];
-    } else if (!this.left) {
-      return [this.right.setColor(this.color), this, this.right.shouldFix()];
-    } else {
-      const [replaced, minimum, fix] = this.left.removeMin();
-      const [_replaced, _fix] = this.setLeft(replaced).fixLeftViolation(fix);
-      return [_replaced, minimum, _fix];
-    }
-  }
-
-  public replaceWithSuccessor(): [Node<E>, boolean] {
-    if (!this.right && !this.left) {
-      return [null, this.shouldFix()];
-    } else if (!this.right) {
-      return [this.left.setColor(this.color), this.left.shouldFix()];
-    } else {
-      const [replaced, successor, fix] = this.right.removeMin();
-      return this.setRight(replaced)
-        .setElement(successor.element)
-        .fixRightViolation(fix);
-    }
-  }
-
   public setElement(element: E): Node<E> {
     return new Node<E>(element, this.color, this.left, this.right);
   }
@@ -161,17 +136,17 @@ class Node<E> {
         Node.isBlack(this.left) &&
         Node.isBlack(this.right)
       ) {
-        console.log("R1");
         return [
           this.setColor(Color.Black).setLeft(this.left.setColor(Color.Red)),
-          fix
+          false
         ];
       } else if (
         Node.isBlack(this) &&
         Node.isRed(this.left) &&
-        Node.isBlack(this.right)
+        Node.isBlack(this.right) &&
+        this.left.left &&
+        this.left.right
       ) {
-        console.log("R2");
         const rotated = this.setLeft(this.left.rotateLeft()).rotateRight();
         return [
           rotated.setLeft(
@@ -181,18 +156,14 @@ class Node<E> {
                 rotated.left.left && rotated.left.left.setColor(Color.Red)
               )
           ),
-          fix
+          false
         ];
       } else if (
         Node.isBlack(this) &&
         Node.isBlack(this.left) &&
-        Node.isBlack(this.right) &&
-        this.right &&
-        this.right.left &&
-        this.right.right
+        Node.isBlack(this.right)
       ) {
-        console.log("R3");
-        return [this.setLeft(this.left.setColor(Color.Red)), fix];
+        return [this.setLeft(this.left.setColor(Color.Red)), true];
       }
     }
     return [this, fix];
@@ -205,17 +176,17 @@ class Node<E> {
         Node.isBlack(this.left) &&
         Node.isBlack(this.right)
       ) {
-        console.log("L1");
         return [
           this.setColor(Color.Black).setRight(this.right.setColor(Color.Red)),
-          fix
+          false
         ];
       } else if (
         Node.isBlack(this) &&
         Node.isBlack(this.left) &&
-        Node.isRed(this.right)
+        Node.isRed(this.right) &&
+        this.right.left &&
+        this.right.right
       ) {
-        console.log("L2");
         const rotated = this.setRight(this.right.rotateRight()).rotateLeft();
         return [
           rotated.setRight(
@@ -225,21 +196,42 @@ class Node<E> {
                 rotated.right.right && rotated.right.right.setColor(Color.Red)
               )
           ),
-          fix
+          false
         ];
       } else if (
         Node.isBlack(this) &&
         Node.isBlack(this.left) &&
-        Node.isBlack(this.right) &&
-        this.left &&
-        this.left.left &&
-        this.left.right
+        Node.isBlack(this.right)
       ) {
-        console.log("L3");
-        return [this.setRight(this.right.setColor(Color.Red)), fix];
+        return [this.setRight(this.right.setColor(Color.Red)), true];
       }
     }
     return [this, fix];
+  }
+
+  private removeMin(): [Node<E>, Node<E>, boolean] {
+    if (!this.left && !this.right) {
+      return [null, this, this.shouldFix()];
+    } else if (!this.left) {
+      return [this.right.setColor(this.color), this, this.right.shouldFix()];
+    } else {
+      const [replaced, minimum, fix] = this.left.removeMin();
+      const [_replaced, _fix] = this.setLeft(replaced).fixLeftViolation(fix);
+      return [_replaced, minimum, _fix];
+    }
+  }
+
+  public replaceWithSuccessor(): [Node<E>, boolean] {
+    if (!this.right && !this.left) {
+      return [null, this.shouldFix()];
+    } else if (!this.right) {
+      return [this.left.setColor(this.color), this.left.shouldFix()];
+    } else {
+      const [replaced, successor, fix] = this.right.removeMin();
+      return this.setRight(replaced)
+        .setElement(successor.element)
+        .fixRightViolation(fix);
+    }
   }
 }
 
@@ -298,8 +290,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
     }
     const comparison = this.comparator(element, node.element);
     if (comparison == 0 && this.equals(element, node.element)) {
-      const [successor, fix] = node.replaceWithSuccessor();
-      return Optional.ofValue<[Node<E>, boolean]>([successor, fix]);
+      return Optional.ofValue(node.replaceWithSuccessor());
     } else if (comparison > 0) {
       return this.removeNode(element, node.right).map(([removed, fix]) =>
         node.setRight(removed).fixRightViolation(fix)
