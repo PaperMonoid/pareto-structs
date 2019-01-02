@@ -125,6 +125,18 @@ class Node<E> {
     return this;
   }
 
+  public hasRedViolation() {
+    if (Node.isBlack(this)) {
+      if (Node.isRed(this.left)) {
+        return Node.isRed(this.left.left) || Node.isRed(this.left.right);
+      }
+      if (Node.isRed(this.right)) {
+        return Node.isRed(this.right.left) || Node.isRed(this.right.right);
+      }
+    }
+    return false;
+  }
+
   public shouldFix() {
     return Node.isBlack(this) && !this.right && !this.left;
   }
@@ -139,7 +151,8 @@ class Node<E> {
         return [
           this.setColor(Color.Black)
             .setLeft(this.left.setColor(Color.Red))
-            .fixRedViolation(),
+            .fixRedViolation()
+            .setColor(Color.Black),
           false
         ];
       } else if (
@@ -156,6 +169,7 @@ class Node<E> {
               .setColor(Color.Black)
               .setLeft(rotated.left.left.setColor(Color.Red))
               .fixRedViolation()
+              .setColor(Color.Black)
           ),
           false
         ];
@@ -164,9 +178,10 @@ class Node<E> {
         Node.isBlack(this.left) &&
         Node.isBlack(this.right)
       ) {
+        const node = this.setLeft(this.left.setColor(Color.Red));
         return [
-          this.setLeft(this.left.setColor(Color.Red)).fixRedViolation(),
-          true
+          node.fixRedViolation().setColor(Color.Black),
+          !node.hasRedViolation()
         ];
       }
     }
@@ -183,7 +198,8 @@ class Node<E> {
         return [
           this.setColor(Color.Black)
             .setRight(this.right.setColor(Color.Red))
-            .fixRedViolation(),
+            .fixRedViolation()
+            .setColor(Color.Black),
           false
         ];
       } else if (
@@ -200,6 +216,7 @@ class Node<E> {
               .setColor(Color.Black)
               .setRight(rotated.right.right.setColor(Color.Red))
               .fixRedViolation()
+              .setColor(Color.Black)
           ),
           false
         ];
@@ -208,9 +225,10 @@ class Node<E> {
         Node.isBlack(this.left) &&
         Node.isBlack(this.right)
       ) {
+        const node = this.setRight(this.right.setColor(Color.Red));
         return [
-          this.setRight(this.right.setColor(Color.Red)).fixRedViolation(),
-          true
+          node.fixRedViolation().setColor(Color.Black),
+          !node.hasRedViolation()
         ];
       }
     }
