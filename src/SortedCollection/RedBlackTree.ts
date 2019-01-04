@@ -420,30 +420,30 @@ class RedBlackTree<E> implements SortedCollection<E> {
     return this.count;
   }
 
-  public min(): E {
+  public min(): Optional<E> {
     if (!this.root) {
-      throw new RangeError();
+      return Optional.empty();
     } else {
-      return this.root.min().element;
+      return Optional.ofValue(this.root.min().element);
     }
   }
 
-  public max(): E {
+  public max(): Optional<E> {
     if (!this.root) {
-      throw new RangeError();
+      return Optional.empty();
     } else {
-      return this.root.max().element;
+      return Optional.ofValue(this.root.max().element);
     }
   }
 
-  public nth(index: number): E {
+  public nth(index: number): Optional<E> {
     let i = 0;
     for (let element of this) {
       if (i++ == index) {
-        return element;
+        return Optional.ofValue(element);
       }
     }
-    throw new RangeError();
+    return Optional.empty();
   }
 
   public slice(lower?: number, upper?: number): SortedCollection<E> {
@@ -586,11 +586,11 @@ class Reversed<E> extends RedBlackTree<E> {
     return this.tree.size();
   }
 
-  public min(): E {
+  public min(): Optional<E> {
     return this.tree.max();
   }
 
-  public max(): E {
+  public max(): Optional<E> {
     return this.tree.min();
   }
 

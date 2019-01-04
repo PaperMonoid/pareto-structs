@@ -3,6 +3,7 @@ import Comparator from "../Function/Comparator";
 import Consumer from "../Function/Consumer";
 import Equals from "../Function/Equals";
 import Function from "../Function/Function";
+import Optional from "../Data/Optional";
 import Predicate from "../Function/Predicate";
 
 interface SortedCollection<E> extends Iterable<E> {
@@ -16,9 +17,9 @@ interface SortedCollection<E> extends Iterable<E> {
   public containsAll(collection: Iterable<E>): boolean;
   public isEmpty(): boolean;
   public size(): number;
-  public min(): E;
-  public max(): E;
-  public nth(index: number): E;
+  public min(): Optional<E>;
+  public max(): Optional<E>;
+  public nth(index: number): Optional<E>;
   public slice(lower?: number, upper?: number): SortedCollection<E>;
   public reverse(): SortedCollection<E>;
   public toArray(): E[];
