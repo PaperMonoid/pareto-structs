@@ -13,11 +13,13 @@ interface SortedCollection<E> extends Iterable<E> {
   public intersection(collection: Iterable<E>): SortedCollection<E>;
   public except(collection: Iterable<E>): SortedCollection<E>;
   public clear(): SortedCollection<E>;
+  public search(element: E): Optional<E>;
+  public next(element: E): Optional<E>;
+  public previous(element: E): Optional<E>;
   public contains(element: E): boolean;
   public containsAll(collection: Iterable<E>): boolean;
   public isEmpty(): boolean;
   public size(): number;
-  public search(element: E): Optional<E>;
   public min(): Optional<E>;
   public max(): Optional<E>;
   public nth(index: number): Optional<E>;

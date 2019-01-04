@@ -374,13 +374,13 @@ class RedBlackTree<E> implements SortedCollection<E> {
     return new RedBlackTree<E>(this.comparator, this.equals);
   }
 
-  private searchElement(element: E, node: Node<E>): Optional<E> {
+  private searchElement(element: E, node: Node<E>): Optional<Node<E>> {
     if (!node) {
       return Optional.empty();
     }
     const comparison = this.comparator(element, node.element);
     if (comparison == 0 && this.equals(element, node.element)) {
-      return Optional.ofValue(node.element);
+      return Optional.ofValue(node);
     } else if (comparison > 0) {
       return this.searchElement(element, node.right);
     } else {
@@ -389,7 +389,51 @@ class RedBlackTree<E> implements SortedCollection<E> {
   }
 
   public search(element: E): Optional<E> {
-    return this.searchElement(element, this.root);
+    return this.searchElement(element, this.root).map(node => node.element);
+  }
+
+  private nextElement(element: E, node: Node<E>): Optional<Node<E>> {
+    if (!node) {
+      return Optional.empty();
+    }
+    const comparison = this.comparator(element, node.element);
+    if (comparison == 0 && this.equals(element, node.element)) {
+      return Optional.ofValue(node.right && node.right.min());
+    } else if (comparison > 0) {
+      return this.nextElement(element, node.right);
+    } else {
+      return this.nextElement(element, node.left).map(next =>
+        next ? next : node.right && node.right.min()
+      );
+    }
+  }
+
+  public next(element: E): Optional<E> {
+    return this.nextElement(element, this.root)
+      .flatMap(node => Optional.ofNullable(node))
+      .map(node => node.element);
+  }
+
+  private previousElement(element: E, node: Node<E>): Optional<Node<E>> {
+    if (!node) {
+      return Optional.empty();
+    }
+    const comparison = this.comparator(element, node.element);
+    if (comparison == 0 && this.equals(element, node.element)) {
+      return Optional.ofValue(node.left && node.left.max());
+    } else if (comparison > 0) {
+      return this.nextElement(element, node.right).map(next =>
+        next ? next : node.left && node.left.max()
+      );
+    } else {
+      return this.nextElement(element, node.left);
+    }
+  }
+
+  public previous(element: E): Optional<E> {
+    return this.previousElement(element, this.root)
+      .flatMap(node => Optional.ofNullable(node))
+      .map(node => node.element);
   }
 
   public contains(element: E): boolean {
@@ -572,6 +616,14 @@ class Reversed<E> extends RedBlackTree<E> {
 
   public search(element: E): Optional<E> {
     return this.tree.search(element);
+  }
+
+  public next(element: E): Optional<E> {
+    return this.tree.previous(element);
+  }
+
+  public previous(element: E): Optional<E> {
+    return this.tree.next(element);
   }
 
   public contains(element: E): boolean {
