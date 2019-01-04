@@ -210,9 +210,7 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     } else if (comparison > 0) {
       return this.nextElement(element, node.right);
     } else {
-      return this.nextElement(element, node.left).map(next =>
-        next ? next : node.right && node.right.min()
-      );
+      return this.nextElement(element, node.left).map(next => next || node);
     }
   }
 
@@ -230,11 +228,11 @@ class BinarySearchTree<E> implements SortedCollection<E> {
     if (comparison == 0 && this.equals(element, node.element)) {
       return Optional.ofValue(node.left && node.left.max());
     } else if (comparison > 0) {
-      return this.nextElement(element, node.right).map(next =>
-        next ? next : node.left && node.left.max()
+      return this.previousElement(element, node.right).map(
+        next => next || node
       );
     } else {
-      return this.nextElement(element, node.left);
+      return this.previousElement(element, node.left);
     }
   }
 
