@@ -374,22 +374,26 @@ class RedBlackTree<E> implements SortedCollection<E> {
     return new RedBlackTree<E>(this.comparator, this.equals);
   }
 
-  public search(element: E, node: Node<E>): Node<E> {
+  private searchElement(element: E, node: Node<E>): Optional<E> {
     if (!node) {
-      return null;
+      return Optional.empty();
     }
     const comparison = this.comparator(element, node.element);
     if (comparison == 0 && this.equals(element, node.element)) {
-      return node;
+      return Optional.ofValue(node.element);
     } else if (comparison > 0) {
-      return this.search(element, node.right);
+      return this.searchElement(element, node.right);
     } else {
-      return this.search(element, node.left);
+      return this.searchElement(element, node.left);
     }
   }
 
+  public search(element: E): Optional<E> {
+    return this.searchElement(element, this.root);
+  }
+
   public contains(element: E): boolean {
-    return this.search(element, this.root) != null;
+    return this.search(element).isPresent();
   }
 
   public containsAll(collection: Iterable<E>): boolean {
@@ -566,8 +570,8 @@ class Reversed<E> extends RedBlackTree<E> {
     return new Reversed<E>(this.tree.clear());
   }
 
-  public search(element: E, node: Node<E>): Node<E> {
-    return this.tree.search(element, node);
+  public search(element: E): Optional<E> {
+    return this.tree.search(element);
   }
 
   public contains(element: E): boolean {

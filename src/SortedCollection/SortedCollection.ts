@@ -17,6 +17,7 @@ interface SortedCollection<E> extends Iterable<E> {
   public containsAll(collection: Iterable<E>): boolean;
   public isEmpty(): boolean;
   public size(): number;
+  public search(element: E): Optional<E>;
   public min(): Optional<E>;
   public max(): Optional<E>;
   public nth(index: number): Optional<E>;
