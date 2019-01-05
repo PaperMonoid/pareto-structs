@@ -1,4 +1,4 @@
-## [Index](/#documentation)
+## [Index](/README.md#documentation)
 # SortedCollection
 `interface SortedCollection<E> extends Iterable<E>`
 

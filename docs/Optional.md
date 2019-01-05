@@ -1,4 +1,4 @@
-## [Index](/#documentation)
+## [Index](/README.md#documentation)
 # Optional
 
 ## Overview
