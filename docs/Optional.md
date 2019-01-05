@@ -1,8 +1,8 @@
+## [Index](/#documentation)
 # Optional
 
 ## Overview
-* [..](/docs)
-* [Factory Methods](#Factory Methods)
+* [Factory Methods](#factory-methods)
   * empty
   * ofValue
   * ofNullable

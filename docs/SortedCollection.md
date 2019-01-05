@@ -1,3 +1,4 @@
+## [Index](/#documentation)
 # SortedCollection
 `interface SortedCollection<E> extends Iterable<E>`
 
@@ -6,7 +7,6 @@ This interface represents an immutable sorted collection of objects. It may allo
 Due to the fact that Typescript doesn't currently support higher kinded types all implementations updates return `SortedCollection<E>` instead of it's own type. This can be an inconvenience since it makes it imposible to access any of the implementation methods and attributes.
 
 ## Overview
-* [..](/docs)
 * [add](#add)
 * [remove](#remove)
 * union
@@ -38,7 +38,7 @@ Due to the fact that Typescript doesn't currently support higher kinded types al
 
 Adds an element to the collection and returns a new collection with these changes.
 
-### Example
+#### Example
 ```typescript
 console.log(collection.toArray()); // []
 
@@ -62,7 +62,7 @@ console.log(collection.toArray()); // [1, 2]
 
 Removes an element from collection and returns a new collection with these changes.
 
-### Example
+#### Example
 ```typescript
 console.log(collection.toArray()); // [1,2,3]
 
