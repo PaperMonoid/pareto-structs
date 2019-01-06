@@ -78,8 +78,8 @@ const a = SortedCollection.asBinarySearchTree<number>(comparator);
 const b = SortedCollection.asBinarySearchTree<number>(comparator, equals);
 ```
 
-*More information*
-* [General information and implementation](https://en.wikipedia.org/wiki/Binary_search_tree)
+**Further reading**
+* [Binary search tree](https://en.wikipedia.org/wiki/Binary_search_tree)
 
 ### asRedBlackTree
 `public static asRedBlackTree<E>(
@@ -121,12 +121,12 @@ const a = SortedCollection.asRedBlackTree<number>(comparator);
 const b = SortedCollection.asRedBlackTree<number>(comparator, equals);
 ```
 
-*More information*
-* [General information](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
-* [More general information](https://cs.gmu.edu/~kauffman/cs310/14-redblack-trees.pdf)
-* [Visualization](https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)
-* [Implementation details](http://www.cs.middlebury.edu/~candrews/mhc/cs211/cs211_red-black%20trees2.pdf)
-* [More implementation details](https://www.cs.tufts.edu/~nr/cs257/archive/chris-okasaki/redblack99.pdf)
+**Further reading**
+* [Red–black tree](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
+* [Red/Black Tree](https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)
+* [CS 310: Red-Black trees](https://cs.gmu.edu/~kauffman/cs310/14-redblack-trees.pdf)
+* [CS211 - Data Structures](http://www.cs.middlebury.edu/~candrews/mhc/cs211/cs211_red-black%20trees2.pdf)
+* [FUNCTIONAL PEARLS Red-Black Trees in a Functional Setting](https://www.cs.tufts.edu/~nr/cs257/archive/chris-okasaki/redblack99.pdf)
 
 ## add
 `public abstract add(element: E): SortedCollection<E>`
