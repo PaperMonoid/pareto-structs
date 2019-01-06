@@ -78,6 +78,9 @@ const a = SortedCollection.asBinarySearchTree<number>(comparator);
 const b = SortedCollection.asBinarySearchTree<number>(comparator, equals);
 ```
 
+*More information*
+* [General information and implementation](https://en.wikipedia.org/wiki/Binary_search_tree)
+
 ### asRedBlackTree
 `public static asRedBlackTree<E>(
   comparator: Comparator<E>,
@@ -117,6 +120,13 @@ const a = SortedCollection.asRedBlackTree<number>(comparator);
 // using comparator and equals.
 const b = SortedCollection.asRedBlackTree<number>(comparator, equals);
 ```
+
+*More information*
+* [General information](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
+* [More general information](https://cs.gmu.edu/~kauffman/cs310/14-redblack-trees.pdf)
+* [Visualization](https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)
+* [Implementation details](http://www.cs.middlebury.edu/~candrews/mhc/cs211/cs211_red-black%20trees2.pdf)
+* [More implementation details](https://www.cs.tufts.edu/~nr/cs257/archive/chris-okasaki/redblack99.pdf)
 
 ## add
 `public abstract add(element: E): SortedCollection<E>`
@@ -184,16 +194,14 @@ Returns an emtpy collection.
 ## search
 `public abstract search(element: E): Optional<E>`
 
-Searches an element in the collection and returns it as an [Optional](/Optional.md).
+Searches an element in the collection and returns it as an [Optional](/docs/Optional.md).
 
 **Parameters**
 * `element` - The element to be searched in the collection.
 
 **Returns**
-* An [Optional](/Optional.md) element. If the element isn't found, then returns an empty [Optional](/Optional.md).
+* An [Optional](/docs/Optional.md) element. If the element isn't found, then returns an empty [Optional](/docs/Optional.md).
 
-## next
-## previous
 ## contains
 ## containsAll
 ## isEmpty
