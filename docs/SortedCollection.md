@@ -47,14 +47,17 @@ Due to the fact that Typescript doesn't currently support higher kinded types al
 Retuns an empty BinarySearchTree instance.
 
 **Type Parameters**
-* `E` The type of the elements of the collection.
+* `E` - The type of the elements of the collection.
 
 **Parameters**
-* `comparator` The comparator function defines the sort order of the collection.
-* `equals?` The equality function defines if two objects are the same. If ommited, it uses strict equality (`===`) to test values.
+* `comparator` - The comparator function defines the sort order of the collection.
+* `equals?` - The equality function defines if two objects are the same. If ommited, it uses strict equality (`===`) to test values.
 
 **Returns**
 * An empty BinarySearchTree.
+
+**Notes**
+* It allows duplicate elements.
 
 **Example**
 ```typescript
@@ -84,14 +87,17 @@ const b = SortedCollection.asBinarySearchTree<number>(comparator, equals);
 Retuns an empty RedBlackTree instance.
 
 **Type Parameters**
-* `E` The type of the elements of the collection
+* `E` - The type of the elements of the collection
 
 **Parameters**
-* `comparator` The comparator function defines the sort order of the collection.
-* `equals?` The equality function defines if two objects are the same. If ommited, it uses strict equality (`===`) to test values.
+* `comparator` - The comparator function defines the sort order of the collection.
+* `equals?` - The equality function defines if two objects are the same. If ommited, it uses strict equality (`===`) to test values.
 
 **Returns**
 * An empty RedBlackTree.
+
+**Notes**
+* It allows duplicate elements.
 
 **Example**
 ```typescript
@@ -105,10 +111,10 @@ function equals(first: number, second: number) {
   return first === second;
 }
 
-// using comparator
+// using comparator.
 const a = SortedCollection.asRedBlackTree<number>(comparator);
 
-// using comparator and equals
+// using comparator and equals.
 const b = SortedCollection.asRedBlackTree<number>(comparator, equals);
 ```
 
@@ -118,65 +124,74 @@ const b = SortedCollection.asRedBlackTree<number>(comparator, equals);
 Adds an element to the collection and returns a new collection with these changes.
 
 **Parameters**
-* `element` The element to be added to the collection.
+* `element` - The element to be added to the collection.
 
 **Returns**
-An new collection with the changes.
+* A new collection with the changes.
 
-**Example**
-```typescript
-console.log(collection.toArray()); // []
-
-// adds 1 and returns a new collection
-// the original collection doesn't change
-collection.add(1);
-console.log(collection.toArray()); // []
-
-// adds 1 and returns a new collection
-// replaces the old collection with the updated one
-collection = collection.add(1);
-console.log(collection.toArray()); // [1]
-
-// adds 2, adds 1 and returns a new collection
-// replaces the old collection with the updated one
-collection = collection.add(2).add(1);
-console.log(collection.toArray()); // [1, 2]
-```
 ## remove
 `public abstract remove(element: E): SortedCollection<E>`
 
 Removes an element from collection and returns a new collection with these changes.
 
 **Parameters**
-* `element` The element to be removed from the collection.
+* `element` - The element to be removed from the collection.
 
 **Returns**
-An new collection with the changes.
+* A new collection with the changes.
 
-**Example**
-```typescript
-console.log(collection.toArray()); // [1,2,3]
-
-// removes 1 and returns a new collection
-// the original collection doesn't change
-collection.remove(1);
-console.log(collection.toArray()); // [1,2,3]
-
-// removes 1 and returns a new collection
-// replaces the old collection with the updated one
-collection = collection.remove(1);
-console.log(collection.toArray()); // [2,3]
-
-// removes 2, removes 1 and returns a new collection
-// replaces the old collection with the updated one
-collection = collection.remove(2).remove(1);
-console.log(collection.toArray()); // [2, 1]
-```
 ## union
+`public abstract union(collection: Iterable<E>): SortedCollection<E>`
+
+Adds all the elements of an iterable to the collection and returns a new collection with these changes.
+
+**Parameters**
+* `collection` - The iterable with the elements to be added to the collection.
+
+**Returns**
+* A new collection with the changes.
+
 ## intersection
+`public abstract intersection(collection: Iterable<E>): SortedCollection<E>`
+
+Retains all the elements shared in common between the collection and an iterable and returns a new collection with these changes.
+
+**Parameters**
+* `collection` - The iterable with the elements to be retained from the collection.
+
+**Returns**
+* An new collection with the changes.
+
 ## except
+`public abstract except(collection: Iterable<E>): SortedCollection<E>`
+
+Removes all the elements of an iterable from the collection and returns a new collection with these changes.
+
+**Parameters**
+* `collection` - The iterable with the elements to be removed from the collection.
+
+**Returns**
+* An new collection with the changes.
+
 ## clear
+`public abstract clear(): SortedCollection<E>`
+
+Returns an emtpy collection.
+
+**Returns**
+* An empty collection.
+
 ## search
+`public abstract search(element: E): Optional<E>`
+
+Searches an element in the collection and returns it as an [Optional](/Optional.md).
+
+**Parameters**
+* `element` - The element to be searched in the collection.
+
+**Returns**
+* An [Optional](/Optional.md) element. If the element isn't found, then returns an empty [Optional](/Optional.md).
+
 ## next
 ## previous
 ## contains
