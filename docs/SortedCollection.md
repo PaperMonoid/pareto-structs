@@ -37,27 +37,26 @@ Due to the fact that Typescript doesn't currently support higher kinded types al
 * [reduce](#reduce)
 
 ## Factory Methods
+
 ### asBinarySearchTree
-```typescript
-public static asBinarySearchTree<E>(
+`public static asBinarySearchTree<E>(
   comparator: Comparator<E>,
   equals?: Equals<E>
-): SortedCollection<E>
-```
+): SortedCollection<E>`
 
-Retuns a BinarySearchTree instance.
+Retuns an empty BinarySearchTree instance.
 
-#### Type Parameters
+**Type Parameters**
 * `E` The type of the elements of the collection.
 
-#### Parameters
+**Parameters**
 * `comparator` The comparator function defines the sort order of the collection.
 * `equals?` The equality function defines if two objects are the same. If ommited, it uses strict equality (`===`) to test values.
 
-#### Returns
-An empty BinarySearchTree.
+**Returns**
+* An empty BinarySearchTree.
 
-#### Example
+**Example**
 ```typescript
 import SortedCollection from "pareto-structs/SortedCollection";
 
@@ -69,35 +68,32 @@ function equals(first: number, second: number) {
   return first === second;
 }
 
-// using comparator
+// using comparator.
 const a = SortedCollection.asBinarySearchTree<number>(comparator);
 
-// using comparator and equals
+// using comparator and equals.
 const b = SortedCollection.asBinarySearchTree<number>(comparator, equals);
 ```
 
-
 ### asRedBlackTree
-```typescript 
-public static asRedBlackTree<E>(
+`public static asRedBlackTree<E>(
   comparator: Comparator<E>,
   equals?: Equals<E>
-): SortedCollection<E>
-```
+): SortedCollection<E>`
 
-Retuns a RedBlackTree instance.
+Retuns an empty RedBlackTree instance.
 
-#### Type Parameters
+**Type Parameters**
 * `E` The type of the elements of the collection
 
-#### Parameters
+**Parameters**
 * `comparator` The comparator function defines the sort order of the collection.
 * `equals?` The equality function defines if two objects are the same. If ommited, it uses strict equality (`===`) to test values.
 
-#### Returns
-An empty RedBlackTree.
+**Returns**
+* An empty RedBlackTree.
 
-#### Example
+**Example**
 ```typescript
 import SortedCollection from "pareto-structs/SortedCollection";
 
@@ -117,19 +113,17 @@ const b = SortedCollection.asRedBlackTree<number>(comparator, equals);
 ```
 
 ## add
-```typescript
-public abstract add(element: E): SortedCollection<E>
-```
+`public abstract add(element: E): SortedCollection<E>`
 
 Adds an element to the collection and returns a new collection with these changes.
 
-#### Parameters
+**Parameters**
 * `element` The element to be added to the collection.
 
-#### Returns
+**Returns**
 An new collection with the changes.
 
-#### Example
+**Example**
 ```typescript
 console.log(collection.toArray()); // []
 
@@ -153,13 +147,13 @@ console.log(collection.toArray()); // [1, 2]
 
 Removes an element from collection and returns a new collection with these changes.
 
-#### Parameters
+**Parameters**
 * `element` The element to be removed from the collection.
 
-#### Returns
+**Returns**
 An new collection with the changes.
 
-#### Example
+**Example**
 ```typescript
 console.log(collection.toArray()); // [1,2,3]
 
