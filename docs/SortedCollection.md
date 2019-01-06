@@ -38,13 +38,98 @@ Due to the fact that Typescript doesn't currently support higher kinded types al
 
 ## Factory Methods
 ### asBinarySearchTree
+```typescript
+public static asBinarySearchTree<E>(
+  comparator: Comparator<E>,
+  equals?: Equals<E>
+): SortedCollection<E>
+```
+
+Retuns a BinarySearchTree instance.
+
+#### Type Parameters
+* `E` The type of the elements of the collection.
+
+#### Parameters
+* `comparator` The comparator function defines the sort order of the collection.
+* `equals?` The equality function defines if two objects are the same. If ommited, it uses strict equality (`===`) to test values.
+
+#### Returns
+An empty BinarySearchTree.
+
+#### Example
+```typescript
+import SortedCollection from "pareto-structs/SortedCollection";
+
+function comparator(first: number, second: number) {
+  return first - second;
+}
+
+function equals(first: number, second: number) {
+  return first === second;
+}
+
+// using comparator
+const a = SortedCollection.asBinarySearchTree<number>(comparator);
+
+// using comparator and equals
+const b = SortedCollection.asBinarySearchTree<number>(comparator, equals);
+```
+
+
 ### asRedBlackTree
+```typescript 
+public static asRedBlackTree<E>(
+  comparator: Comparator<E>,
+  equals?: Equals<E>
+): SortedCollection<E>
+```
+
+Retuns a RedBlackTree instance.
+
+#### Type Parameters
+* `E` The type of the elements of the collection
+
+#### Parameters
+* `comparator` The comparator function defines the sort order of the collection.
+* `equals?` The equality function defines if two objects are the same. If ommited, it uses strict equality (`===`) to test values.
+
+#### Returns
+An empty RedBlackTree.
+
+#### Example
+```typescript
+import SortedCollection from "pareto-structs/SortedCollection";
+
+function comparator(first: number, second: number) {
+  return first - second;
+}
+
+function equals(first: number, second: number) {
+  return first === second;
+}
+
+// using comparator
+const a = SortedCollection.asRedBlackTree<number>(comparator);
+
+// using comparator and equals
+const b = SortedCollection.asRedBlackTree<number>(comparator, equals);
+```
 
 ## add
-`public abstract add(element: E): SortedCollection<E>`
+```typescript
+public abstract add(element: E): SortedCollection<E>
+```
 
 Adds an element to the collection and returns a new collection with these changes.
 
+#### Parameters
+* `element` The element to be added to the collection.
+
+#### Returns
+An new collection with the changes.
+
+#### Example
 ```typescript
 console.log(collection.toArray()); // []
 
@@ -68,6 +153,13 @@ console.log(collection.toArray()); // [1, 2]
 
 Removes an element from collection and returns a new collection with these changes.
 
+#### Parameters
+* `element` The element to be removed from the collection.
+
+#### Returns
+An new collection with the changes.
+
+#### Example
 ```typescript
 console.log(collection.toArray()); // [1,2,3]
 
