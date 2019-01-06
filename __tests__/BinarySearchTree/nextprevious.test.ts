@@ -1,4 +1,4 @@
-import { SortedCollection, BinarySearchTree } from "../../src/SortedCollection";
+import SortedCollection from "../../src/SortedCollection";
 
 function asc(first: number, second: number): number {
   return first - second;
@@ -9,7 +9,7 @@ function desc(first: number, second: number): number {
 }
 
 test("BinarySearchTree empty next 0 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   const e = tree.search(0).flatMap(element => tree.next(element));
   expect(e.orValue(null)).toBe(null);
   expect(tree.toArray()).toEqual([]);
@@ -17,7 +17,7 @@ test("BinarySearchTree empty next 0 test", function() {
 });
 
 test("BinarySearchTree empty previous 0 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   const e = tree.search(0).flatMap(element => tree.previous(element));
   expect(e.orValue(null)).toBe(null);
   expect(tree.toArray()).toEqual([]);
@@ -25,7 +25,7 @@ test("BinarySearchTree empty previous 0 test", function() {
 });
 
 test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 next 2 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -40,7 +40,7 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 next 2 test", function() {
 });
 
 test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 next 0 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -55,7 +55,7 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 next 0 test", function() {
 });
 
 test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 next -2 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -70,7 +70,7 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 next -2 test", function() {
 });
 
 test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 next 3 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -85,7 +85,7 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 next 3 test", function() {
 });
 
 test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 next -3 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -100,7 +100,7 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 next -3 test", function() {
 });
 
 test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 previous 2 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -115,7 +115,7 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 previous 2 test", function() {
 });
 
 test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 previous 0 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -130,7 +130,7 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 previous 0 test", function() {
 });
 
 test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 previous -2 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -145,7 +145,7 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 previous -2 test", function() 
 });
 
 test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 previous 3 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -160,7 +160,7 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 previous 3 test", function() {
 });
 
 test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 previous -3 test", function() {
-  let tree = new BinarySearchTree<number>(asc) as SortedCollection<number>;
+  let tree = SortedCollection.asBinarySearchTree<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);

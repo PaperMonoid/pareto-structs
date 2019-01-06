@@ -1,6 +1,6 @@
 ## [Index](/README.md#documentation)
 # SortedCollection
-`abstract class SortedCollection<E> extends Iterable<E>`
+`abstract class SortedCollection<E> implements Iterable<E>`
 
 This abstract class represents an immutable sorted collection of objects. It may allow duplicate elements depending on the implementation.
 

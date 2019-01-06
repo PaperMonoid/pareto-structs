@@ -5,8 +5,29 @@ import Equals from "../Function/Equals";
 import Function from "../Function/Function";
 import Optional from "../Data/Optional";
 import Predicate from "../Function/Predicate";
+import SortedCollectionFactory from "./SortedCollectionFactory";
 
 abstract class SortedCollection<E> implements Iterable<E> {
+  public static binarySearchTreeFactory: SortedCollectionFactory;
+  public static redBlackTreeFactory: SortedCollectionFactory;
+
+  public static asBinarySearchTree<E>(
+    comparator: Comparator<E>,
+    equals?: Equals<E>
+  ): SortedCollection<E> {
+    return SortedCollection.binarySearchTreeFactory.create<E>(
+      comparator,
+      equals
+    );
+  }
+
+  public static asRedBlackTree<E>(
+    comparator: Comparator<E>,
+    equals?: Equals<E>
+  ): SortedCollection<E> {
+    return SortedCollection.redBlackTreeFactory.create<E>(comparator, equals);
+  }
+
   public abstract add(element: E): SortedCollection<E>;
   public abstract remove(element: E): SortedCollection<E>;
   public abstract union(collection: Iterable<E>): SortedCollection<E>;

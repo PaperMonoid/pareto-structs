@@ -1,4 +1,5 @@
-import { SortedCollection, RedBlackTree } from "../../src/SortedCollection";
+import RedBlackTree from "../../src/SortedCollection/RedBlackTree";
+import SortedCollection from "../../src/SortedCollection";
 
 enum Color {
   Red,
@@ -65,9 +66,9 @@ function validateColors<E>(tree: RedBlackTree<E>): void {
   validateRedNodes<E>(tree, tree.root);
 }
 
-function validateProperties<E>(tree: RedBlackTree<E>): void {
-  validateColors<E>(tree);
-  validateBlackHeights<E>(tree);
+function validateProperties<E>(tree: SortedCollection<E>): void {
+  validateColors<E>(tree as RedBlackTree<E>);
+  validateBlackHeights<E>(tree as RedBlackTree<E>);
 }
 
 export default validateProperties;
