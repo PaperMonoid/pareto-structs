@@ -3,17 +3,17 @@
 
 ## Overview
 * [Factory Methods](#factory-methods)
-  * empty
-  * ofValue
-  * ofNullable
-* isEmpty
-* getValue
-* orValue
-* isPresent
-* ifPresent
+  * [empty](#empty)
+  * [ofValue](#ofvalue)
+  * [ofNullable](#ofnullable)
+* [isEmpty](#isempty)
+* [getValue](#getvalue)
+* [orValue](#orvalue)
+* [isPresent](#ispresent)
+* [ifPresent](#ifpresent)
 * [filter](#filter)
 * [map](#map)
-* [flatMap](#flatMap)
+* [flatMap](#flatmap)
 
 ## Factory Methods
 ### empty

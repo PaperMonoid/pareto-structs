@@ -6,40 +6,40 @@ import Function from "../Function/Function";
 import Optional from "../Data/Optional";
 import Predicate from "../Function/Predicate";
 
-interface SortedCollection<E> extends Iterable<E> {
-  public add(element: E): SortedCollection<E>;
-  public remove(element: E): SortedCollection<E>;
-  public union(collection: Iterable<E>): SortedCollection<E>;
-  public intersection(collection: Iterable<E>): SortedCollection<E>;
-  public except(collection: Iterable<E>): SortedCollection<E>;
-  public clear(): SortedCollection<E>;
-  public search(element: E): Optional<E>;
-  public next(element: E): Optional<E>;
-  public previous(element: E): Optional<E>;
-  public contains(element: E): boolean;
-  public containsAll(collection: Iterable<E>): boolean;
-  public isEmpty(): boolean;
-  public size(): number;
-  public min(): Optional<E>;
-  public max(): Optional<E>;
-  public nth(index: number): Optional<E>;
-  public slice(lower?: number, upper?: number): SortedCollection<E>;
-  public reverse(): SortedCollection<E>;
-  public toArray(): E[];
-  public [Symbol.iterator](): Iterator<E>;
-  public forEach(action: Consumer<E>): void;
-  public filter(predicate: Predicate<E>): SortedCollection<E>;
-  public map<R>(
+abstract class SortedCollection<E> implements Iterable<E> {
+  public abstract add(element: E): SortedCollection<E>;
+  public abstract remove(element: E): SortedCollection<E>;
+  public abstract union(collection: Iterable<E>): SortedCollection<E>;
+  public abstract intersection(collection: Iterable<E>): SortedCollection<E>;
+  public abstract except(collection: Iterable<E>): SortedCollection<E>;
+  public abstract clear(): SortedCollection<E>;
+  public abstract search(element: E): Optional<E>;
+  public abstract next(element: E): Optional<E>;
+  public abstract previous(element: E): Optional<E>;
+  public abstract contains(element: E): boolean;
+  public abstract containsAll(collection: Iterable<E>): boolean;
+  public abstract isEmpty(): boolean;
+  public abstract size(): number;
+  public abstract min(): Optional<E>;
+  public abstract max(): Optional<E>;
+  public abstract nth(index: number): Optional<E>;
+  public abstract slice(lower?: number, upper?: number): SortedCollection<E>;
+  public abstract reverse(): SortedCollection<E>;
+  public abstract toArray(): E[];
+  public abstract [Symbol.iterator](): Iterator<E>;
+  public abstract forEach(action: Consumer<E>): void;
+  public abstract filter(predicate: Predicate<E>): SortedCollection<E>;
+  public abstract map<R>(
     mapper: Function<E, R>,
     comparator: Comparator<R>,
     equals?: Equals<R>
   ): SortedCollection<R>;
-  public flatMap<R>(
+  public abstract flatMap<R>(
     mapper: Function<E, Iterable<R>>,
     comparator: Comparator<R>,
     equals?: Equals<R>
   ): SortedCollection<R>;
-  public reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U;
+  public abstract reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U;
 }
 
 export default SortedCollection;

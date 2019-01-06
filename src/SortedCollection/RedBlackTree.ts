@@ -259,7 +259,7 @@ class Node<E> {
   }
 }
 
-class RedBlackTree<E> implements SortedCollection<E> {
+class RedBlackTree<E> extends SortedCollection<E> {
   public readonly comparator: Comparator<E>;
   public readonly equals: Equals<E>;
   public readonly root: Node<E>;
@@ -271,6 +271,7 @@ class RedBlackTree<E> implements SortedCollection<E> {
     root?: Node<E>,
     count?: number
   ) {
+    super();
     this.comparator = comparator;
     this.equals = equals || StrictEquality;
     this.root = root;

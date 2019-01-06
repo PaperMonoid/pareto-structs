@@ -1,44 +1,50 @@
 ## [Index](/README.md#documentation)
 # SortedCollection
-`interface SortedCollection<E> extends Iterable<E>`
+`abstract class SortedCollection<E> extends Iterable<E>`
 
-This interface represents an immutable sorted collection of objects. It may allow duplicate elements depending on the implementation.
+This abstract class represents an immutable sorted collection of objects. It may allow duplicate elements depending on the implementation.
 
 Due to the fact that Typescript doesn't currently support higher kinded types all implementations updates return `SortedCollection<E>` instead of it's own type. This can be an inconvenience since it makes it imposible to access any of the implementation methods and attributes.
 
 ## Overview
+* [Factory Methods](#factory-methods)
+  * [asBinarySearchTree](#asbinarysearchtree)
+  * [asRedBlackTree](#asredblacktree)
 * [add](#add)
 * [remove](#remove)
-* union
-* intersection
-* except
-* clear
-* search
-* next
-* previous
-* contains
-* containsAll
-* isEmpty
-* size
-* min
-* max
-* nth
-* slice
-* reverse
-* toArray
-* [Symbol.iterator]
-* forEach
+* [union](#union)
+* [intersection](#intersection)
+* [except](#except)
+* [clear](#clear)
+* [search](#search)
+* [next](#next)
+* [previous](#previous)
+* [contains](#contains)
+* [containsAll](#containsall)
+* [isEmpty](#isempty)
+* [size](#size)
+* [min](#min)
+* [max](#max)
+* [nth](#nth)
+* [slice](#slice)
+* [reverse](#reverse)
+* [toArray](#toarray)
+* [[Symbol.Iterator]](#symbol.iterator])
+* [forEach](#foreach)
 * [filter](#filter)
 * [map](#map)
-* [flatMap](#flatMap)
-* reduce
+* [flatMap](#flatmap)
+* [reduce](#reduce)
+
+## Factory Methods
+### asBinarySearchTree
+### asRedBlackTree
 
 ## add
-`public add(element: E): SortedCollection<E>`
+`public abstract add(element: E): SortedCollection<E>`
 
 Adds an element to the collection and returns a new collection with these changes.
 
-#### Example
 ```typescript
 console.log(collection.toArray()); // []
 
@@ -58,11 +64,10 @@ collection = collection.add(2).add(1);
 console.log(collection.toArray()); // [1, 2]
 ```
 ## remove
-`public remove(element: E): SortedCollection<E>`
+`public abstract remove(element: E): SortedCollection<E>`
 
 Removes an element from collection and returns a new collection with these changes.
 
-#### Example
 ```typescript
 console.log(collection.toArray()); // [1,2,3]
 
