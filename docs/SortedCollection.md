@@ -59,6 +59,9 @@ Returns an empty BinarySearchTree instance.
 **Notes**
 * It allows duplicate elements.
 
+**Further reading**
+* [Binary search tree](https://en.wikipedia.org/wiki/Binary_search_tree)
+
 **Example**
 ```typescript
 import SortedCollection from "pareto-structs/SortedCollection";
@@ -77,11 +80,6 @@ const a = SortedCollection.asBinarySearchTree<number>(comparator);
 // using comparator and equals.
 const b = SortedCollection.asBinarySearchTree<number>(comparator, equals);
 ```
-
-**Further reading**
-* [Binary search tree](https://en.wikipedia.org/wiki/Binary_search_tree)
-
----
 
 ### asRedBlackTree
 `public static asRedBlackTree<E>(
@@ -104,6 +102,13 @@ Returns an empty RedBlackTree instance.
 **Notes**
 * It allows duplicate elements.
 
+**Further reading**
+* [Red–black tree](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
+* [Red/Black Tree](https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)
+* [CS 310: Red-Black trees](https://cs.gmu.edu/~kauffman/cs310/14-redblack-trees.pdf)
+* [CS211 - Data Structures](http://www.cs.middlebury.edu/~candrews/mhc/cs211/cs211_red-black%20trees2.pdf)
+* [FUNCTIONAL PEARLS Red-Black Trees in a Functional Setting](https://www.cs.tufts.edu/~nr/cs257/archive/chris-okasaki/redblack99.pdf)
+
 **Example**
 ```typescript
 import SortedCollection from "pareto-structs/SortedCollection";
@@ -123,15 +128,6 @@ const a = SortedCollection.asRedBlackTree<number>(comparator);
 const b = SortedCollection.asRedBlackTree<number>(comparator, equals);
 ```
 
-**Further reading**
-* [Red–black tree](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
-* [Red/Black Tree](https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)
-* [CS 310: Red-Black trees](https://cs.gmu.edu/~kauffman/cs310/14-redblack-trees.pdf)
-* [CS211 - Data Structures](http://www.cs.middlebury.edu/~candrews/mhc/cs211/cs211_red-black%20trees2.pdf)
-* [FUNCTIONAL PEARLS Red-Black Trees in a Functional Setting](https://www.cs.tufts.edu/~nr/cs257/archive/chris-okasaki/redblack99.pdf)
-
----
-
 ## add
 `public abstract add(element: E): SortedCollection<E>`
 
@@ -142,8 +138,6 @@ Adds an element to this collection and returns a new collection with these chang
 
 **Returns**
 * A new collection with the element.
-
----
 
 ## remove
 `public abstract remove(element: E): SortedCollection<E>`
@@ -156,8 +150,6 @@ Removes an element from this collection and returns a new collection with these 
 **Returns**
 * A new collection without the element.
 
----
-
 ## union
 `public abstract union(collection: Iterable<E>): SortedCollection<E>`
 
@@ -168,8 +160,6 @@ Adds all the elements of an iterable to this collection and returns a new collec
 
 **Returns**
 * A new collection with the elements.
-
----
 
 ## intersection
 `public abstract intersection(collection: Iterable<E>): SortedCollection<E>`
@@ -182,8 +172,6 @@ Retains all the elements shared in common between this collection and an iterabl
 **Returns**
 * An new collection with the elements shared in common.
 
----
-
 ## except
 `public abstract except(collection: Iterable<E>): SortedCollection<E>`
 
@@ -195,8 +183,6 @@ Removes all the elements of an iterable from this collection and returns a new c
 **Returns**
 * An new collection without the elements.
 
----
-
 ## clear
 `public abstract clear(): SortedCollection<E>`
 
@@ -205,20 +191,18 @@ Returns an emtpy collection.
 **Returns**
 * An empty collection.
 
----
-
 ## search
 `public abstract search(element: E): Optional<E>`
 
-Searches an element in this collection and returns it as an [Optional](/docs/Optional.md).
+Searches an element in this collection and returns it as an Optional.
 
 **Parameters**
 * `element` - The element to be searched in this collection.
 
 **Returns**
-* An [Optional](/docs/Optional.md) of the found element, otherwise returns an empty [Optional](/docs/Optional.md).
+* An Optional of the found element, otherwise returns an empty Optional.
 
----
+See also [Optional](/docs/Optional.md).
 
 ## contains
 `public abstract contains(element: E): boolean`
@@ -231,8 +215,6 @@ Searches an element in this collection and returns true if the element is found.
 **Returns**
 * `true` if this collection contains the specified element.
 
----
-
 ## containsAll
 `public abstract containsAll(collection: Iterable<E>): boolean`
 
@@ -244,8 +226,6 @@ Searches all the elements of an iterable in this collection and returns true if 
 **Returns**
 * `true` if this collection contains all the elements.
 
----
-
 ## isEmpty
 `public abstract isEmpty(): boolean`
 
@@ -253,8 +233,6 @@ Returns true if this collection has no elements.
 
 **Returns**
 * `true` if this collection is empty.
-
----
 
 ## size
 `public abstract size(): number`
@@ -264,40 +242,38 @@ Returns the number of elements of this collection.
 **Returns**
 * The number of elements in this collection.
 
----
-
 ## min
 `public abstract min(): Optional<E>`
 
-Finds the first element in this collection and returns it as an [Optional](/docs/Optional.md).
+Finds the first element in this collection and returns it as an Optional.
 
 **Returns**
-* An [Optional](/docs/Optional.md) of the first element. If the collection is empty it returns an empty [Optional](/docs/Optional.md).
+* An Optional of the first element. If the collection is empty it returns an empty Optional.
 
----
+See also [Optional](/docs/Optional.md).
 
 ## max
 `public abstract min(): Optional<E>`
 
-Finds the last element in this collection and returns it as an [Optional](/docs/Optional.md).
+Finds the last element in this collection and returns it as an Optional.
 
 **Returns**
-* An [Optional](/docs/Optional.md) of the last element. If the collection is empty it returns an empty [Optional](/docs/Optional.md).
+* An Optional of the last element. If the collection is empty it returns an empty Optional.
 
----
+See also [Optional](/docs/Optional.md).
 
 ## nth
 `public abstract nth(index: number): Optional<E>`
 
-Searches an element by index in this collection and returns it as an [Optional](/docs/Optional.md).
+Searches an element by index in this collection and returns it as an Optional.
 
 **Parameters**
 * `index` - The index of the element to be searched in this collection.
 
 **Returns**
-* An [Optional](/docs/Optional.md) of the found element, otherwise returns an empty [Optional](/docs/Optional.md).
+* An Optional of the found element, otherwise returns an empty Optional.
 
----
+See also [Optional](/docs/Optional.md).
 
 ## slice
 `public abstract slice(lower?: number, upper?: number): SortedCollection<E>`
@@ -311,8 +287,6 @@ Returns a new collection with the elements of this collection starting from the 
 **Returns**
 * A new collection of the elements of this collection starting from the lower index to the upper index.
 
----
-
 ## reverse
 `public abstract reverse(): SortedCollection<E>`
 
@@ -324,8 +298,6 @@ Returns a new reversed collection with the elements of this collection.
 **Notes**
 * This method behaves the same way as [Array.prototype.slice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice).
 
----
-
 ## toArray
 `public abstract toArray(): E[]`
 
@@ -333,8 +305,6 @@ Returns an array with the elements of this collection.
 
 **Returns**
 * An array with the elements of this collection.
-
----
 
 ## [Symbol.iterator]
 `public abstract [Symbol.iterator](): Iterator<E>`
@@ -344,8 +314,6 @@ Returns an iterator with the elements of this collection.
 **Returns**
 * An iterator with the elements of this collection.
 
----
-
 ## forEach
 `public abstract forEach(action: Consumer<E>): void`
 
@@ -353,8 +321,6 @@ Performs an action on each element of this collection.
 
 **Parameters**
 * `action` - The action to be performed with each element.
-
----
 
 ## filter
 `public abstract filter(predicate: Predicate<E>): SortedCollection<E>`
@@ -366,8 +332,6 @@ Removes the elements of this collection on which the predicate matches false and
 
 **Returns**
 * A new collection with the elements on which the predicate matches true.
-
----
 
 ## map
 `public abstract map<R>(
@@ -389,8 +353,6 @@ Maps the elements of this collection and returns a new collection with these cha
 **Returns**
 * A new collection with the mapped elements.
 
----
-
 ## flatMap
 `public abstract flatMap<R>(
     mapper: Function<E, Iterable<R>>,
@@ -410,8 +372,6 @@ Maps the elements of this collection and returns a new collection with these cha
 
 **Returns**
 * A new collection with the mapped elements.
-
----
 
 ## reduce
 `public abstract reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U`
