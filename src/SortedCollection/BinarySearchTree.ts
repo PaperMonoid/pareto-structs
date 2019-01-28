@@ -13,7 +13,7 @@ class Node<E> {
   public readonly left: Node<E>;
   public readonly right: Node<E>;
 
-  public constructor(element: E, left?: Node<E>, right?: Node<E>) {
+  constructor(element: E, left?: Node<E>, right?: Node<E>) {
     this.element = element;
     this.left = left;
     this.right = right;
@@ -83,6 +83,13 @@ class BinarySearchTree<E> extends SortedCollection<E> {
     this.equals = equals || StrictEquality;
     this.root = root;
     this.count = count || 0;
+  }
+
+  public static create<E>(
+    comparator: Comparator<E>,
+    equals?: Equals<E>
+  ): SortedCollection<E> {
+    return new BinarySearchTree<E>(comparator, equals);
   }
 
   public setRoot(node: Node<E>): BinarySearchTree<E> {
