@@ -1,2 +1,2 @@
-export { default as SortedCollection } from "./SortedCollection";
-export { default as Function } from "./Function";
+export { default as SortedCollection } from "./sorted-collection";
+export { default as Function } from "./function";

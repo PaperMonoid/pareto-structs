@@ -1,5 +1,5 @@
 import validateProperties from "./validateProperties";
-import SortedCollection from "../../src/SortedCollection";
+import SortedCollection from "../../src/sorted-collection";
 
 function asc(first: number, second: number): number {
   return first - second;

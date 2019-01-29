@@ -1,10 +1,10 @@
-import BiFunction from "../Function/BiFunction";
-import Comparator from "../Function/Comparator";
-import Consumer from "../Function/Consumer";
-import Equals from "../Function/Equals";
-import Function from "../Function/Function";
-import Optional from "../Data/Optional";
-import Predicate from "../Function/Predicate";
+import BiFunction from "../function/BiFunction";
+import Comparator from "../function/Comparator";
+import Consumer from "../function/Consumer";
+import Equals from "../function/Equals";
+import Function from "../function/Function";
+import Optional from "../data/Optional";
+import Predicate from "../function/Predicate";
 import SortedCollectionFactory from "./SortedCollectionFactory";
 
 abstract class SortedCollection<E> implements Iterable<E> {

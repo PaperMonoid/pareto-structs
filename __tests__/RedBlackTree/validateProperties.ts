@@ -1,5 +1,5 @@
-import RedBlackTree from "../../src/SortedCollection/RedBlackTree";
-import SortedCollection from "../../src/SortedCollection";
+import RedBlackTree from "../../src/sorted-collection/RedBlackTree";
+import SortedCollection from "../../src/sorted-collection";
 
 enum Color {
   Red,

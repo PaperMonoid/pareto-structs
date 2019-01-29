@@ -1,5 +1,5 @@
-import Comparator from "../Function/Comparator";
-import Equals from "../Function/Equals";
+import Comparator from "../function/Comparator";
+import Equals from "../function/Equals";
 import SortedCollection from "./SortedCollection";
 
 interface SortedCollectionFactory {
