@@ -1,7 +1,7 @@
-import BinarySearchTree from "./BinarySearchTree";
+import BinarySearchTree from "./binary-search-tree";
 import Comparator from "../function/Comparator";
 import Equals from "../function/Equals";
-import RedBlackTree from "./RedBlackTree";
+import RedBlackTree from "./red-black-tree";
 import SortedCollection from "./SortedCollection";
 import SortedCollectionFactory from "./SortedCollectionFactory";
 

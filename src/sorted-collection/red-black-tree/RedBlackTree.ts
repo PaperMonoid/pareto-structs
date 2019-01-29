@@ -1,72 +1,16 @@
-import BiFunction from "../function/BiFunction";
-import Comparator from "../function/Comparator";
-import Consumer from "../function/Consumer";
-import Equals from "../function/Equals";
-import Function from "../function/Function";
-import Optional from "../data/Optional";
-import Predicate from "../function/Predicate";
-import SortedCollection from "./SortedCollection";
-import StrictEquality from "../function/StrictEquality";
+import BiFunction from "../../function/BiFunction";
+import Color from "./Color";
+import Comparator from "../../function/Comparator";
+import Consumer from "../../function/Consumer";
+import Equals from "../../function/Equals";
+import Function from "../../function/Function";
+import Node from "./Node";
+import Optional from "../../data/Optional";
+import Predicate from "../../function/Predicate";
+import SortedCollection from "../SortedCollection";
+import StrictEquality from "../../function/StrictEquality";
 
-class Node<E> {
-  public readonly element: E;
-  public readonly left: Node<E>;
-  public readonly right: Node<E>;
-
-  constructor(element: E, left?: Node<E>, right?: Node<E>) {
-    this.element = element;
-    this.left = left;
-    this.right = right;
-  }
-
-  private removeMin(): Node<E>[] {
-    if (!this.left) {
-      return [this.right, this];
-    } else {
-      const [replaced, minimum] = this.left.removeMin();
-      return [this.setLeft(replaced), minimum];
-    }
-  }
-
-  public replaceWithSuccessor(): Node<E> {
-    if (!this.right) {
-      return this.left;
-    } else {
-      const [replaced, successor] = this.right.removeMin();
-      return this.setRight(replaced).setElement(successor.element);
-    }
-  }
-
-  public setElement(element: E): Node<E> {
-    return new Node<E>(element, this.left, this.right);
-  }
-
-  public setLeft(node: Node<E>): Node<E> {
-    return new Node<E>(this.element, node, this.right);
-  }
-
-  public setRight(node: Node<E>): Node<E> {
-    return new Node<E>(this.element, this.left, node);
-  }
-
-  public min(): Node<E> {
-    if (!this.left) {
-      return this;
-    } else {
-      return this.left.min();
-    }
-  }
-
-  public max(): Node<E> {
-    if (!this.right) {
-      return this;
-    } else {
-      return this.right.max();
-    }
-  }
-}
-
-class BinarySearchTree<E> extends SortedCollection<E> {
+class RedBlackTree<E> extends SortedCollection<E> {
   public readonly comparator: Comparator<E>;
   public readonly equals: Equals<E>;
   public readonly root: Node<E>;
@@ -89,25 +33,20 @@ class BinarySearchTree<E> extends SortedCollection<E> {
     comparator: Comparator<E>,
     equals?: Equals<E>
   ): SortedCollection<E> {
-    return new BinarySearchTree<E>(comparator, equals);
+    return new RedBlackTree<E>(comparator, equals);
   }
 
-  public setRoot(node: Node<E>): BinarySearchTree<E> {
-    return new BinarySearchTree<E>(
+  public setRoot(node: Node<E>): RedBlackTree<E> {
+    return new RedBlackTree<E>(
       this.comparator,
       this.equals,
-      node,
+      node && node.setColor(Color.Black),
       this.count
     );
   }
 
-  public setCount(count: number): BinarySearchTree<E> {
-    return new BinarySearchTree<E>(
-      this.comparator,
-      this.equals,
-      this.root,
-      count
-    );
+  public setCount(count: number): RedBlackTree<E> {
+    return new RedBlackTree<E>(this.comparator, this.equals, this.root, count);
   }
 
   private addNode(newNode: Node<E>, node: Node<E>): Node<E> {
@@ -116,18 +55,19 @@ class BinarySearchTree<E> extends SortedCollection<E> {
     } else if (!node) {
       return newNode;
     } else if (this.comparator(newNode.element, node.element) > 0) {
-      return node.setRight(this.addNode(newNode, node.right));
+      return node.setRight(this.addNode(newNode, node.right)).fixRedViolation();
     } else {
-      return node.setLeft(this.addNode(newNode, node.left));
+      return node.setLeft(this.addNode(newNode, node.left)).fixRedViolation();
     }
   }
 
   public add(element: E): SortedCollection<E> {
-    const node = this.addNode(new Node<E>(element), this.root);
-    return this.setRoot(node).setCount(this.count + 1);
+    return this.setRoot(
+      this.addNode(new Node<E>(element, Color.Red), this.root)
+    ).setCount(this.count + 1);
   }
 
-  private removeNode(element: E, node: Node<E>): Optional<Node<E>> {
+  private removeNode(element: E, node: Node<E>): Optional<[Node<E>, boolean]> {
     if (!node) {
       return Optional.empty();
     }
@@ -135,16 +75,20 @@ class BinarySearchTree<E> extends SortedCollection<E> {
     if (comparison == 0 && this.equals(element, node.element)) {
       return Optional.ofValue(node.replaceWithSuccessor());
     } else if (comparison > 0) {
-      return this.removeNode(element, node.right).map(node.setRight.bind(node));
+      return this.removeNode(element, node.right).map(([removed, fix]) =>
+        node.setRight(removed).fixRightViolation(fix)
+      );
     } else {
-      return this.removeNode(element, node.left).map(node.setLeft.bind(node));
+      return this.removeNode(element, node.left).map(([removed, fix]) =>
+        node.setLeft(removed).fixLeftViolation(fix)
+      );
     }
   }
 
   public remove(element: E): SortedCollection<E> {
     const tree = this;
     return this.removeNode(element, this.root)
-      .map(replaced => tree.setRoot(replaced).setCount(tree.count - 1))
+      .map(([replaced, fix]) => tree.setRoot(replaced).setCount(tree.count - 1))
       .orValue(this);
   }
 
@@ -156,7 +100,6 @@ class BinarySearchTree<E> extends SortedCollection<E> {
     return tree;
   }
 
-  // TODO: fix implementation. sorted elements = worst case insert O(n).
   public intersection(collection: Iterable<E>): SortedCollection<E> {
     const A = this[Symbol.iterator]();
     const B = this.clear()
@@ -187,7 +130,7 @@ class BinarySearchTree<E> extends SortedCollection<E> {
   }
 
   public clear(): SortedCollection<E> {
-    return new BinarySearchTree<E>(this.comparator, this.equals);
+    return new RedBlackTree<E>(this.comparator, this.equals);
   }
 
   private searchElement(element: E, node: Node<E>): Optional<Node<E>> {
@@ -360,10 +303,10 @@ class BinarySearchTree<E> extends SortedCollection<E> {
   public map<R>(
     mapper: Function<E, R>,
     comparator: Comparator<R>,
-    equals?: Equals<R>
+    equals: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new BinarySearchTree<R>(comparator, equals),
+      new RedBlackTree<R>(comparator, equals),
       (tree, element) => tree.add(mapper(element))
     );
   }
@@ -371,10 +314,10 @@ class BinarySearchTree<E> extends SortedCollection<E> {
   public flatMap<R>(
     mapper: Function<E, Iterable<R>>,
     comparator: Comparator<R>,
-    equals?: Equals<R>
+    equals: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new BinarySearchTree<R>(comparator, equals),
+      new RedBlackTree<R>(comparator, equals),
       (tree, element) => tree.union(mapper(element))
     );
   }
@@ -388,19 +331,19 @@ class BinarySearchTree<E> extends SortedCollection<E> {
   }
 }
 
-class Reversed<E> extends BinarySearchTree<E> {
-  public tree: BinarySearchTree<E>;
+class Reversed<E> extends RedBlackTree<E> {
+  public tree: RedBlackTree<E>;
 
   constructor(collection: SortedCollection<E>) {
     super(null);
-    this.tree = collection as BinarySearchTree<E>;
+    this.tree = collection as RedBlackTree<E>;
   }
 
-  public setRoot(node: Node<E>): BinarySearchTree<E> {
+  public setRoot(node: Node<E>): RedBlackTree<E> {
     return new Reversed<E>(this.tree.setRoot(node));
   }
 
-  public setCount(count: number): BinarySearchTree<E> {
+  public setCount(count: number): RedBlackTree<E> {
     return new Reversed<E>(this.tree.setCount(count));
   }
 
@@ -480,4 +423,4 @@ class Reversed<E> extends BinarySearchTree<E> {
   }
 }
 
-export default BinarySearchTree;
+export default RedBlackTree;
