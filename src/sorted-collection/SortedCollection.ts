@@ -3,6 +3,7 @@ import Comparator from "../function/Comparator";
 import Consumer from "../function/Consumer";
 import Equals from "../function/Equals";
 import Function from "../function/Function";
+import ListIterator from "./ListIterator";
 import Optional from "../data/Optional";
 import Predicate from "../function/Predicate";
 import SortedCollectionFactory from "./SortedCollectionFactory";
@@ -35,8 +36,6 @@ abstract class SortedCollection<E> implements Iterable<E> {
   public abstract except(collection: Iterable<E>): SortedCollection<E>;
   public abstract clear(): SortedCollection<E>;
   public abstract search(element: E): Optional<E>;
-  public abstract next(element: E): Optional<E>;
-  public abstract previous(element: E): Optional<E>;
   public abstract contains(element: E): boolean;
   public abstract containsAll(collection: Iterable<E>): boolean;
   public abstract isEmpty(): boolean;
@@ -48,6 +47,7 @@ abstract class SortedCollection<E> implements Iterable<E> {
   public abstract reverse(): SortedCollection<E>;
   public abstract toArray(): E[];
   public abstract [Symbol.iterator](): Iterator<E>;
+  public abstract listIterator(): ListIterator<E>;
   public abstract forEach(action: Consumer<E>): void;
   public abstract filter(predicate: Predicate<E>): SortedCollection<E>;
   public abstract map<R>(

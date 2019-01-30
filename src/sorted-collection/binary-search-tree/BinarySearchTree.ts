@@ -3,6 +3,7 @@ import Comparator from "../../function/Comparator";
 import Consumer from "../../function/Consumer";
 import Equals from "../../function/Equals";
 import Function from "../../function/Function";
+import ListIterator from "../ListIterator";
 import Node from "./Node";
 import Optional from "../../data/Optional";
 import Predicate from "../../function/Predicate";
@@ -288,6 +289,10 @@ class BinarySearchTree<E> extends SortedCollection<E> {
     return visit(this.root);
   }
 
+  public listIterator(): ListIterator<E> {
+    throw new ReferenceError("Not immplemented");
+  }
+
   public forEach(action: Consumer<E>): void {
     for (let element of this) {
       action(element);
@@ -420,6 +425,10 @@ class Reversed<E> extends BinarySearchTree<E> {
       }
     }
     return visit(this.tree.root);
+  }
+
+  public listIterator(): ListIterator<E> {
+    throw new ReferenceError("Not immplemented");
   }
 }
 
