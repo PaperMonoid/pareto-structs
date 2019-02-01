@@ -1,5 +1,3 @@
-function Identity<E>(e: E): E {
+export default function Identity<E>(e: E): E {
   return e;
 }
-
-export default Identity;

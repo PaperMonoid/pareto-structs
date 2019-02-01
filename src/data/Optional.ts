@@ -2,7 +2,7 @@ import Consumer from "../function/Consumer";
 import Function from "../function/Function";
 import Predicate from "../function/Predicate";
 
-abstract class Optional<T> {
+export default abstract class Optional<T> {
   public static empty<T>(): Optional<T> {
     return EmptyOptional.getInstance() as Optional<T>;
   }
@@ -105,5 +105,3 @@ class EmptyOptional<T> extends Optional<T> {
     return Optional.empty();
   }
 }
-
-export default Optional;

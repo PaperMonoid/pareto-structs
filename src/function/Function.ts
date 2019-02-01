@@ -1,5 +1,3 @@
-interface Function<T, R> {
+export default interface Function<T, R> {
   (value: T): R;
 }
-
-export default Function;

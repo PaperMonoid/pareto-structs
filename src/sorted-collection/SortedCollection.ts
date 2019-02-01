@@ -8,7 +8,7 @@ import Optional from "../data/Optional";
 import Predicate from "../function/Predicate";
 import SortedCollectionFactory from "./SortedCollectionFactory";
 
-abstract class SortedCollection<E> implements Iterable<E> {
+export default abstract class SortedCollection<E> implements Iterable<E> {
   public static binarySearchTreeFactory: SortedCollectionFactory;
   public static redBlackTreeFactory: SortedCollectionFactory;
 
@@ -62,5 +62,3 @@ abstract class SortedCollection<E> implements Iterable<E> {
   ): SortedCollection<R>;
   public abstract reduce<U>(identity: U, accumulator: BiFunction<U, E, U>): U;
 }
-
-export default SortedCollection;
