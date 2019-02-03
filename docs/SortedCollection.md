@@ -64,7 +64,7 @@ Returns an empty BinarySearchTree instance.
 
 **Example**
 ```typescript
-import SortedCollection from "pareto-structs/SortedCollection";
+import SortedCollection from "pareto-forest/SortedCollection";
 
 function comparator(first: number, second: number) {
   return first - second;
@@ -111,7 +111,7 @@ Returns an empty RedBlackTree instance.
 
 **Example**
 ```typescript
-import SortedCollection from "pareto-structs/SortedCollection";
+import SortedCollection from "pareto-forest/SortedCollection";
 
 function comparator(first: number, second: number) {
   return first - second;

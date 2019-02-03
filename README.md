@@ -1,4 +1,4 @@
-# Pareto Structs
+# Pareto Forest
 A typescript data structure library for pareto optimization.
 
 # Documentation
