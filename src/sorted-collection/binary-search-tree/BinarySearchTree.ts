@@ -10,7 +10,7 @@ import Predicate from "../../function/Predicate";
 import SortedCollection from "../SortedCollection";
 import StrictEquality from "../../function/StrictEquality";
 
-class BinarySearchTree<E> extends SortedCollection<E> {
+export default class BinarySearchTree<E> extends SortedCollection<E> {
   public readonly comparator: Comparator<E>;
   public readonly equals: Equals<E>;
   public readonly root: Node<E>;
@@ -431,5 +431,3 @@ class Reversed<E> extends BinarySearchTree<E> {
     throw new ReferenceError("Not immplemented");
   }
 }
-
-export default BinarySearchTree;
