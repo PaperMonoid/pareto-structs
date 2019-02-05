@@ -1,20 +1,11 @@
-import BinarySearchTree from "./binary-search-tree";
+import BinarySearchTreeFactory from "./binary-search-tree/BinarySearchTreeFactory";
 import Comparator from "../function/Comparator";
 import Equals from "../function/Equals";
 import RedBlackTree from "./red-black-tree";
 import SortedCollection from "./SortedCollection";
 import SortedCollectionAbstractFactory from "./SortedCollectionAbstractFactory";
 
-class BinarySearchTreeFactory extends SortedCollectionAbstractFactory {
-  public create<E>(
-    comparator: Comparator<E>,
-    equals?: Equals<E>
-  ): SortedCollection<E> {
-    return new BinarySearchTree<E>(comparator, equals);
-  }
-}
-
-class RedBlackTreeFactory extends SortedCollectionAbstractFactory {
+class RedBlackTreeFactory implements SortedCollectionAbstractFactory {
   public create<E>(
     comparator: Comparator<E>,
     equals?: Equals<E>
