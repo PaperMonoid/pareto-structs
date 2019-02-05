@@ -15,8 +15,9 @@ class ReversedBinarySearchTree<E> extends AbstractBinarySearchTree<E> {
   public tree: AbstractBinarySearchTree<E>;
 
   constructor(collection: SortedCollection<E>) {
-    super(null, null);
-    this.tree = collection as AbstractBinarySearchTree<E>;
+    let tree = collection as AbstractBinarySearchTree<E>;
+    super(tree.factory, null);
+    this.tree = tree;
   }
 
   public setRoot(node: Node<E>): AbstractBinarySearchTree<E> {
@@ -148,7 +149,7 @@ class ReversedBinarySearchTree<E> extends AbstractBinarySearchTree<E> {
     equals?: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      this.tree.factory.create<R>(comparator, equals),
+      this.factory.create<R>(comparator, equals),
       (tree, element) => tree.add(mapper(element))
     );
   }
@@ -159,7 +160,7 @@ class ReversedBinarySearchTree<E> extends AbstractBinarySearchTree<E> {
     equals?: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      this.tree.factory.create<R>(comparator, equals),
+      this.factory.create<R>(comparator, equals),
       (tree, element) => tree.union(mapper(element))
     );
   }

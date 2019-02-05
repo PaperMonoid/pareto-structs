@@ -311,7 +311,7 @@ export default class BinarySearchTree<E> extends AbstractBinarySearchTree<E> {
     equals?: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new BinarySearchTree<R>(comparator, equals),
+      this.factory.create<R>(comparator, equals),
       (tree, element) => tree.add(mapper(element))
     );
   }
@@ -322,7 +322,7 @@ export default class BinarySearchTree<E> extends AbstractBinarySearchTree<E> {
     equals?: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      new BinarySearchTree<R>(comparator, equals),
+      this.factory.create<R>(comparator, equals),
       (tree, element) => tree.union(mapper(element))
     );
   }
