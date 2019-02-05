@@ -1,3 +1,4 @@
+import AbstractBinarySearchTree from "./AbstractBinarySearchTree";
 import BiFunction from "../../function/BiFunction";
 import Comparator from "../../function/Comparator";
 import Consumer from "../../function/Consumer";
@@ -7,26 +8,18 @@ import ListIterator from "../ListIterator";
 import Node from "./Node";
 import Optional from "../../data/Optional";
 import Predicate from "../../function/Predicate";
+import ReversedBinarySearchTree from "./ReversedBinarySearchTree";
 import SortedCollection from "../SortedCollection";
 import StrictEquality from "../../function/StrictEquality";
 
-export default class BinarySearchTree<E> extends SortedCollection<E> {
-  public readonly comparator: Comparator<E>;
-  public readonly equals: Equals<E>;
-  public readonly root: Node<E>;
-  public readonly count: number;
-
+export default class BinarySearchTree<E> extends AbstractBinarySearchTree<E> {
   constructor(
     comparator: Comparator<E>,
     equals?: Equals<E>,
     root?: Node<E>,
     count?: number
   ) {
-    super();
-    this.comparator = comparator;
-    this.equals = equals || StrictEquality;
-    this.root = root;
-    this.count = count || 0;
+    super(comparator, equals, root, count);
   }
 
   public static create<E>(
@@ -36,7 +29,7 @@ export default class BinarySearchTree<E> extends SortedCollection<E> {
     return new BinarySearchTree<E>(comparator, equals);
   }
 
-  public setRoot(node: Node<E>): BinarySearchTree<E> {
+  public setRoot(node: Node<E>): AbstractBinarySearchTree<E> {
     return new BinarySearchTree<E>(
       this.comparator,
       this.equals,
@@ -45,7 +38,7 @@ export default class BinarySearchTree<E> extends SortedCollection<E> {
     );
   }
 
-  public setCount(count: number): BinarySearchTree<E> {
+  public setCount(count: number): AbstractBinarySearchTree<E> {
     return new BinarySearchTree<E>(
       this.comparator,
       this.equals,
@@ -267,7 +260,7 @@ export default class BinarySearchTree<E> extends SortedCollection<E> {
   }
 
   public reverse(): SortedCollection<E> {
-    return new Reversed<E>(this);
+    return new ReversedBinarySearchTree<E>(this);
   }
 
   public toArray(): E[] {
@@ -333,101 +326,5 @@ export default class BinarySearchTree<E> extends SortedCollection<E> {
       accumulated = accumulator(accumulated, element);
     }
     return accumulated;
-  }
-}
-
-class Reversed<E> extends BinarySearchTree<E> {
-  public tree: BinarySearchTree<E>;
-
-  constructor(collection: SortedCollection<E>) {
-    super(null);
-    this.tree = collection as BinarySearchTree<E>;
-  }
-
-  public setRoot(node: Node<E>): BinarySearchTree<E> {
-    return new Reversed<E>(this.tree.setRoot(node));
-  }
-
-  public setCount(count: number): BinarySearchTree<E> {
-    return new Reversed<E>(this.tree.setCount(count));
-  }
-
-  public add(element: E): SortedCollection<E> {
-    return new Reversed<E>(this.tree.add(element));
-  }
-
-  public remove(element: E): SortedCollection<E> {
-    return new Reversed<E>(this.tree.remove(element));
-  }
-
-  public union(collection: Iterable<E>): SortedCollection<E> {
-    return new Reversed<E>(this.tree.union(collection));
-  }
-
-  public intersection(collection: Iterable<E>): SortedCollection<E> {
-    return new Reversed<E>(this.tree.intersection(collection));
-  }
-
-  public except(collection: Iterable<E>): SortedCollection<E> {
-    return new Reversed<E>(this.tree.except(collection));
-  }
-
-  public clear(): SortedCollection<E> {
-    return new Reversed<E>(this.tree.clear());
-  }
-
-  public search(element: E): Optional<E> {
-    return this.tree.search(element);
-  }
-
-  public next(element: E): Optional<E> {
-    return this.tree.previous(element);
-  }
-
-  public previous(element: E): Optional<E> {
-    return this.tree.next(element);
-  }
-
-  public contains(element: E): boolean {
-    return this.tree.contains(element);
-  }
-
-  public containsAll(collection: Iterable<E>): boolean {
-    return this.tree.containsAll(collection);
-  }
-
-  public isEmpty(): boolean {
-    return this.tree.isEmpty();
-  }
-
-  public size(): number {
-    return this.tree.size();
-  }
-
-  public min(): Optional<E> {
-    return this.tree.max();
-  }
-
-  public max(): Optional<E> {
-    return this.tree.min();
-  }
-
-  public reverse(): SortedCollection<E> {
-    return this.tree;
-  }
-
-  public [Symbol.iterator](): Iterator<E> {
-    function* visit(node: Node<E>) {
-      if (node) {
-        yield* visit(node.right);
-        yield node.element;
-        yield* visit(node.left);
-      }
-    }
-    return visit(this.tree.root);
-  }
-
-  public listIterator(): ListIterator<E> {
-    throw new ReferenceError("Not immplemented");
   }
 }
