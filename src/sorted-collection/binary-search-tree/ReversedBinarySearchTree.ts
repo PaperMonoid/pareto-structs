@@ -1,3 +1,4 @@
+import AbstractBinarySearchTree from "./AbstractBinarySearchTree";
 import BiFunction from "../../function/BiFunction";
 import Comparator from "../../function/Comparator";
 import Consumer from "../../function/Consumer";
@@ -9,17 +10,13 @@ import Optional from "../../data/Optional";
 import Predicate from "../../function/Predicate";
 import SortedCollection from "../SortedCollection";
 import StrictEquality from "../../function/StrictEquality";
-import AbstractBinarySearchTree from "./AbstractBinarySearchTree";
-import SortedCollectionAbstractFactory from "../SortedCollectionAbstractFactory";
 
 class ReversedBinarySearchTree<E> extends AbstractBinarySearchTree<E> {
   public tree: AbstractBinarySearchTree<E>;
-  public factory: SortedCollectionAbstractFactory;
 
   constructor(collection: SortedCollection<E>) {
-    super(null);
+    super(null, null);
     this.tree = collection as AbstractBinarySearchTree<E>;
-    this.factory = null;
   }
 
   public setRoot(node: Node<E>): AbstractBinarySearchTree<E> {
@@ -151,7 +148,7 @@ class ReversedBinarySearchTree<E> extends AbstractBinarySearchTree<E> {
     equals?: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      this.factory.create<R>(comparator, equals),
+      this.tree.factory.create<R>(comparator, equals),
       (tree, element) => tree.add(mapper(element))
     );
   }
@@ -162,7 +159,7 @@ class ReversedBinarySearchTree<E> extends AbstractBinarySearchTree<E> {
     equals?: Equals<R>
   ): SortedCollection<R> {
     return this.reduce<SortedCollection<R>>(
-      this.factory.create<R>(comparator, equals),
+      this.tree.factory.create<R>(comparator, equals),
       (tree, element) => tree.union(mapper(element))
     );
   }

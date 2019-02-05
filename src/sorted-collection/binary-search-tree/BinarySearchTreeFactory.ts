@@ -6,6 +6,15 @@ import SortedCollectionAbstractFactory from "../SortedCollectionAbstractFactory"
 
 export default class BinarySearchTreeFactory
   implements SortedCollectionAbstractFactory {
+  private static instance: BinarySearchTreeFactory;
+
+  public static getInstance(): BinarySearchTreeFactory {
+    return (
+      BinarySearchTreeFactory.instance ||
+      (BinarySearchTreeFactory.instance = new BinarySearchTreeFactory())
+    );
+  }
+
   public create<E>(
     comparator: Comparator<E>,
     equals?: Equals<E>

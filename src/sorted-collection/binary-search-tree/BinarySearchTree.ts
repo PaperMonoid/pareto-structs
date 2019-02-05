@@ -1,5 +1,6 @@
 import AbstractBinarySearchTree from "./AbstractBinarySearchTree";
 import BiFunction from "../../function/BiFunction";
+import BinarySearchTreeFactory from "./BinarySearchTreeFactory";
 import Comparator from "../../function/Comparator";
 import Consumer from "../../function/Consumer";
 import Equals from "../../function/Equals";
@@ -19,7 +20,13 @@ export default class BinarySearchTree<E> extends AbstractBinarySearchTree<E> {
     root?: Node<E>,
     count?: number
   ) {
-    super(comparator, equals, root, count);
+    super(
+      BinarySearchTreeFactory.getInstance(),
+      comparator,
+      equals,
+      root,
+      count
+    );
   }
 
   public static create<E>(
