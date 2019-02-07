@@ -1,5 +1,6 @@
 import AbstractBinarySearchTree from "./AbstractBinarySearchTree";
 import BinarySearchTreeFactory from "./BinarySearchTreeFactory";
+import BinarySearchTreeListIterator from "./BinarySearchTreeListIterator";
 import Comparator from "../../function/Comparator";
 import Equals from "../../function/Equals";
 import ListIterator from "../ListIterator";
@@ -147,48 +148,6 @@ export default class BinarySearchTree<E> extends AbstractBinarySearchTree<E> {
     return this.searchElement(element, this.root).map(node => node.element);
   }
 
-  private nextElement(element: E, node: Node<E>): Optional<Node<E>> {
-    if (!node) {
-      return Optional.empty();
-    }
-    const comparison = this.comparator(element, node.element);
-    if (comparison == 0 && this.equals(element, node.element)) {
-      return Optional.ofValue(node.right && node.right.min());
-    } else if (comparison > 0) {
-      return this.nextElement(element, node.right);
-    } else {
-      return this.nextElement(element, node.left).map(next => next || node);
-    }
-  }
-
-  public next(element: E): Optional<E> {
-    return this.nextElement(element, this.root)
-      .flatMap(node => Optional.ofNullable(node))
-      .map(node => node.element);
-  }
-
-  private previousElement(element: E, node: Node<E>): Optional<Node<E>> {
-    if (!node) {
-      return Optional.empty();
-    }
-    const comparison = this.comparator(element, node.element);
-    if (comparison == 0 && this.equals(element, node.element)) {
-      return Optional.ofValue(node.left && node.left.max());
-    } else if (comparison > 0) {
-      return this.previousElement(element, node.right).map(
-        next => next || node
-      );
-    } else {
-      return this.previousElement(element, node.left);
-    }
-  }
-
-  public previous(element: E): Optional<E> {
-    return this.previousElement(element, this.root)
-      .flatMap(node => Optional.ofNullable(node))
-      .map(node => node.element);
-  }
-
   public contains(element: E): boolean {
     return this.search(element).isPresent();
   }
@@ -253,6 +212,6 @@ export default class BinarySearchTree<E> extends AbstractBinarySearchTree<E> {
   }
 
   public listIterator(): ListIterator<E> {
-    throw new ReferenceError("Not immplemented");
+    return new BinarySearchTreeListIterator<E>(this);
   }
 }
