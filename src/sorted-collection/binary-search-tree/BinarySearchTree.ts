@@ -10,7 +10,7 @@ import ReversedBinarySearchTree from "./ReversedBinarySearchTree";
 import SortedCollection from "../SortedCollection";
 
 export default class BinarySearchTree<E> extends AbstractBinarySearchTree<E> {
-  constructor(
+  public constructor(
     comparator: Comparator<E>,
     equals?: Equals<E>,
     root?: Node<E>,

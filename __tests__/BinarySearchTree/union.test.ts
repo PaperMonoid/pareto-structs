@@ -1,4 +1,5 @@
 import SortedCollection from "../../src/sorted-collection";
+import BinarySearchTree from "../../src/sorted-collection/binary-search-tree";
 
 function asc(first: number, second: number): number {
   return first - second;
@@ -9,16 +10,16 @@ function desc(first: number, second: number): number {
 }
 
 test("BinarySearchTree union empty and empty test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(asc);
-  let b = SortedCollection.asBinarySearchTree<number>(asc);
+  let a = BinarySearchTree.create<number>(asc);
+  let b = BinarySearchTree.create<number>(asc);
   let c = a.union(b);
   expect(c.toArray()).toEqual([]);
   expect(c.size()).toBe(0);
 });
 
 test("BinarySearchTree union empty and 1 test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(asc);
-  let b = SortedCollection.asBinarySearchTree<number>(asc);
+  let a = BinarySearchTree.create<number>(asc);
+  let b = BinarySearchTree.create<number>(asc);
   b = b.add(1);
   let c = a.union(b);
   expect(c.toArray()).toEqual([1]);
@@ -26,18 +27,18 @@ test("BinarySearchTree union empty and 1 test", function() {
 });
 
 test("BinarySearchTree union 1 and empty test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(asc);
+  let a = BinarySearchTree.create<number>(asc);
   a = a.add(1);
-  let b = SortedCollection.asBinarySearchTree<number>(asc);
+  let b = BinarySearchTree.create<number>(asc);
   let c = a.union(b);
   expect(c.toArray()).toEqual([1]);
   expect(c.size()).toBe(1);
 });
 
 test("BinarySearchTree union 1 and 1 test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(asc);
+  let a = BinarySearchTree.create<number>(asc);
   a = a.add(1);
-  let b = SortedCollection.asBinarySearchTree<number>(asc);
+  let b = BinarySearchTree.create<number>(asc);
   b = b.add(1);
   let c = a.union(b);
   expect(c.toArray()).toEqual([1, 1]);
@@ -45,11 +46,11 @@ test("BinarySearchTree union 1 and 1 test", function() {
 });
 
 test("BinarySearchTree union 1, 2, 3 and 1, 2, 3 test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(asc);
+  let a = BinarySearchTree.create<number>(asc);
   a = a.add(1);
   a = a.add(2);
   a = a.add(3);
-  let b = SortedCollection.asBinarySearchTree<number>(asc);
+  let b = BinarySearchTree.create<number>(asc);
   b = b.add(1);
   b = b.add(2);
   b = b.add(3);
@@ -59,11 +60,11 @@ test("BinarySearchTree union 1, 2, 3 and 1, 2, 3 test", function() {
 });
 
 test("BinarySearchTree union 3, 2, 1 and 1, 2, 3 test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(asc);
+  let a = BinarySearchTree.create<number>(asc);
   a = a.add(3);
   a = a.add(2);
   a = a.add(1);
-  let b = SortedCollection.asBinarySearchTree<number>(asc);
+  let b = BinarySearchTree.create<number>(asc);
   b = b.add(1);
   b = b.add(2);
   b = b.add(3);
@@ -73,11 +74,11 @@ test("BinarySearchTree union 3, 2, 1 and 1, 2, 3 test", function() {
 });
 
 test("BinarySearchTree union 1, 2, 3 and 3, 2, 1 test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(asc);
+  let a = BinarySearchTree.create<number>(asc);
   a = a.add(1);
   a = a.add(2);
   a = a.add(3);
-  let b = SortedCollection.asBinarySearchTree<number>(asc);
+  let b = BinarySearchTree.create<number>(asc);
   b = b.add(3);
   b = b.add(2);
   b = b.add(1);
@@ -87,11 +88,11 @@ test("BinarySearchTree union 1, 2, 3 and 3, 2, 1 test", function() {
 });
 
 test("BinarySearchTree union 1, 2, 3 and 1, 2, 3 desc test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(asc);
+  let a = BinarySearchTree.create<number>(asc);
   a = a.add(1);
   a = a.add(2);
   a = a.add(3);
-  let b = SortedCollection.asBinarySearchTree<number>(desc);
+  let b = BinarySearchTree.create<number>(desc);
   b = b.add(1);
   b = b.add(2);
   b = b.add(3);
@@ -101,11 +102,11 @@ test("BinarySearchTree union 1, 2, 3 and 1, 2, 3 desc test", function() {
 });
 
 test("BinarySearchTree union 1, 2, 3 desc and 1, 2, 3 test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(desc);
+  let a = BinarySearchTree.create<number>(desc);
   a = a.add(1);
   a = a.add(2);
   a = a.add(3);
-  let b = SortedCollection.asBinarySearchTree<number>(asc);
+  let b = BinarySearchTree.create<number>(asc);
   b = b.add(1);
   b = b.add(2);
   b = b.add(3);
@@ -115,11 +116,11 @@ test("BinarySearchTree union 1, 2, 3 desc and 1, 2, 3 test", function() {
 });
 
 test("BinarySearchTree union 1, 2, 3 desc and 1, 2, 3 desc test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(desc);
+  let a = BinarySearchTree.create<number>(desc);
   a = a.add(1);
   a = a.add(2);
   a = a.add(3);
-  let b = SortedCollection.asBinarySearchTree<number>(desc);
+  let b = BinarySearchTree.create<number>(desc);
   b = b.add(1);
   b = b.add(2);
   b = b.add(3);
@@ -129,11 +130,11 @@ test("BinarySearchTree union 1, 2, 3 desc and 1, 2, 3 desc test", function() {
 });
 
 test("BinarySearchTree union 3, 2, 1 and 5, 4, 6 test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(asc);
+  let a = BinarySearchTree.create<number>(asc);
   a = a.add(3);
   a = a.add(2);
   a = a.add(1);
-  let b = SortedCollection.asBinarySearchTree<number>(asc);
+  let b = BinarySearchTree.create<number>(asc);
   b = b.add(5);
   b = b.add(4);
   b = b.add(6);
@@ -143,11 +144,11 @@ test("BinarySearchTree union 3, 2, 1 and 5, 4, 6 test", function() {
 });
 
 test("BinarySearchTree union 3, 2, 1 and 5, 4, 6 desc test", function() {
-  let a = SortedCollection.asBinarySearchTree<number>(asc);
+  let a = BinarySearchTree.create<number>(asc);
   a = a.add(3);
   a = a.add(2);
   a = a.add(1);
-  let b = SortedCollection.asBinarySearchTree<number>(desc);
+  let b = BinarySearchTree.create<number>(desc);
   b = b.add(5);
   b = b.add(4);
   b = b.add(6);

@@ -9,7 +9,7 @@ import SortedCollection from "../SortedCollection";
 class ReversedBinarySearchTree<E> extends AbstractBinarySearchTree<E> {
   public tree: AbstractBinarySearchTree<E>;
 
-  constructor(collection: SortedCollection<E>) {
+  public constructor(collection: SortedCollection<E>) {
     let tree = collection as AbstractBinarySearchTree<E>;
     super(tree.factory, null);
     this.tree = tree;

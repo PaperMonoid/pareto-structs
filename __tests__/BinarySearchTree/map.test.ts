@@ -1,4 +1,5 @@
 import SortedCollection from "../../src/sorted-collection";
+import BinarySearchTree from "../../src/sorted-collection/binary-search-tree";
 
 function asc(first: number, second: number): number {
   return first - second;
@@ -40,7 +41,7 @@ function fib(n) {
 }
 
 test("BinarySearchTree map empty timesTwo test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.map(timesTwo, asc);
   expect(tree.toArray()).toEqual([]);
   expect(tree.size()).toBe(0);
@@ -48,7 +49,7 @@ test("BinarySearchTree map empty timesTwo test", function() {
 });
 
 test("BinarySearchTree map empty zero test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.map(zero, asc);
   expect(tree.toArray()).toEqual([]);
   expect(tree.size()).toBe(0);
@@ -56,7 +57,7 @@ test("BinarySearchTree map empty zero test", function() {
 });
 
 test("BinarySearchTree map 0 timesTwo test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.map(timesTwo, asc);
   expect(tree.toArray()).toEqual([0]);
@@ -65,7 +66,7 @@ test("BinarySearchTree map 0 timesTwo test", function() {
 });
 
 test("BinarySearchTree map 1 zero test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.add(1);
   tree = tree.map(zero, asc);
   expect(tree.toArray()).toEqual([0]);
@@ -74,7 +75,7 @@ test("BinarySearchTree map 1 zero test", function() {
 });
 
 test("BinarySearchTree map 1, 2, 0 timesTwo test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.union([1, 2, 0]);
   tree = tree.map(timesTwo, asc);
   expect(tree.toArray()).toEqual([0, 2, 4]);
@@ -83,7 +84,7 @@ test("BinarySearchTree map 1, 2, 0 timesTwo test", function() {
 });
 
 test("BinarySearchTree map 1, 2, 0 zero test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.union([1, 2, 0]);
   tree = tree.map(zero, asc);
   expect(tree.toArray()).toEqual([0, 0, 0]);
@@ -92,7 +93,7 @@ test("BinarySearchTree map 1, 2, 0 zero test", function() {
 });
 
 test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 timesTwo test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.union([1, 2, 0, 3, -4, -2, -1, 4, -3]);
   tree = tree.map(timesTwo, asc);
   expect(tree.toArray()).toEqual([-8, -6, -4, -2, 0, 2, 4, 6, 8]);
@@ -101,7 +102,7 @@ test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 timesTwo test", functio
 });
 
 test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 additiveInverse test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.union([1, 2, 0, 3, -4, -2, -1, 4, -3]);
   tree = tree.map(additiveInverse, asc);
   expect(tree.toArray()).toEqual([-4, -3, -2, -1, -0, 1, 2, 3, 4]);
@@ -110,7 +111,7 @@ test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 additiveInverse test", 
 });
 
 test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 multiplicativeInverse test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.union([1, 2, 0, 3, -4, -2, -1, 4, -3]);
   tree = tree.map(multiplicativeInverse, asc);
   expect(tree.toArray()).toEqual([
@@ -129,7 +130,7 @@ test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 multiplicativeInverse t
 });
 
 test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 square test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.union([1, 2, 0, 3, -4, -2, -1, 4, -3]);
   tree = tree.map(square, asc);
   expect(tree.toArray()).toEqual([0, 1, 1, 4, 4, 9, 9, 16, 16]);
@@ -138,7 +139,7 @@ test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 square test", function(
 });
 
 test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 zero test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.union([1, 2, 0, 3, -4, -2, -1, 4, -3]);
   tree = tree.map(zero, asc);
   expect(tree.toArray()).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0]);
@@ -147,7 +148,7 @@ test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 zero test", function() 
 });
 
 test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 id test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.union([1, 2, 0, 3, -4, -2, -1, 4, -3]);
   tree = tree.map(id, asc);
   expect(tree.toArray()).toEqual([-4, -3, -2, -1, 0, 1, 2, 3, 4]);
@@ -156,7 +157,7 @@ test("BinarySearchTree map 1, 2, 0, 3, -4, -2, -1, 4, -3 id test", function() {
 });
 
 test("BinarySearchTree map 5, 2, 6, 1, 4, 3 fibonacci test", function() {
-  let tree = SortedCollection.asBinarySearchTree<number>(asc);
+  let tree = BinarySearchTree.create<number>(asc);
   tree = tree.union([5, 2, 6, 1, 4, 3]);
   tree = tree.map(fib, asc);
   expect(tree.toArray()).toEqual([1, 1, 2, 3, 5, 8]);

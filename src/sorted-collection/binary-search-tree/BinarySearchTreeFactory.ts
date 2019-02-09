@@ -2,10 +2,10 @@ import BinarySearchTree from "./BinarySearchTree";
 import Comparator from "../../function/Comparator";
 import Equals from "../../function/Equals";
 import SortedCollection from "../SortedCollection";
-import SortedCollectionAbstractFactory from "../SortedCollectionAbstractFactory";
+import SortedCollectionFactory from "../SortedCollectionFactory";
 
 export default class BinarySearchTreeFactory
-  implements SortedCollectionAbstractFactory {
+  implements SortedCollectionFactory {
   private static instance: BinarySearchTreeFactory;
 
   public static getInstance(): BinarySearchTreeFactory {

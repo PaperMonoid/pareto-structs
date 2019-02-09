@@ -3,9 +3,9 @@ import Comparator from "../function/Comparator";
 import Equals from "../function/Equals";
 import RedBlackTree from "./red-black-tree";
 import SortedCollection from "./SortedCollection";
-import SortedCollectionAbstractFactory from "./SortedCollectionAbstractFactory";
+import SortedCollectionFactory from "./SortedCollectionFactory";
 
-class RedBlackTreeFactory implements SortedCollectionAbstractFactory {
+class RedBlackTreeFactory implements SortedCollectionFactory {
   public create<E>(
     comparator: Comparator<E>,
     equals?: Equals<E>
@@ -14,7 +14,6 @@ class RedBlackTreeFactory implements SortedCollectionAbstractFactory {
   }
 }
 
-SortedCollection.binarySearchTreeFactory = new BinarySearchTreeFactory();
 SortedCollection.redBlackTreeFactory = new RedBlackTreeFactory();
 
 export default SortedCollection;

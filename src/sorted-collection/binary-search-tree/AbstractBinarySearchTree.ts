@@ -7,7 +7,7 @@ import Node from "./Node";
 import Optional from "../../data/Optional";
 import Predicate from "../../function/Predicate";
 import SortedCollection from "../SortedCollection";
-import SortedCollectionAbstractFactory from "../SortedCollectionAbstractFactory";
+import SortedCollectionFactory from "../SortedCollectionFactory";
 import StrictEquality from "../../function/StrictEquality";
 
 abstract class AbstractBinarySearchTree<E> extends SortedCollection<E> {
@@ -15,10 +15,10 @@ abstract class AbstractBinarySearchTree<E> extends SortedCollection<E> {
   public readonly equals: Equals<E>;
   public readonly root: Node<E>;
   public readonly count: number;
-  public readonly factory: SortedCollectionAbstractFactory;
+  public readonly factory: SortedCollectionFactory;
 
   constructor(
-    factory: SortedCollectionAbstractFactory,
+    factory: SortedCollectionFactory,
     comparator: Comparator<E>,
     equals?: Equals<E>,
     root?: Node<E>,

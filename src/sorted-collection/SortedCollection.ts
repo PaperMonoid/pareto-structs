@@ -6,21 +6,10 @@ import Function from "../function/Function";
 import ListIterator from "./ListIterator";
 import Optional from "../data/Optional";
 import Predicate from "../function/Predicate";
-import SortedCollectionAbstractFactory from "./SortedCollectionAbstractFactory";
+import SortedCollectionFactory from "./SortedCollectionFactory";
 
 export default abstract class SortedCollection<E> implements Iterable<E> {
-  public static binarySearchTreeFactory: SortedCollectionAbstractFactory;
-  public static redBlackTreeFactory: SortedCollectionAbstractFactory;
-
-  public static asBinarySearchTree<E>(
-    comparator: Comparator<E>,
-    equals?: Equals<E>
-  ): SortedCollection<E> {
-    return SortedCollection.binarySearchTreeFactory.create<E>(
-      comparator,
-      equals
-    );
-  }
+  public static redBlackTreeFactory: SortedCollectionFactory;
 
   public static asRedBlackTree<E>(
     comparator: Comparator<E>,

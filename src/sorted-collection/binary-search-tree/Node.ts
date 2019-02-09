@@ -3,7 +3,7 @@ export default class Node<E> {
   public readonly left: Node<E>;
   public readonly right: Node<E>;
 
-  constructor(element: E, left?: Node<E>, right?: Node<E>) {
+  public constructor(element: E, left?: Node<E>, right?: Node<E>) {
     this.element = element;
     this.left = left;
     this.right = right;
