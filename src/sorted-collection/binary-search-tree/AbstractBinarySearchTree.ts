@@ -1,9 +1,8 @@
-import Comparator from "../../function/Comparator";
-import Equals from "../../function/Equals";
 import Node from "./Node";
-import Optional from "../../data/Optional";
 import SortedCollection from "../SortedCollection";
 import SortedCollectionFactory from "../SortedCollectionFactory";
+import { Comparator, Equals } from "../../function";
+import { Optional } from "../../data";
 
 abstract class AbstractBinarySearchTree<E> extends SortedCollection<E> {
   public readonly root: Node<E>;

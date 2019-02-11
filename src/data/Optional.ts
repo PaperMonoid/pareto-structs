@@ -1,6 +1,4 @@
-import Consumer from "../function/Consumer";
-import Function from "../function/Function";
-import Predicate from "../function/Predicate";
+import { Consumer, Function, Predicate } from "../function";
 
 export default abstract class Optional<T> {
   public static empty<T>(): Optional<T> {

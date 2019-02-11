@@ -1,7 +1,7 @@
 import AbstractBinarySearchTree from "./AbstractBinarySearchTree";
-import ListIterator from "../ListIterator";
+import ListIterator from "../list-iterator";
 import Node from "./Node";
-import Optional from "../../data/Optional";
+import { Optional } from "../../data";
 
 class BinarySearchTreeListIterator<E> implements ListIterator<E> {
   public readonly tree: AbstractBinarySearchTree<E>;

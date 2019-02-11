@@ -1,11 +1,10 @@
 import AbstractRedBlackTree from "./AbstractRedBlackTree";
-import Comparator from "../../function/Comparator";
-import Equals from "../../function/Equals";
-import ListIterator from "../ListIterator";
+import ListIterator from "../list-iterator";
 import Node from "./Node";
-import Optional from "../../data/Optional";
+import ReversedListIterator from "../list-iterator/ReversedListIterator";
 import SortedCollection from "../SortedCollection";
-import ReversedListIterator from "../ReversedListIterator";
+import { Comparator, Equals } from "../../function";
+import { Optional } from "../../data";
 
 class ReversedRedBlackTree<E> extends AbstractRedBlackTree<E> {
   public tree: AbstractRedBlackTree<E>;

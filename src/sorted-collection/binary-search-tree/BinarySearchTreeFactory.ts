@@ -1,8 +1,7 @@
 import BinarySearchTree from "./BinarySearchTree";
-import Comparator from "../../function/Comparator";
-import Equals from "../../function/Equals";
 import SortedCollection from "../SortedCollection";
 import SortedCollectionFactory from "../SortedCollectionFactory";
+import { Comparator, Equals } from "../../function";
 
 export default class BinarySearchTreeFactory
   implements SortedCollectionFactory {

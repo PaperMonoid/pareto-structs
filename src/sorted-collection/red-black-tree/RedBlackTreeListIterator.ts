@@ -1,7 +1,7 @@
 import AbstractRedBlackTree from "./AbstractRedBlackTree";
-import ListIterator from "../ListIterator";
+import ListIterator from "../list-iterator";
 import Node from "./Node";
-import Optional from "../../data/Optional";
+import { Optional } from "../../data";
 
 class RedBlackTreeListIterator<E> implements ListIterator<E> {
   public readonly tree: AbstractRedBlackTree<E>;

@@ -1,13 +1,12 @@
 import AbstractBinarySearchTree from "./AbstractBinarySearchTree";
 import BinarySearchTreeFactory from "./BinarySearchTreeFactory";
 import BinarySearchTreeListIterator from "./BinarySearchTreeListIterator";
-import Comparator from "../../function/Comparator";
-import Equals from "../../function/Equals";
-import ListIterator from "../ListIterator";
+import ListIterator from "../list-iterator";
 import Node from "./Node";
-import Optional from "../../data/Optional";
 import ReversedBinarySearchTree from "./ReversedBinarySearchTree";
 import SortedCollection from "../SortedCollection";
+import { Comparator, Equals } from "../../function";
+import { Optional } from "../../data";
 
 export default class BinarySearchTree<E> extends AbstractBinarySearchTree<E> {
   public constructor(

@@ -1,13 +1,15 @@
-import BiFunction from "../function/BiFunction";
-import Comparator from "../function/Comparator";
-import Consumer from "../function/Consumer";
-import Equals from "../function/Equals";
-import Function from "../function/Function";
-import ListIterator from "./ListIterator";
-import Optional from "../data/Optional";
-import Predicate from "../function/Predicate";
+import ListIterator from "./list-iterator";
 import SortedCollectionFactory from "./SortedCollectionFactory";
-import StrictEquality from "../function/StrictEquality";
+import {
+  BiFunction,
+  Comparator,
+  Consumer,
+  Equals,
+  Function,
+  Predicate,
+  StrictEquality
+} from "../function";
+import { Optional } from "../data";
 
 export default abstract class SortedCollection<E> implements Iterable<E> {
   public readonly factory: SortedCollectionFactory;

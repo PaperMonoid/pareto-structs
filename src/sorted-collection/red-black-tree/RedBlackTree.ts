@@ -1,19 +1,13 @@
 import AbstractRedBlackTree from "./AbstractRedBlackTree";
-import BiFunction from "../../function/BiFunction";
 import Color from "./Color";
-import Comparator from "../../function/Comparator";
-import Consumer from "../../function/Consumer";
-import Equals from "../../function/Equals";
-import Function from "../../function/Function";
-import ListIterator from "../ListIterator";
+import ListIterator from "../list-iterator";
 import Node from "./Node";
-import Optional from "../../data/Optional";
-import Predicate from "../../function/Predicate";
 import RedBlackTreeFactory from "./RedBlackTreeFactory";
 import RedBlackTreeListIterator from "./RedBlackTreeListIterator";
 import ReversedRedBlackTree from "./ReversedRedBlackTree";
 import SortedCollection from "../SortedCollection";
-import StrictEquality from "../../function/StrictEquality";
+import { Comparator, Equals } from "../../function";
+import { Optional } from "../../data";
 
 export default class RedBlackTree<E> extends AbstractRedBlackTree<E> {
   constructor(

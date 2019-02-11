@@ -1,11 +1,10 @@
 import AbstractBinarySearchTree from "./AbstractBinarySearchTree";
-import Comparator from "../../function/Comparator";
-import Equals from "../../function/Equals";
-import ListIterator from "../ListIterator";
+import ListIterator from "../list-iterator";
 import Node from "./Node";
-import Optional from "../../data/Optional";
-import ReversedListIterator from "../ReversedListIterator";
+import ReversedListIterator from "../list-iterator/ReversedListIterator";
 import SortedCollection from "../SortedCollection";
+import { Comparator, Equals } from "../../function";
+import { Optional } from "../../data";
 
 class ReversedBinarySearchTree<E> extends AbstractBinarySearchTree<E> {
   public tree: AbstractBinarySearchTree<E>;
