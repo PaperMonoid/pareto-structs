@@ -135,7 +135,7 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 desc  reverse test", function(
   expect(tree.size()).toBe(7);
 });
 
-test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 desc  reverse test", function() {
+test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 desc reverse test", function() {
   let tree = BinarySearchTree.create<number>(desc);
   tree = tree.add(0);
   tree = tree.add(2);
@@ -148,4 +148,42 @@ test("BinarySearchTree add 0, 2, -2, 3, -3, -1, 1 desc  reverse test", function(
   tree = tree.reverse();
   expect(tree.size()).toBe(7);
   expect(tree.toArray()).toEqual([3, 2, 1, 0, -1, -2, -3]);
+});
+
+test("BinarySearcTree union 2, 3, 1, 0, 4, 5 stateful filter", function() {
+  let tree = BinarySearchTree.create<number>(asc).union([2, 3, 1, 0, 4, 5]);
+  let state = 0;
+  tree = tree.reverse().filter(element => state++ < 3);
+  expect(tree.size()).toBe(3);
+  expect(tree.toArray()).toEqual([5, 4, 3]);
+});
+
+test("BinarySearcTree union 2, 3, 1, 0, 4, 5 map", function() {
+  let tree = BinarySearchTree.create<number>(asc).union([2, 3, 1, 0, 4, 5]);
+  let last = null;
+  tree = tree
+    .reverse()
+    .map(element => (last = element * 2), asc)
+    .reverse();
+  expect(last).toBe(0);
+  expect(tree.size()).toBe(6);
+  expect(tree.toArray()).toEqual([10, 8, 6, 4, 2, 0]);
+});
+
+test("BinarySearcTree union 2, 3, 1, 0, 4, 5 flatMap", function() {
+  let tree = BinarySearchTree.create<number>(asc).union([2, 3, 1, 0, 4, 5]);
+  let last = null;
+  tree = tree
+    .reverse()
+    .flatMap(element => (last = [element, element + 1]), asc)
+    .reverse();
+  expect(last).toEqual([0, 1]);
+  expect(tree.size()).toBe(12);
+  expect(tree.toArray()).toEqual([6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0]);
+});
+
+test("BinarySearcTree union 2, 3, 1, 4, 5 reduce", function() {
+  let tree = BinarySearchTree.create<number>(asc).union([2, 3, 1, 4, 5]);
+  let result = tree.reverse().reduce(1, (a, b) => b + a * b);
+  expect(result).toBe(273);
 });
