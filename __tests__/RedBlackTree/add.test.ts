@@ -1,5 +1,6 @@
 import validateProperties from "./validateProperties";
 import SortedCollection from "../../src/sorted-collection";
+import RedBlackTree from "../../src/sorted-collection/red-black-tree";
 
 function asc(first: number, second: number): number {
   return first - second;
@@ -10,14 +11,14 @@ function desc(first: number, second: number): number {
 }
 
 test("RedBlackTree empty test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   expect(tree.toArray()).toEqual([]);
   expect(tree.size()).toBe(0);
   validateProperties<number>(tree);
 });
 
 test("RedBlackTree add 0 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   expect(tree.toArray()).toEqual([0]);
   expect(tree.size()).toBe(1);
@@ -25,7 +26,7 @@ test("RedBlackTree add 0 test", function() {
 });
 
 test("RedBlackTree add 0, 1, -1 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(1);
   tree = tree.add(-1);
@@ -35,7 +36,7 @@ test("RedBlackTree add 0, 1, -1 test", function() {
 });
 
 test("RedBlackTree add -1, 0, 1 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(-1);
   tree = tree.add(0);
   tree = tree.add(1);
@@ -45,7 +46,7 @@ test("RedBlackTree add -1, 0, 1 test", function() {
 });
 
 test("RedBlackTree add 1, 0, -1 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(1);
   tree = tree.add(0);
   tree = tree.add(-1);
@@ -55,7 +56,7 @@ test("RedBlackTree add 1, 0, -1 test", function() {
 });
 
 test("RedBlackTree add 0, 2, -2, -1, 1 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -67,7 +68,7 @@ test("RedBlackTree add 0, 2, -2, -1, 1 test", function() {
 });
 
 test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -81,7 +82,7 @@ test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 test", function() {
 });
 
 test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 desc test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(desc);
+  let tree = RedBlackTree.create<number>(desc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -95,7 +96,7 @@ test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 desc test", function() {
 });
 
 test("RedBlackTree add 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(1);
   tree = tree.add(2);

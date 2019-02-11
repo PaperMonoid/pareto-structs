@@ -1,5 +1,6 @@
 import validateProperties from "./validateProperties";
 import SortedCollection from "../../src/sorted-collection";
+import RedBlackTree from "../../src/sorted-collection/red-black-tree";
 
 function asc(first: number, second: number): number {
   return first - second;
@@ -10,7 +11,7 @@ function desc(first: number, second: number): number {
 }
 
 test("RedBlackTree empty remove nothing test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.remove(0);
   expect(tree.toArray()).toEqual([]);
   expect(tree.size()).toBe(0);
@@ -18,7 +19,7 @@ test("RedBlackTree empty remove nothing test", function() {
 });
 
 test("RedBlackTree add 0 remove nothing test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.remove(-1);
   expect(tree.toArray()).toEqual([0]);
@@ -27,7 +28,7 @@ test("RedBlackTree add 0 remove nothing test", function() {
 });
 
 test("RedBlackTree add 0 remove 0 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.remove(0);
   expect(tree.toArray()).toEqual([]);
@@ -36,7 +37,7 @@ test("RedBlackTree add 0 remove 0 test", function() {
 });
 
 test("RedBlackTree add 0, 1, -1 remove 0 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(1);
   tree = tree.add(-1);
@@ -47,7 +48,7 @@ test("RedBlackTree add 0, 1, -1 remove 0 test", function() {
 });
 
 test("RedBlackTree add 0, 1, -1 remove 1 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(1);
   tree = tree.add(-1);
@@ -58,7 +59,7 @@ test("RedBlackTree add 0, 1, -1 remove 1 test", function() {
 });
 
 test("RedBlackTree add 0, 1, -1 remove -1 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(1);
   tree = tree.add(-1);
@@ -69,7 +70,7 @@ test("RedBlackTree add 0, 1, -1 remove -1 test", function() {
 });
 
 test("RedBlackTree add 0, 2, -2, -1, 1 remove 0 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -82,7 +83,7 @@ test("RedBlackTree add 0, 2, -2, -1, 1 remove 0 test", function() {
 });
 
 test("RedBlackTree add 0, 2, -2, -1, 1 remove 1 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -95,7 +96,7 @@ test("RedBlackTree add 0, 2, -2, -1, 1 remove 1 test", function() {
 });
 
 test("RedBlackTree add 0, 2, -2, -1, 1 remove -1 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -108,7 +109,7 @@ test("RedBlackTree add 0, 2, -2, -1, 1 remove -1 test", function() {
 });
 
 test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove 0 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -123,7 +124,7 @@ test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove 0 test", function() {
 });
 
 test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove 2 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -138,7 +139,7 @@ test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove 2 test", function() {
 });
 
 test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove -2 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -153,7 +154,7 @@ test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove -2 test", function() {
 });
 
 test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove 0 desc test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(desc);
+  let tree = RedBlackTree.create<number>(desc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -168,7 +169,7 @@ test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove 0 desc test", function() {
 });
 
 test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove undefined test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -183,7 +184,7 @@ test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove undefined test", function()
 });
 
 test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove null test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.add(2);
   tree = tree.add(-2);
@@ -198,7 +199,7 @@ test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 remove null test", function() {
 });
 
 test("RedBlackTree add 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 remove 10 test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(1);
   tree = tree.add(2);
   tree = tree.add(3);

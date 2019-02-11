@@ -9,15 +9,6 @@ import Predicate from "../function/Predicate";
 import SortedCollectionFactory from "./SortedCollectionFactory";
 
 export default abstract class SortedCollection<E> implements Iterable<E> {
-  public static redBlackTreeFactory: SortedCollectionFactory;
-
-  public static asRedBlackTree<E>(
-    comparator: Comparator<E>,
-    equals?: Equals<E>
-  ): SortedCollection<E> {
-    return SortedCollection.redBlackTreeFactory.create<E>(comparator, equals);
-  }
-
   public abstract add(element: E): SortedCollection<E>;
   public abstract remove(element: E): SortedCollection<E>;
   public abstract union(collection: Iterable<E>): SortedCollection<E>;

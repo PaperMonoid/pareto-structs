@@ -1,4 +1,4 @@
-import AbstractBinarySearchTree from "./AbstractBinarySearchTree";
+import AbstractRedBlackTree from "./AbstractRedBlackTree";
 import Comparator from "../../function/Comparator";
 import Equals from "../../function/Equals";
 import ListIterator from "../ListIterator";
@@ -7,45 +7,45 @@ import Optional from "../../data/Optional";
 import SortedCollection from "../SortedCollection";
 import ReversedListIterator from "../ReversedListIterator";
 
-class ReversedBinarySearchTree<E> extends AbstractBinarySearchTree<E> {
-  public tree: AbstractBinarySearchTree<E>;
+class ReversedRedBlackTree<E> extends AbstractRedBlackTree<E> {
+  public tree: AbstractRedBlackTree<E>;
 
   public constructor(collection: SortedCollection<E>) {
-    let tree = collection as AbstractBinarySearchTree<E>;
+    let tree = collection as AbstractRedBlackTree<E>;
     super(tree.factory, null);
     this.tree = tree;
   }
 
-  public setRoot(node: Node<E>): AbstractBinarySearchTree<E> {
-    return new ReversedBinarySearchTree<E>(this.tree.setRoot(node));
+  public setRoot(node: Node<E>): AbstractRedBlackTree<E> {
+    return new ReversedRedBlackTree<E>(this.tree.setRoot(node));
   }
 
-  public setCount(count: number): AbstractBinarySearchTree<E> {
-    return new ReversedBinarySearchTree<E>(this.tree.setCount(count));
+  public setCount(count: number): AbstractRedBlackTree<E> {
+    return new ReversedRedBlackTree<E>(this.tree.setCount(count));
   }
 
   public add(element: E): SortedCollection<E> {
-    return new ReversedBinarySearchTree<E>(this.tree.add(element));
+    return new ReversedRedBlackTree<E>(this.tree.add(element));
   }
 
   public remove(element: E): SortedCollection<E> {
-    return new ReversedBinarySearchTree<E>(this.tree.remove(element));
+    return new ReversedRedBlackTree<E>(this.tree.remove(element));
   }
 
   public union(collection: Iterable<E>): SortedCollection<E> {
-    return new ReversedBinarySearchTree<E>(this.tree.union(collection));
+    return new ReversedRedBlackTree<E>(this.tree.union(collection));
   }
 
   public intersection(collection: Iterable<E>): SortedCollection<E> {
-    return new ReversedBinarySearchTree<E>(this.tree.intersection(collection));
+    return new ReversedRedBlackTree<E>(this.tree.intersection(collection));
   }
 
   public except(collection: Iterable<E>): SortedCollection<E> {
-    return new ReversedBinarySearchTree<E>(this.tree.except(collection));
+    return new ReversedRedBlackTree<E>(this.tree.except(collection));
   }
 
   public clear(): SortedCollection<E> {
-    return new ReversedBinarySearchTree<E>(this.tree.clear());
+    return new ReversedRedBlackTree<E>(this.tree.clear());
   }
 
   public search(element: E): Optional<E> {
@@ -96,4 +96,4 @@ class ReversedBinarySearchTree<E> extends AbstractBinarySearchTree<E> {
   }
 }
 
-export default ReversedBinarySearchTree;
+export default ReversedRedBlackTree;

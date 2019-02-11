@@ -1,5 +1,6 @@
 import validateProperties from "./validateProperties";
 import SortedCollection from "../../src/sorted-collection";
+import RedBlackTree from "../../src/sorted-collection/red-black-tree";
 
 function asc(first: number, second: number): number {
   return first - second;
@@ -34,7 +35,7 @@ function prime(x) {
 }
 
 test("RedBlackTree flatMap empty twice test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.flatMap(twice, asc);
   expect(tree.toArray()).toEqual([]);
   expect(tree.size()).toBe(0);
@@ -43,7 +44,7 @@ test("RedBlackTree flatMap empty twice test", function() {
 });
 
 test("RedBlackTree flatMap 0 twice test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.flatMap(twice, asc);
   expect(tree.toArray()).toEqual([0, 0]);
@@ -53,7 +54,7 @@ test("RedBlackTree flatMap 0 twice test", function() {
 });
 
 test("RedBlackTree flatMap 0 id test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.add(0);
   tree = tree.flatMap(id, asc);
   expect(tree.toArray()).toEqual([0]);
@@ -63,7 +64,7 @@ test("RedBlackTree flatMap 0 id test", function() {
 });
 
 test("RedBlackTree flatMap 1, 2, 0 twice test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.union([1, 2, 0]);
   tree = tree.flatMap(twice, asc);
   expect(tree.toArray()).toEqual([0, 0, 1, 1, 2, 2]);
@@ -73,7 +74,7 @@ test("RedBlackTree flatMap 1, 2, 0 twice test", function() {
 });
 
 test("RedBlackTree flatMap 1, 2, 0 id test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.union([1, 2, 0]);
   tree = tree.flatMap(id, asc);
   expect(tree.toArray()).toEqual([0, 1, 2]);
@@ -83,7 +84,7 @@ test("RedBlackTree flatMap 1, 2, 0 id test", function() {
 });
 
 test("RedBlackTree flatMap 1, 2, 0 itself test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.union([1, 2, 0]);
   tree = tree.flatMap(x => tree, asc);
   expect(tree.toArray()).toEqual([0, 0, 0, 1, 1, 1, 2, 2, 2]);
@@ -93,7 +94,7 @@ test("RedBlackTree flatMap 1, 2, 0 itself test", function() {
 });
 
 test("RedBlackTree flatMap 1, 2, 0 pair test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.union([1, 2, 0]);
   tree = tree.flatMap(pair, asc);
   expect(tree.toArray()).toEqual([-2, -1, -0, 0, 1, 2]);
@@ -103,7 +104,7 @@ test("RedBlackTree flatMap 1, 2, 0 pair test", function() {
 });
 
 test("RedBlackTree flatMap 11, 7, -1, 4, 5, 6, 8, 2, 0, 1, 10, 9, 3 prime test", function() {
-  let tree = SortedCollection.asRedBlackTree<number>(asc);
+  let tree = RedBlackTree.create<number>(asc);
   tree = tree.union([11, 7, -1, 4, 5, 6, 8, 2, 0, 1, 10, 9, 3]);
   tree = tree.flatMap(prime, asc);
   expect(tree.toArray()).toEqual([2, 3, 5, 7, 11]);

@@ -1,13 +1,13 @@
-import AbstractBinarySearchTree from "./AbstractBinarySearchTree";
+import AbstractRedBlackTree from "./AbstractRedBlackTree";
 import ListIterator from "../ListIterator";
 import Node from "./Node";
 import Optional from "../../data/Optional";
 
-class BinarySearchTreeListIterator<E> implements ListIterator<E> {
-  public readonly tree: AbstractBinarySearchTree<E>;
+class RedBlackTreeListIterator<E> implements ListIterator<E> {
+  public readonly tree: AbstractRedBlackTree<E>;
   public node: Node<E>;
 
-  public constructor(tree: AbstractBinarySearchTree<E>) {
+  public constructor(tree: AbstractRedBlackTree<E>) {
     this.tree = tree;
     this.node = tree.root;
   }
@@ -92,4 +92,4 @@ class BinarySearchTreeListIterator<E> implements ListIterator<E> {
   }
 }
 
-export default BinarySearchTreeListIterator;
+export default RedBlackTreeListIterator;
