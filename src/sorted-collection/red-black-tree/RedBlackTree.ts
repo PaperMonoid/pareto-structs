@@ -25,13 +25,6 @@ export default class RedBlackTree<E> extends AbstractRedBlackTree<E> {
     super(RedBlackTreeFactory.getInstance(), comparator, equals, root, count);
   }
 
-  public static create<E>(
-    comparator: Comparator<E>,
-    equals?: Equals<E>
-  ): SortedCollection<E> {
-    return new RedBlackTree<E>(comparator, equals);
-  }
-
   public setRoot(node: Node<E>): AbstractRedBlackTree<E> {
     return new RedBlackTree<E>(
       this.comparator,
@@ -88,47 +81,6 @@ export default class RedBlackTree<E> extends AbstractRedBlackTree<E> {
       .orValue(this);
   }
 
-  public union(collection: Iterable<E>): SortedCollection<E> {
-    let tree = this as SortedCollection<E>;
-    for (let element of collection) {
-      tree = tree.add(element);
-    }
-    return tree;
-  }
-
-  public intersection(collection: Iterable<E>): SortedCollection<E> {
-    const A = this[Symbol.iterator]();
-    const B = this.clear()
-      .union(collection)
-      [Symbol.iterator]();
-    let tree = this.clear();
-    for (let a = A.next(), b = B.next(); !a.done && !b.done; ) {
-      const comparison = this.comparator(a.value, b.value);
-      if (comparison > 0) {
-        b = B.next();
-      } else if (comparison < 0) {
-        a = A.next();
-      } else {
-        tree = tree.add(a.value);
-        a = A.next();
-        b = B.next();
-      }
-    }
-    return tree;
-  }
-
-  public except(collection: Iterable<E>): SortedCollection<E> {
-    let tree = this as SortedCollection<E>;
-    for (let element of collection) {
-      tree = tree.remove(element);
-    }
-    return tree;
-  }
-
-  public clear(): SortedCollection<E> {
-    return new RedBlackTree<E>(this.comparator, this.equals);
-  }
-
   private searchElement(element: E, node: Node<E>): Optional<Node<E>> {
     if (!node) {
       return Optional.empty();
@@ -145,76 +97,6 @@ export default class RedBlackTree<E> extends AbstractRedBlackTree<E> {
 
   public search(element: E): Optional<E> {
     return this.searchElement(element, this.root).map(node => node.element);
-  }
-
-  private nextElement(element: E, node: Node<E>): Optional<Node<E>> {
-    if (!node) {
-      return Optional.empty();
-    }
-    const comparison = this.comparator(element, node.element);
-    if (comparison == 0 && this.equals(element, node.element)) {
-      return Optional.ofValue(node.right && node.right.min());
-    } else if (comparison > 0) {
-      return this.nextElement(element, node.right);
-    } else {
-      return this.nextElement(element, node.left).map(next => next || node);
-    }
-  }
-
-  public next(element: E): Optional<E> {
-    return this.nextElement(element, this.root)
-      .flatMap(node => Optional.ofNullable(node))
-      .map(node => node.element);
-  }
-
-  private previousElement(element: E, node: Node<E>): Optional<Node<E>> {
-    if (!node) {
-      return Optional.empty();
-    }
-    const comparison = this.comparator(element, node.element);
-    if (comparison == 0 && this.equals(element, node.element)) {
-      return Optional.ofValue(node.left && node.left.max());
-    } else if (comparison > 0) {
-      return this.previousElement(element, node.right).map(
-        next => next || node
-      );
-    } else {
-      return this.previousElement(element, node.left);
-    }
-  }
-
-  public previous(element: E): Optional<E> {
-    return this.previousElement(element, this.root)
-      .flatMap(node => Optional.ofNullable(node))
-      .map(node => node.element);
-  }
-
-  public contains(element: E): boolean {
-    return this.search(element).isPresent();
-  }
-
-  public containsAll(collection: Iterable<E>): boolean {
-    const A = this[Symbol.iterator]();
-    const B = this.clear()
-      .union(collection)
-      [Symbol.iterator]();
-    let a, b;
-    for (a = A.next(), b = B.next(); !a.done && !b.done; ) {
-      const comparison = this.comparator(a.value, b.value);
-      if (comparison == 0 && this.equals(a.value, b.value)) {
-        a = A.next();
-        b = B.next();
-      } else if (comparison > 0) {
-        return false;
-      } else {
-        a = A.next();
-      }
-    }
-    return b.done;
-  }
-
-  public isEmpty(): boolean {
-    return this.root == null;
   }
 
   public size(): number {

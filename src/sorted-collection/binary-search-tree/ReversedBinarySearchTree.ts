@@ -4,8 +4,8 @@ import Equals from "../../function/Equals";
 import ListIterator from "../ListIterator";
 import Node from "./Node";
 import Optional from "../../data/Optional";
-import SortedCollection from "../SortedCollection";
 import ReversedListIterator from "../ReversedListIterator";
+import SortedCollection from "../SortedCollection";
 
 class ReversedBinarySearchTree<E> extends AbstractBinarySearchTree<E> {
   public tree: AbstractBinarySearchTree<E>;

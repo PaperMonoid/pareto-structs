@@ -25,13 +25,6 @@ export default class BinarySearchTree<E> extends AbstractBinarySearchTree<E> {
     );
   }
 
-  public static create<E>(
-    comparator: Comparator<E>,
-    equals?: Equals<E>
-  ): SortedCollection<E> {
-    return new BinarySearchTree<E>(comparator, equals);
-  }
-
   public setRoot(node: Node<E>): AbstractBinarySearchTree<E> {
     return new BinarySearchTree<E>(
       this.comparator,
@@ -88,48 +81,6 @@ export default class BinarySearchTree<E> extends AbstractBinarySearchTree<E> {
       .orValue(this);
   }
 
-  public union(collection: Iterable<E>): SortedCollection<E> {
-    let tree = this as SortedCollection<E>;
-    for (let element of collection) {
-      tree = tree.add(element);
-    }
-    return tree;
-  }
-
-  // TODO: fix implementation. sorted elements = worst case insert O(n).
-  public intersection(collection: Iterable<E>): SortedCollection<E> {
-    const A = this[Symbol.iterator]();
-    const B = this.clear()
-      .union(collection)
-      [Symbol.iterator]();
-    let tree = this.clear();
-    for (let a = A.next(), b = B.next(); !a.done && !b.done; ) {
-      const comparison = this.comparator(a.value, b.value);
-      if (comparison > 0) {
-        b = B.next();
-      } else if (comparison < 0) {
-        a = A.next();
-      } else {
-        tree = tree.add(a.value);
-        a = A.next();
-        b = B.next();
-      }
-    }
-    return tree;
-  }
-
-  public except(collection: Iterable<E>): SortedCollection<E> {
-    let tree = this as SortedCollection<E>;
-    for (let element of collection) {
-      tree = tree.remove(element);
-    }
-    return tree;
-  }
-
-  public clear(): SortedCollection<E> {
-    return new BinarySearchTree<E>(this.comparator, this.equals);
-  }
-
   private searchElement(element: E, node: Node<E>): Optional<Node<E>> {
     if (!node) {
       return Optional.empty();
@@ -146,34 +97,6 @@ export default class BinarySearchTree<E> extends AbstractBinarySearchTree<E> {
 
   public search(element: E): Optional<E> {
     return this.searchElement(element, this.root).map(node => node.element);
-  }
-
-  public contains(element: E): boolean {
-    return this.search(element).isPresent();
-  }
-
-  public containsAll(collection: Iterable<E>): boolean {
-    const A = this[Symbol.iterator]();
-    const B = this.clear()
-      .union(collection)
-      [Symbol.iterator]();
-    let a, b;
-    for (a = A.next(), b = B.next(); !a.done && !b.done; ) {
-      const comparison = this.comparator(a.value, b.value);
-      if (comparison == 0 && this.equals(a.value, b.value)) {
-        a = A.next();
-        b = B.next();
-      } else if (comparison > 0) {
-        return false;
-      } else {
-        a = A.next();
-      }
-    }
-    return b.done;
-  }
-
-  public isEmpty(): boolean {
-    return this.root == null;
   }
 
   public size(): number {
