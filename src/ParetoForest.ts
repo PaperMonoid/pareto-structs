@@ -1,4 +1,6 @@
-export default class ParetoForest<T> {
+import Frontier from "./frontier";
+
+export default class ParetoForest<E> {
   public add(element: E): ParetoForest<E> {
     throw new ReferenceError("Not implemented");
   }
