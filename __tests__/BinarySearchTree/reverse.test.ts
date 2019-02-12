@@ -187,3 +187,28 @@ test("BinarySearchTree union 2, 3, 1, 4, 5 reduce", function() {
   let result = tree.reverse().reduce(1, (a, b) => b + a * b);
   expect(result).toBe(273);
 });
+
+test("BinarySearchTree union 11, 7, -1, 4, 5, 6, 8, 2, 0, 1, 10, 9, 3 reverse listIterator test", function() {
+  let tree = BinarySearchTree.create<number>(asc);
+  tree = tree.union([11, 7, -1, 4, 5, 6, 8, 2, 0, 1, 10, 9, 3]).reverse();
+  let iterator = tree.listIterator();
+  iterator.last();
+  expect(iterator.next()).toEqual({ value: undefined, done: true });
+  expect(iterator.previous()).toEqual({ value: -1, done: false });
+  expect(iterator.previous()).toEqual({ value: 0, done: false });
+  expect(iterator.previous()).toEqual({ value: 1, done: false });
+  expect(iterator.next()).toEqual({ value: 0, done: false });
+  iterator.head();
+  expect(iterator.previous()).toEqual({ value: undefined, done: true });
+  expect(iterator.next()).toEqual({ value: 11, done: false });
+  expect(iterator.next()).toEqual({ value: 10, done: false });
+  expect(iterator.next()).toEqual({ value: 9, done: false });
+  expect(iterator.previous()).toEqual({ value: 10, done: false });
+  iterator.last();
+  expect(iterator.previous()).toEqual({ value: -1, done: false });
+  iterator.head();
+  expect(iterator.next()).toEqual({ value: 11, done: false });
+  expect(tree.toArray()).toEqual([11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1]);
+  expect(tree.size()).toBe(13);
+  expect(tree.isEmpty()).toBe(false);
+});
