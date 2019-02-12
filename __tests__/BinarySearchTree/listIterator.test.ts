@@ -26,8 +26,31 @@ test("BinarySearchTree union 0 listIterator test", function() {
   expect(iterator.next()).toEqual({ value: undefined, done: true });
   expect(iterator.previous()).toEqual({ value: 0, done: false });
   expect(iterator.previous()).toEqual({ value: undefined, done: true });
+  expect(iterator.next()).toEqual({ value: 0, done: false });
+  expect(iterator.next()).toEqual({ value: undefined, done: true });
   expect(tree.toArray()).toEqual([0]);
   expect(tree.size()).toBe(1);
+  expect(tree.isEmpty()).toBe(false);
+});
+
+test("BinarySearchTree union 2, 1, 0 listIterator test", function() {
+  let tree = BinarySearchTree.create<number>(asc).union([2, 1, 0]);
+  let iterator = tree.listIterator();
+  expect(iterator.previous()).toEqual({ value: undefined, done: true });
+  expect(iterator.next()).toEqual({ value: 0, done: false });
+  expect(iterator.previous()).toEqual({ value: undefined, done: true });
+  expect(iterator.next()).toEqual({ value: 0, done: false });
+  expect(iterator.next()).toEqual({ value: 1, done: false });
+  expect(iterator.previous()).toEqual({ value: 0, done: false });
+  expect(iterator.previous()).toEqual({ value: undefined, done: true });
+  expect(iterator.next()).toEqual({ value: 0, done: false });
+  expect(iterator.next()).toEqual({ value: 1, done: false });
+  expect(iterator.next()).toEqual({ value: 2, done: false });
+  expect(iterator.next()).toEqual({ value: undefined, done: true });
+  expect(iterator.previous()).toEqual({ value: 2, done: false });
+  expect(iterator.previous()).toEqual({ value: 1, done: false });
+  expect(tree.toArray()).toEqual([0, 1, 2]);
+  expect(tree.size()).toBe(3);
   expect(tree.isEmpty()).toBe(false);
 });
 

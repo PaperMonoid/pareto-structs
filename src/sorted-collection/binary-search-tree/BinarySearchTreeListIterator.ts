@@ -53,7 +53,7 @@ class BinarySearchTreeListIterator<E> implements ListIterator<E> {
   }
 
   private previousElement(current: Node<E>, node: Node<E>): Optional<Node<E>> {
-    if (!node) {
+    if (!node || !current) {
       return Optional.empty();
     }
     const comparison = this.tree.comparator(current.element, node.element);
@@ -90,7 +90,7 @@ class BinarySearchTreeListIterator<E> implements ListIterator<E> {
   }
 
   private nextElement(current: Node<E>, node: Node<E>): Optional<Node<E>> {
-    if (!node) {
+    if (!node || !current) {
       return Optional.empty();
     }
     const comparison = this.tree.comparator(current.element, node.element);
