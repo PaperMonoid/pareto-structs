@@ -163,7 +163,7 @@ test("RedBlackTree add 0, 2, -2, 3, -3, -1, 1 desc reverse test", function() {
   validateProperties<number>(tree);
 });
 
-test("BinarySearcTree union 2, 3, 1, 0, 4, 5 stateful filter", function() {
+test("RedBlackTree union 2, 3, 1, 0, 4, 5 stateful filter", function() {
   let tree = RedBlackTree.create<number>(asc).union([2, 3, 1, 0, 4, 5]);
   let state = 0;
   tree = tree.reverse().filter(element => state++ < 3);
@@ -171,7 +171,7 @@ test("BinarySearcTree union 2, 3, 1, 0, 4, 5 stateful filter", function() {
   expect(tree.toArray()).toEqual([5, 4, 3]);
 });
 
-test("BinarySearcTree union 2, 3, 1, 0, 4, 5 map", function() {
+test("RedBlackTree union 2, 3, 1, 0, 4, 5 map", function() {
   let tree = RedBlackTree.create<number>(asc).union([2, 3, 1, 0, 4, 5]);
   let last = null;
   tree = tree
@@ -183,7 +183,7 @@ test("BinarySearcTree union 2, 3, 1, 0, 4, 5 map", function() {
   expect(tree.toArray()).toEqual([10, 8, 6, 4, 2, 0]);
 });
 
-test("BinarySearcTree union 2, 3, 1, 0, 4, 5 flatMap", function() {
+test("RedBlackTree union 2, 3, 1, 0, 4, 5 flatMap", function() {
   let tree = RedBlackTree.create<number>(asc).union([2, 3, 1, 0, 4, 5]);
   let last = null;
   tree = tree
@@ -195,7 +195,7 @@ test("BinarySearcTree union 2, 3, 1, 0, 4, 5 flatMap", function() {
   expect(tree.toArray()).toEqual([6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0]);
 });
 
-test("BinarySearcTree union 2, 3, 1, 4, 5 reduce", function() {
+test("RedBlackTree union 2, 3, 1, 4, 5 reduce", function() {
   let tree = RedBlackTree.create<number>(asc).union([2, 3, 1, 4, 5]);
   let result = tree.reverse().reduce(1, (a, b) => b + a * b);
   expect(result).toBe(273);
