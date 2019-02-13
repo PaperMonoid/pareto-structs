@@ -3,25 +3,31 @@ import ListIterator from "../list-iterator";
 import Node from "./Node";
 import { Optional } from "../../data";
 
+enum ListIteratorState {
+  Head,
+  Middle,
+  Last
+}
+
 class RedBlackTreeListIterator<E> implements ListIterator<E> {
   public readonly tree: AbstractRedBlackTree<E>;
   public node: Node<E>;
+  public state: ListIteratorState;
 
   public constructor(tree: AbstractRedBlackTree<E>) {
     this.tree = tree;
-    this.node = tree.root;
+    this.node = null;
+    this.state = ListIteratorState.Head;
   }
 
   public head(): void {
-    if (this.tree.root) {
-      this.node = this.tree.root.min();
-    }
+    this.node = null;
+    this.state = ListIteratorState.Head;
   }
 
   public last(): void {
-    if (this.tree.root) {
-      this.node = this.tree.root.max();
-    }
+    this.node = null;
+    this.state = ListIteratorState.Last;
   }
 
   private searchElement(element: E, node: Node<E>): Optional<Node<E>> {
@@ -42,11 +48,12 @@ class RedBlackTreeListIterator<E> implements ListIterator<E> {
     const optionalNode = this.searchElement(value, this.tree.root);
     if (optionalNode.isPresent()) {
       this.node = optionalNode.getValue();
+      this.state = ListIteratorState.Middle;
     }
   }
 
   private previousElement(current: Node<E>, node: Node<E>): Optional<Node<E>> {
-    if (!node) {
+    if (!node || !current) {
       return Optional.empty();
     }
     const comparison = this.tree.comparator(current.element, node.element);
@@ -62,15 +69,28 @@ class RedBlackTreeListIterator<E> implements ListIterator<E> {
   }
 
   public previous(): { value: E; done: boolean } {
-    return this.previousElement(this.node, this.tree.root)
-      .flatMap(node => Optional.ofNullable(node)) // TODO review this line
-      .map(node => node.element)
-      .map(value => ({ value: value, done: false }))
-      .orValue({ value: undefined, done: true });
+    if (this.state == ListIteratorState.Last && this.tree.root) {
+      this.state = ListIteratorState.Middle;
+      this.node = this.tree.root.max();
+      return { value: this.node.element, done: false };
+    }
+    const optionalPrevious = this.previousElement(
+      this.node,
+      this.tree.root
+    ).flatMap(node => Optional.ofNullable(node));
+    if (optionalPrevious.isPresent()) {
+      this.state = ListIteratorState.Middle;
+      this.node = optionalPrevious.getValue();
+      return { value: this.node.element, done: false };
+    } else {
+      this.state = ListIteratorState.Head;
+      this.node = null;
+      return { value: undefined, done: true };
+    }
   }
 
   private nextElement(current: Node<E>, node: Node<E>): Optional<Node<E>> {
-    if (!node) {
+    if (!node || !current) {
       return Optional.empty();
     }
     const comparison = this.tree.comparator(current.element, node.element);
@@ -84,11 +104,23 @@ class RedBlackTreeListIterator<E> implements ListIterator<E> {
   }
 
   public next(): { value: E; done: boolean } {
-    return this.nextElement(this.node, this.tree.root)
-      .flatMap(node => Optional.ofNullable(node)) // TODO review this line
-      .map(node => node.element)
-      .map(value => ({ value: value, done: false }))
-      .orValue({ value: undefined, done: true });
+    if (this.state == ListIteratorState.Head && this.tree.root) {
+      this.state = ListIteratorState.Middle;
+      this.node = this.tree.root.min();
+      return { value: this.node.element, done: false };
+    }
+    const optionalNext = this.nextElement(this.node, this.tree.root).flatMap(
+      node => Optional.ofNullable(node)
+    );
+    if (optionalNext.isPresent()) {
+      this.state = ListIteratorState.Middle;
+      this.node = optionalNext.getValue();
+      return { value: this.node.element, done: false };
+    } else {
+      this.state = ListIteratorState.Last;
+      this.node = null;
+      return { value: undefined, done: true };
+    }
   }
 }
 
