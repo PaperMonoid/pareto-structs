@@ -1,1 +1,1 @@
-export { default } from "./ParetoForest";
+export { default } from "./pareto-struct";
