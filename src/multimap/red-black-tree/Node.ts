@@ -35,6 +35,10 @@ export default class Node<K, V> {
     return false;
   }
 
+  setKey(key: K): Node<K, V> {
+    return new Node<K, V>(key, this.values, this.color, this.left, this.right);
+  }
+
   setValues(values: V[]): Node<K, V> {
     return new Node<K, V>(this.key, values, this.color, this.left, this.right);
   }
@@ -243,6 +247,7 @@ export default class Node<K, V> {
     } else {
       const [replaced, successor, fix] = this.right.removeMin();
       return this.setRight(replaced)
+        .setKey(successor.key)
         .setValues(successor.values)
         .fixRightViolation(fix);
     }

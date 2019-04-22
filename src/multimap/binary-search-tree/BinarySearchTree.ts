@@ -96,7 +96,7 @@ export default class BinarySearchTree<K, V> implements MultiMap<K, V> {
         const [left, diff] = this.replaceNode(newNode, node.left);
         return [node.setLeft(left), diff];
       } else {
-        const diff = node.values.length - newNode.values.length;
+        const diff = newNode.values.length - node.values.length;
         return [node.setValues(newNode.values), diff];
       }
     }

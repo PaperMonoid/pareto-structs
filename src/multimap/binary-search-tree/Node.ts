@@ -25,8 +25,14 @@ export default class Node<K, V> {
       return this.left;
     } else {
       const [replaced, successor] = this.right.removeMin();
-      return this.setRight(replaced).setValues(successor.values);
+      return this.setRight(replaced)
+        .setKey(successor.key)
+        .setValues(successor.values);
     }
+  }
+
+  setKey(key: K): Node<K, V> {
+    return new Node<K, V>(key, this.values, this.left, this.right);
   }
 
   setValues(values: V[]): Node<K, V> {

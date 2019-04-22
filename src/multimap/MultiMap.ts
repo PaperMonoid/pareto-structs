@@ -10,7 +10,7 @@ export default interface MultiMap<K, V> extends Iterable<[K, V]> {
   containsKey(key: K): boolean;
   containsValue(value: V): boolean;
   containsEntry(key: K, value: V): boolean;
-  clear(): MultiMap<E>;
+  clear(): MultiMap<K, V>;
   isEmpty(): boolean;
   size(): number;
   keys(): K[];
