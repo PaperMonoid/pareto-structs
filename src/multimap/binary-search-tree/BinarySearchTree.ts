@@ -2,8 +2,8 @@ import BinarySearchTreeListIterator from "./BinarySearchTreeListIterator";
 import ListIterator from "../../list/ListIterator";
 import Node from "./Node";
 import MultiMap from "../../multimap";
-import { Comparator, Equals, StrictEquality } from "../../../function";
-import { Optional } from "../../../data";
+import { Comparator, Equals, StrictEquality } from "../../function";
+import { Optional } from "../../data";
 
 export default class BinarySearchTree<K, V> implements MultiMap<K, V> {
   readonly comparator: Comparator<K>;
@@ -68,7 +68,8 @@ export default class BinarySearchTree<K, V> implements MultiMap<K, V> {
   }
 
   put(key: K, value: V): MultiMap<K, V> {
-    const node = this.addNode(new Node<K, V>(key, [value]), this.root);
+    const array = [value];
+    const node = this.addNode(new Node<K, V>(key, array), this.root);
     return this.setRoot(node).setCount(this.count + 1);
   }
 
@@ -154,24 +155,30 @@ export default class BinarySearchTree<K, V> implements MultiMap<K, V> {
       .orValue(this);
   }
 
-  private removeNode(key: K, node: Node<K, V>): Optional<Node<K, V>> {
+  private removeNode(key: K, node: Node<K, V>): [Optional<Node<K, V>>, number] {
     if (!node) {
-      return Optional.empty();
+      return [Optional.empty(), 0];
     }
     const comparison = this.comparator(key, node.key);
     if (comparison == 0) {
-      return Optional.ofValue(node.replaceWithSuccessor());
+      return [
+        Optional.ofValue(node.replaceWithSuccessor()),
+        node.values.length
+      ];
     } else if (comparison > 0) {
-      return this.removeNode(key, node.right).map(node.setRight.bind(node));
+      const [changedNode, diff] = this.removeNode(key, node.right);
+      return [changedNode.map(node.setRight.bind(node)), diff];
     } else {
-      return this.removeNode(key, node.left).map(node.setLeft.bind(node));
+      const [changedNode, diff] = this.removeNode(key, node.left);
+      return [changedNode.map(node.setLeft.bind(node)), diff];
     }
   }
 
   removeAll(key: K): MultiMap<K, V> {
     const tree = this;
-    return this.removeNode(key, this.root)
-      .map(replaced => tree.setRoot(replaced).setCount(tree.count - 1))
+    const [removed, diff] = this.removeNode(key, this.root);
+    return removed
+      .map(replaced => tree.setRoot(replaced).setCount(tree.count - diff))
       .orValue(this);
   }
 

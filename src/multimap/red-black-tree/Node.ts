@@ -1,49 +1,57 @@
 import Color from "./Color";
 
-export default class Node<E> {
-  public readonly element: E;
-  public readonly color: Color;
-  public readonly left: Node<E>;
-  public readonly right: Node<E>;
+export default class Node<K, V> {
+  readonly key: K;
+  readonly values: V[];
+  readonly color: Color;
+  readonly left: Node<K, V>;
+  readonly right: Node<K, V>;
 
-  constructor(element: E, color: Color, left?: Node<E>, right?: Node<E>) {
-    this.element = element;
+  constructor(
+    key: K,
+    values: V[],
+    color: Color,
+    left?: Node<K, V>,
+    right?: Node<K, V>
+  ) {
+    this.key = key;
+    this.values = values;
     this.color = color;
     this.left = left;
     this.right = right;
   }
 
-  public static isBlack(node: Node<any>): boolean {
+  static isBlack(node: Node<any, any>): boolean {
     if (node) {
       return node.color == Color.Black;
     }
     return true;
   }
 
-  public static isRed(node: Node<any>): boolean {
+  static isRed(node: Node<any, any>): boolean {
     if (node) {
       return node.color == Color.Red;
     }
     return false;
   }
 
-  public setElement(element: E): Node<E> {
-    return new Node<E>(element, this.color, this.left, this.right);
+  setValues(values: V[]): Node<K, V> {
+    return new Node<K, V>(this.key, values, this.color, this.left, this.right);
   }
 
-  public setColor(color: Color): Node<E> {
-    return new Node<E>(this.element, color, this.left, this.right);
+  setColor(color: Color): Node<K, V> {
+    return new Node<K, V>(this.key, this.values, color, this.left, this.right);
   }
 
-  public setLeft(node: Node<E>): Node<E> {
-    return new Node<E>(this.element, this.color, node, this.right);
+  setLeft(node: Node<K, V>): Node<K, V> {
+    return new Node<K, V>(this.key, this.values, this.color, node, this.right);
   }
 
-  public setRight(node: Node<E>): Node<E> {
-    return new Node<E>(this.element, this.color, this.left, node);
+  setRight(node: Node<K, V>): Node<K, V> {
+    return new Node<K, V>(this.key, this.values, this.color, this.left, node);
   }
 
-  public min(): Node<E> {
+  min(): Node<K, V> {
     if (!this.left) {
       return this;
     } else {
@@ -51,7 +59,7 @@ export default class Node<E> {
     }
   }
 
-  public max(): Node<E> {
+  max(): Node<K, V> {
     if (!this.right) {
       return this;
     } else {
@@ -59,21 +67,21 @@ export default class Node<E> {
     }
   }
 
-  public rotateRight(): Node<E> {
+  rotateRight(): Node<K, V> {
     if (!this.left) {
       return this;
     }
     return this.left.setRight(this.setLeft(this.left.right));
   }
 
-  public rotateLeft(): Node<E> {
+  rotateLeft(): Node<K, V> {
     if (!this.right) {
       return this;
     }
     return this.right.setLeft(this.setRight(this.right.left));
   }
 
-  public fixRedViolation(): Node<E> {
+  fixRedViolation(): Node<K, V> {
     if (Node.isBlack(this)) {
       if (Node.isRed(this.left)) {
         if (Node.isRed(this.left.left)) {
@@ -107,7 +115,7 @@ export default class Node<E> {
     return this;
   }
 
-  public hasRedViolation() {
+  hasRedViolation() {
     if (Node.isBlack(this)) {
       if (Node.isRed(this.left)) {
         return Node.isRed(this.left.left) || Node.isRed(this.left.right);
@@ -119,11 +127,11 @@ export default class Node<E> {
     return false;
   }
 
-  public shouldFix() {
+  shouldFix() {
     return Node.isBlack(this) && !this.right && !this.left;
   }
 
-  public fixRightViolation(fix: boolean): [Node<E>, boolean] {
+  fixRightViolation(fix: boolean): [Node<K, V>, boolean] {
     if (fix && this.left) {
       if (
         Node.isRed(this) &&
@@ -169,7 +177,7 @@ export default class Node<E> {
     return [this, fix];
   }
 
-  public fixLeftViolation(fix: boolean): [Node<E>, boolean] {
+  fixLeftViolation(fix: boolean): [Node<K, V>, boolean] {
     if (fix && this.right) {
       if (
         Node.isRed(this) &&
@@ -215,7 +223,7 @@ export default class Node<E> {
     return [this, fix];
   }
 
-  private removeMin(): [Node<E>, Node<E>, boolean] {
+  removeMin(): [Node<K, V>, Node<K, V>, boolean] {
     if (!this.left && !this.right) {
       return [null, this, this.shouldFix()];
     } else if (!this.left) {
@@ -227,7 +235,7 @@ export default class Node<E> {
     }
   }
 
-  public replaceWithSuccessor(): [Node<E>, boolean] {
+  replaceWithSuccessor(): [Node<K, V>, boolean] {
     if (!this.right && !this.left) {
       return [null, this.shouldFix()];
     } else if (!this.right) {
@@ -235,7 +243,7 @@ export default class Node<E> {
     } else {
       const [replaced, successor, fix] = this.right.removeMin();
       return this.setRight(replaced)
-        .setElement(successor.element)
+        .setValues(successor.values)
         .fixRightViolation(fix);
     }
   }

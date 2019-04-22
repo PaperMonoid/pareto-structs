@@ -1,15 +1,10 @@
 export default class Node<K, V> {
-  public readonly key: K;
-  public readonly values: V[];
-  public readonly left: Node<K, V>;
-  public readonly right: Node<K, V>;
+  readonly key: K;
+  readonly values: V[];
+  readonly left: Node<K, V>;
+  readonly right: Node<K, V>;
 
-  public constructor(
-    key: K,
-    values: V[],
-    left?: Node<K, V>,
-    right?: Node<K, V>
-  ) {
+  constructor(key: K, values: V[], left?: Node<K, V>, right?: Node<K, V>) {
     this.key = key;
     this.values = values;
     this.left = left;
@@ -25,7 +20,7 @@ export default class Node<K, V> {
     }
   }
 
-  public replaceWithSuccessor(): Node<K, V> {
+  replaceWithSuccessor(): Node<K, V> {
     if (!this.right) {
       return this.left;
     } else {
@@ -34,19 +29,19 @@ export default class Node<K, V> {
     }
   }
 
-  public setValues(values: V[]): Node<K, V> {
+  setValues(values: V[]): Node<K, V> {
     return new Node<K, V>(this.key, values, this.left, this.right);
   }
 
-  public setLeft(node: Node<K, V>): Node<K, V> {
+  setLeft(node: Node<K, V>): Node<K, V> {
     return new Node<K, V>(this.key, this.values, node, this.right);
   }
 
-  public setRight(node: Node<K, V>): Node<K, V> {
+  setRight(node: Node<K, V>): Node<K, V> {
     return new Node<K, V>(this.key, this.values, this.left, node);
   }
 
-  public min(): Node<K, V> {
+  min(): Node<K, V> {
     if (!this.left) {
       return this;
     } else {
@@ -54,7 +49,7 @@ export default class Node<K, V> {
     }
   }
 
-  public max(): Node<K, V> {
+  max(): Node<K, V> {
     if (!this.right) {
       return this;
     } else {

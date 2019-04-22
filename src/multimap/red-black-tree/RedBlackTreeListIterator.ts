@@ -1,7 +1,7 @@
-import BinarySearchTree from "./BinarySearchTree";
+import RedBlackTree from "./RedBlackTree";
 import ListIterator from "../../list/ListIterator";
 import Node from "./Node";
-import { Optional } from "../../../data";
+import { Optional } from "../../data";
 
 enum ListIteratorState {
   Head,
@@ -9,13 +9,13 @@ enum ListIteratorState {
   Last
 }
 
-class BinarySearchTreeListIterator<K, V> implements ListIterator<[K, V]> {
-  readonly tree: BinarySearchTree<K, V>;
+class RedBlackTreeListIterator<K, V> implements ListIterator<[K, V]> {
+  readonly tree: RedBlackTree<K, V>;
   node: Node<K, V>;
   state: ListIteratorState;
   index: number;
 
-  constructor(tree: BinarySearchTree<K, V>, key: K) {
+  constructor(tree: RedBlackTree<K, V>, key: K) {
     this.tree = tree;
     this.node = null;
     this.state = ListIteratorState.Head;
@@ -164,4 +164,4 @@ class BinarySearchTreeListIterator<K, V> implements ListIterator<[K, V]> {
   }
 }
 
-export default BinarySearchTreeListIterator;
+export default RedBlackTreeListIterator;
