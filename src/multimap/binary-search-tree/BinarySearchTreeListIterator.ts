@@ -6,7 +6,8 @@ import { Optional } from "../../data";
 enum ListIteratorState {
   Head,
   Middle,
-  Last
+  Last,
+  NotFound
 }
 
 class BinarySearchTreeListIterator<K, V> implements ListIterator<[K, V]> {
@@ -55,6 +56,10 @@ class BinarySearchTreeListIterator<K, V> implements ListIterator<[K, V]> {
       this.index = 0;
       this.node = optionalNode.getValue();
       this.state = ListIteratorState.Middle;
+    } else {
+      this.node = null;
+      this.state = ListIteratorState.NotFound;
+      this.index = -1;
     }
   }
 
@@ -76,6 +81,9 @@ class BinarySearchTreeListIterator<K, V> implements ListIterator<[K, V]> {
   }
 
   previous(): { value: [K, V]; done: boolean } {
+    if (this.state == ListIteratorState.NotFound) {
+      return { value: undefined, done: true };
+    }
     if (this.state == ListIteratorState.Last && this.tree.root) {
       this.state = ListIteratorState.Middle;
       this.node = this.tree.root.max();
@@ -129,6 +137,9 @@ class BinarySearchTreeListIterator<K, V> implements ListIterator<[K, V]> {
   }
 
   public next(): { value: [K, V]; done: boolean } {
+    if (this.state == ListIteratorState.NotFound) {
+      return { value: undefined, done: true };
+    }
     if (this.state == ListIteratorState.Head && this.tree.root) {
       this.state = ListIteratorState.Middle;
       this.node = this.tree.root.min();

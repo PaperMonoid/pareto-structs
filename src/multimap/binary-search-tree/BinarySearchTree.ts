@@ -242,6 +242,30 @@ export default class BinarySearchTree<K, V> implements MultiMap<K, V> {
     return this.count;
   }
 
+  nth(index: number): [K, V] {
+    let i = 0;
+    for (let [key, value] of this) {
+      if (i++ == index) {
+        return [key, value];
+      }
+    }
+    throw new RangeError("Index out of bounds");
+  }
+
+  slice(lower?: number, upper?: number): MultiMap<K, V> {
+    const min = lower < 0 ? this.size() + lower : lower;
+    const max = upper < 0 ? this.size() + upper : upper;
+    let i = 0;
+    let tree: MultiMap<K, V> = this;
+    for (let [key, value] of this) {
+      if (i < min || i >= max) {
+        tree = tree.remove(key, value);
+      }
+      i++;
+    }
+    return tree;
+  }
+
   keys(): K[] {
     const array = [];
     for (let [key, _] of this) {
