@@ -1,17 +1,20 @@
 import Frontier from "./Frontier";
 import MultiMap from "../multimap";
 import RedBlackTree from "../multimap/red-black-tree";
-import { Comparator } from "../function";
+import { Equals, StrictEquality, Comparator } from "../function";
 
 export default class ParetoStruct<K, V> {
   readonly comparators: Comparator<K>[];
+  readonly equals?: Equals<V>;
   readonly frontiers: MultiMap<K[], Frontier<K, V>>;
 
   constructor(
     comparators: Comparator<K>[],
+    equals?: Equals<V>,
     frontiers?: MultiMap<K[], Frontier<K, V>>
   ) {
     this.comparators = comparators;
+    this.equals = equals || StrictEquality;
     if (!frontiers) {
       frontiers = RedBlackTree.create<K[], Frontier<K, V>>(function(
         first,
@@ -47,14 +50,19 @@ export default class ParetoStruct<K, V> {
   }
 
   setFrontiers(frontiers: MultiMap<K[], Frontier<K, V>>) {
-    return new ParetoStruct<K, V>(this.comparators, frontiers);
+    return new ParetoStruct<K, V>(this.comparators, this.equals, frontiers);
   }
 
   put(keys: K[], value: V): ParetoStruct<K, V> {
     let iterator = this.frontiers.iterator(keys);
     let current = iterator.next();
     if (current.done) {
-      const frontier = new Frontier<K, V>(this.comparators, keys, value);
+      const frontier = new Frontier<K, V>(
+        this.comparators,
+        this.equals,
+        keys,
+        value
+      );
       const frontiers = this.frontiers.put(keys, frontier);
       iterator = frontiers.iterator(keys);
       iterator.previous();
@@ -76,7 +84,30 @@ export default class ParetoStruct<K, V> {
     }
   }
 
-  remove(value: V): ParetoStruct<K, V> {
-    throw new ReferenceError("Not implemented");
+  removeAll(keys: K[]): ParetoStruct<K, V> {
+    return this.setFrontiers(this.frontiers.removeAll(keys));
+  }
+
+  remove(keys: K[], value: V): ParetoStruct<K, V> {
+    let iterator = this.frontiers.iterator(keys);
+    let current = iterator.next();
+    if (current.done) {
+      return this;
+    } else {
+      let [_, frontier] = current.value;
+      if (this.equals(frontier.optimal, value)) {
+        let self = this.removeAll(keys);
+        for (let dimention of frontier.dimentions) {
+          for (let [_keys, _value] of dimention) {
+            self = self.put(_keys, _value);
+          }
+        }
+        return self;
+      } else {
+        return this.setFrontiers(
+          this.frontiers.replace(keys, [frontier.remove(keys, value)])
+        );
+      }
+    }
   }
 }

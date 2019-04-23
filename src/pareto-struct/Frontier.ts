@@ -1,20 +1,24 @@
 import MultiMap from "../multimap";
 import RedBlackTree from "../multimap/red-black-tree";
-import { Comparator } from "../function";
+import { Equals, Comparator } from "../function";
 
 export default class Frontier<K, V> {
   readonly comparators: Comparator<K>[];
+  readonly equals?: Equals<V>;
   readonly keys: K[];
   readonly optimal: V;
   readonly dimentions: MultiMap<K[], V>[];
 
   constructor(
     comparators: Comparator<K>[],
+    equals: Equals<V>,
     keys: K[],
     optimal: V,
     dimentions?: MultiMap<K[], V>[]
   ) {
     this.comparators = comparators;
+    this.equals = equals;
+    this.equals;
     this.keys = keys;
     this.optimal = optimal;
     if (!dimentions) {
@@ -23,7 +27,7 @@ export default class Frontier<K, V> {
         dimentions.push(
           RedBlackTree.create<K[], V>(function(first, second) {
             return comparators[i](first[i], second[i]);
-          })
+          }, equals)
         );
       }
     }
@@ -33,6 +37,7 @@ export default class Frontier<K, V> {
   setDimentions(dimentions: MultiMap<K[], V>[]) {
     return new Frontier<K, V>(
       this.comparators,
+      this.equals,
       this.keys,
       this.optimal,
       dimentions
