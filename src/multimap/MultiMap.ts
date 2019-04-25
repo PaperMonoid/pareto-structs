@@ -13,6 +13,8 @@ export default interface MultiMap<K, V> extends Iterable<[K, V]> {
   clear(): MultiMap<K, V>;
   isEmpty(): boolean;
   size(): number;
+  head(): [K, V];
+  last(): [K, V];
   nth(index: number): [K, V];
   slice(lower?: number, upper?: number): MultiMap<K, V>;
   keys(): K[];

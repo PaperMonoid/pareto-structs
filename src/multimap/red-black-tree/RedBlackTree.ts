@@ -260,6 +260,22 @@ export default class RedBlackTree<K, V> implements MultiMap<K, V> {
     return this.count;
   }
 
+  head(): [K, V] {
+    if (this.root) {
+      const node = this.root.min();
+      return [node.key, node.values[0]];
+    }
+    throw new RangeError("Empty multimap");
+  }
+
+  last(): [K, V] {
+    if (this.root) {
+      const node = this.root.max();
+      return [node.key, node.values[node.values.length - 1]];
+    }
+    throw new RangeError("Empty multimap");
+  }
+
   nth(index: number): [K, V] {
     let i = 0;
     for (let [key, value] of this) {
