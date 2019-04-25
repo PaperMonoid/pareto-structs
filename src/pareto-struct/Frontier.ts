@@ -1,6 +1,5 @@
-import MultiMap from "../multimap";
-import RedBlackTree from "../multimap/red-black-tree";
 import { Equals, Comparator } from "../function";
+import { MultiMap, RedBlackTree } from "../multimap";
 
 export default class Frontier<K, V> {
   readonly comparators: Comparator<K>[];

@@ -1,1 +1,1 @@
-export { default } from "./pareto-struct";
+export { ParetoStruct, Frontier } from "./pareto-struct";

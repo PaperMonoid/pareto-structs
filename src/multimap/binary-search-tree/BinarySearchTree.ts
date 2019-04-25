@@ -1,8 +1,8 @@
 import BinarySearchTreeListIterator from "./BinarySearchTreeListIterator";
-import ListIterator from "../../list/ListIterator";
 import Node from "./Node";
-import MultiMap from "../../multimap";
 import { Comparator, Equals, StrictEquality } from "../../function";
+import { ListIterator } from "../../list";
+import { MultiMap } from "../../multimap";
 import { Optional } from "../../data";
 
 export default class BinarySearchTree<K, V> implements MultiMap<K, V> {

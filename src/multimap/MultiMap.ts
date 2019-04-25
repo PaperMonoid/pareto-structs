@@ -1,4 +1,4 @@
-import ListIterator from "../list/ListIterator";
+import { ListIterator } from "../list";
 
 export default interface MultiMap<K, V> extends Iterable<[K, V]> {
   put(key: K, value: V): MultiMap<K, V>;

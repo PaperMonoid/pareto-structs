@@ -1,7 +1,6 @@
 import Frontier from "./Frontier";
-import MultiMap from "../multimap";
-import RedBlackTree from "../multimap/red-black-tree";
 import { Equals, StrictEquality, Comparator } from "../function";
+import { MultiMap, RedBlackTree } from "../multimap";
 
 export default class ParetoStruct<K, V> {
   readonly comparators: Comparator<K>[];

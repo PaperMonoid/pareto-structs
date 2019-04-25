@@ -1,9 +1,9 @@
-import RedBlackTreeListIterator from "./RedBlackTreeListIterator";
 import Color from "./Color";
-import ListIterator from "../../list/ListIterator";
 import Node from "./Node";
-import MultiMap from "../../multimap";
+import RedBlackTreeListIterator from "./RedBlackTreeListIterator";
 import { Comparator, Equals, StrictEquality } from "../../function";
+import { ListIterator } from "../../list";
+import { MultiMap } from "../../multimap";
 import { Optional } from "../../data";
 
 export default class RedBlackTree<K, V> implements MultiMap<K, V> {

@@ -1,5 +1,4 @@
-import RedBlackTree from "../../src/multimap/red-black-tree";
-import MultiMap from "../../src/multimap";
+import { MultiMap, RedBlackTree } from "../../src/multimap";
 
 enum Color {
   Red,

@@ -1,6 +1,6 @@
-import RedBlackTree from "./RedBlackTree";
-import ListIterator from "../../list/ListIterator";
 import Node from "./Node";
+import RedBlackTree from "./RedBlackTree";
+import { ListIterator } from "../../list";
 import { Optional } from "../../data";
 
 enum ListIteratorState {

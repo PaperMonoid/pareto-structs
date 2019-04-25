@@ -1,6 +1,6 @@
 import BinarySearchTree from "./BinarySearchTree";
-import ListIterator from "../../list/ListIterator";
 import Node from "./Node";
+import { ListIterator } from "../../list";
 import { Optional } from "../../data";
 
 enum ListIteratorState {

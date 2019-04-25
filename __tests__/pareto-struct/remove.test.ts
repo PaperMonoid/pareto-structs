@@ -1,6 +1,5 @@
-import MultiMap from "../../src/multimap";
-import ParetoStruct from "../../src/pareto-struct";
-import Frontier from "../../src/pareto-struct/Frontier";
+import { MultiMap } from "../../src/multimap";
+import { ParetoStruct, Frontier } from "../../src";
 
 function asc(first: number, second: number): number {
   return first - second;

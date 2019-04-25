@@ -1,5 +1,4 @@
-import MultiMap from "../../src/multimap";
-import RedBlackTree from "../../src/multimap/red-black-tree";
+import { MultiMap, RedBlackTree } from "../../src/multimap";
 import validateProperties from "./validateProperties";
 
 function asc(first: number, second: number): number {

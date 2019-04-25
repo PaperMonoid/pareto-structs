@@ -1,5 +1,4 @@
-import MultiMap from "../../src/multimap";
-import BinarySearchTree from "../../src/multimap/binary-search-tree";
+import { MultiMap, BinarySearchTree } from "../../src/multimap";
 
 function asc(first: number, second: number): number {
   return first - second;
