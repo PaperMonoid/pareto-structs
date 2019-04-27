@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "outDir": "dist/",
+    "outDir": "./dist/",
     "target": "es2015",
+    "moduleResolution": "node",
     "esModuleInterop": true
   },
-  "include": ["src/*"]
+  "include": ["./src/**/*"]
 }
