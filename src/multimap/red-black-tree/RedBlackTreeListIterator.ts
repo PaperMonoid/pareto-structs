@@ -93,9 +93,9 @@ class RedBlackTreeListIterator<K, V> implements ListIterator<[K, V]> {
         done: false
       };
     }
-    if (this.node && this.index >= 0) {
+    if (this.node && --this.index >= 0) {
       return {
-        value: [this.node.key, this.node.values[this.index--]],
+        value: [this.node.key, this.node.values[this.index]],
         done: false
       };
     }
@@ -149,9 +149,9 @@ class RedBlackTreeListIterator<K, V> implements ListIterator<[K, V]> {
         done: false
       };
     }
-    if (this.node && this.index < this.node.values.length) {
+    if (this.node && ++this.index < this.node.values.length) {
       return {
-        value: [this.node.key, this.node.values[this.index++]],
+        value: [this.node.key, this.node.values[this.index]],
         done: false
       };
     }

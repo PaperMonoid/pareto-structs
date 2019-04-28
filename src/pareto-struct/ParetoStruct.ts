@@ -1,5 +1,6 @@
 import Frontier from "./Frontier";
 import { Equals, StrictEquality, Comparator } from "../function";
+import { ListIterator } from "../list";
 import { MultiMap, RedBlackTree } from "../multimap";
 
 export default class ParetoStruct<K, V> {
@@ -15,37 +16,38 @@ export default class ParetoStruct<K, V> {
     this.comparators = comparators;
     this.equals = equals || StrictEquality;
     if (!frontiers) {
-      frontiers = RedBlackTree.create<K[], Frontier<K, V>>(function(
-        first,
-        second
-      ) {
-        let equal = 0;
-        let dominated = 0;
-        let nonDominated = 0;
-        for (let i in comparators) {
-          const comparison = comparators[i](first[i], second[i]);
-          if (comparison == 0) {
-            equal++;
-          }
-          if (comparison >= 0) {
-            dominated++;
-          }
-          if (comparison <= 0) {
-            nonDominated++;
-          }
-        }
-        if (equal == comparators.length) {
-          return 0;
-        } else if (dominated == comparators.length) {
-          return 1;
-        } else if (nonDominated == comparators.length) {
-          return -1;
-        } else {
-          return 0;
-        }
-      });
+      frontiers = RedBlackTree.create<K[], Frontier<K, V>>(
+        this.compare.bind(this)
+      );
     }
     this.frontiers = frontiers;
+  }
+
+  private compare(first: K[], second: K[]) {
+    let equal = 0;
+    let dominated = 0;
+    let nonDominated = 0;
+    for (let i in this.comparators) {
+      const comparison = this.comparators[i](first[i], second[i]);
+      if (comparison == 0) {
+        equal++;
+      }
+      if (comparison >= 0) {
+        dominated++;
+      }
+      if (comparison <= 0) {
+        nonDominated++;
+      }
+    }
+    if (equal == this.comparators.length) {
+      return 0;
+    } else if (dominated == this.comparators.length) {
+      return 1;
+    } else if (nonDominated == this.comparators.length) {
+      return -1;
+    } else {
+      return 0;
+    }
   }
 
   setFrontiers(frontiers: MultiMap<K[], Frontier<K, V>>) {
@@ -54,7 +56,8 @@ export default class ParetoStruct<K, V> {
 
   put(keys: K[], value: V): ParetoStruct<K, V> {
     let iterator = this.frontiers.iterator(keys);
-    let current = iterator.next();
+    let current = iterator.previous();
+    current = this.lastMatch(iterator, keys);
     if (current.done) {
       const frontier = new Frontier<K, V>(
         this.comparators,
@@ -64,8 +67,9 @@ export default class ParetoStruct<K, V> {
       );
       const frontiers = this.frontiers.put(keys, frontier);
       iterator = frontiers.iterator(keys);
-      iterator.previous();
       let previous = iterator.previous();
+      previous = this.lastMatch(iterator, keys);
+      previous = iterator.previous();
       if (previous.done) {
         return this.setFrontiers(frontiers);
       } else {
@@ -78,7 +82,7 @@ export default class ParetoStruct<K, V> {
     } else {
       const [_, replaced] = current.value;
       return this.setFrontiers(
-        this.frontiers.replace(keys, [replaced.put(keys, value)])
+        this.frontiers.replace(replaced.keys, [replaced.put(keys, value)])
       );
     }
   }
@@ -89,7 +93,8 @@ export default class ParetoStruct<K, V> {
 
   remove(keys: K[], value: V): ParetoStruct<K, V> {
     let iterator = this.frontiers.iterator(keys);
-    let current = iterator.next();
+    let current = iterator.previous();
+    current = this.lastMatch(iterator, keys);
     if (current.done) {
       return this;
     } else {
@@ -104,9 +109,25 @@ export default class ParetoStruct<K, V> {
         return self;
       } else {
         return this.setFrontiers(
-          this.frontiers.replace(keys, [frontier.remove(keys, value)])
+          this.frontiers.replace(frontier.keys, [frontier.remove(keys, value)])
         );
       }
     }
+  }
+
+  private lastMatch(
+    iterator: ListIterator<[K[], Frontier<K, V>]>,
+    keys: K[]
+  ): { value: [K[], Frontier<K, V>]; done: boolean } {
+    let current = iterator.next();
+    while (!current.done) {
+      if (this.compare(keys, current.value[0]) == 0) {
+        current = iterator.next();
+      } else {
+        break;
+      }
+    }
+    current = iterator.previous();
+    return current;
   }
 }
