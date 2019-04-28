@@ -59,11 +59,15 @@ export default class ParetoStruct<K, V> {
     let current = iterator.previous();
     current = this.lastMatch(iterator, keys);
     if (current.done) {
+      const optimals = RedBlackTree.create<K[], V>(
+        this.compare.bind(this),
+        this.equals
+      );
       const frontier = new Frontier<K, V>(
         this.comparators,
         this.equals,
         keys,
-        value
+        optimals.put(keys, value)
       );
       const frontiers = this.frontiers.put(keys, frontier);
       iterator = frontiers.iterator(keys);
@@ -98,21 +102,31 @@ export default class ParetoStruct<K, V> {
     if (current.done) {
       return this;
     } else {
-      let [_, frontier] = current.value;
-      if (this.equals(frontier.optimal, value)) {
-        let self = this.removeAll(keys);
+      let [_keys, frontier] = current.value;
+      frontier = frontier.remove(keys, value);
+      if (frontier.optimals.isEmpty()) {
+        let self = this.removeAll(_keys);
         for (let dimention of frontier.dimentions) {
-          for (let [_keys, _value] of dimention) {
-            self = self.put(_keys, _value);
+          for (let [__keys, __value] of dimention) {
+            self = self.put(__keys, __value);
           }
         }
         return self;
       } else {
-        return this.setFrontiers(
-          this.frontiers.replace(frontier.keys, [frontier.remove(keys, value)])
-        );
+        return this.setFrontiers(this.frontiers.replace(_keys, [frontier]));
       }
     }
+  }
+
+  size(): number {
+    let count = 0;
+    for (let [_, frontier] of this.frontiers) {
+      count += frontier.optimals.size();
+      for (let dimention of frontier.dimentions) {
+        count += dimention.size();
+      }
+    }
+    return count;
   }
 
   private lastMatch(

@@ -5,21 +5,21 @@ export default class Frontier<K, V> {
   readonly comparators: Comparator<K>[];
   readonly equals?: Equals<V>;
   readonly keys: K[];
-  readonly optimal: V;
+  readonly optimals: MultiMap<K[], V>;
   readonly dimentions: MultiMap<K[], V>[];
 
   constructor(
     comparators: Comparator<K>[],
     equals: Equals<V>,
     keys: K[],
-    optimal: V,
+    optimals: MultiMap<K[], V>,
     dimentions?: MultiMap<K[], V>[]
   ) {
     this.comparators = comparators;
     this.equals = equals;
     this.equals;
     this.keys = keys;
-    this.optimal = optimal;
+    this.optimals = optimals;
     if (!dimentions) {
       dimentions = [];
       for (let i in keys) {
@@ -38,8 +38,18 @@ export default class Frontier<K, V> {
       this.comparators,
       this.equals,
       this.keys,
-      this.optimal,
+      this.optimals,
       dimentions
+    );
+  }
+
+  setOptimals(optimals: MultiMap<K[], V>) {
+    return new Frontier<K, V>(
+      this.comparators,
+      this.equals,
+      this.keys,
+      optimals,
+      this.dimentions
     );
   }
 
@@ -94,6 +104,8 @@ export default class Frontier<K, V> {
     if (index > -1) {
       const dimention = this.dimentions[index].put(keys, value);
       return this.setNthDimention(index, dimention);
+    } else {
+      return this.setOptimals(this.optimals.put(keys, value));
     }
     return this;
   }
@@ -103,6 +115,8 @@ export default class Frontier<K, V> {
     if (index > -1) {
       const dimention = this.dimentions[index].remove(keys, value);
       return this.setNthDimention(index, dimention);
+    } else {
+      return this.setOptimals(this.optimals.remove(keys, value));
     }
     return this;
   }
